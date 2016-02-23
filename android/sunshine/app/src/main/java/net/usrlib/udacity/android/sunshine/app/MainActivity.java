@@ -1,4 +1,4 @@
-package net.userlib.udacity.android.sunshine.app;
+package net.usrlib.udacity.android.sunshine.app;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

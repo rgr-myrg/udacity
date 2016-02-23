@@ -1,4 +1,4 @@
-package net.userlib.udacity.android.sunshine.app;
+package net.usrlib.udacity.android.sunshine.app;
 
 import org.junit.Test;
 
