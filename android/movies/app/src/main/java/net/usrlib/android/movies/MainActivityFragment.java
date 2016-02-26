@@ -62,12 +62,10 @@ public class MainActivityFragment extends Fragment {
 					return;
 				}
 
-				Intent intent = new Intent(getActivity(), MainActivity.class);
+				Intent intent = new Intent(getActivity(), DetailActivity.class);
 				intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
-				//getActivity().startActivity(intent);
-
-				Log.d("MAIN", "onItemClick " + movieItemVO.getOriginalTitle());
+				getActivity().startActivity(intent);
 			}
 		});
 
@@ -101,7 +99,7 @@ public class MainActivityFragment extends Fragment {
 					mMovieApi.fetchNextPageSortedBy(MovieVars.MOST_POPULAR);
 				} else if (mPreviousVisibleItem > firstVisibleItem && firstVisibleItem == 0) {
 					Log.d("MAIN", "PREVIOUS PAGE??? firstVisibleItem:" + String.valueOf(firstVisibleItem));
-					mMovieApi.fetchPreviousPageSortedBy(MovieVars.MOST_POPULAR);
+					//mMovieApi.fetchPreviousPageSortedBy(MovieVars.MOST_POPULAR);
 				}
 				mPreviousVisibleItem = firstVisibleItem;
 			}
@@ -110,7 +108,7 @@ public class MainActivityFragment extends Fragment {
 
 	private void onMovieFeedLoaded(ArrayList<MovieItemVO> arrayList){
 		Log.d("MAIN", ((MovieItemVO) arrayList.get(0)).getImageUrl());
-	//	if (mGridItemAdapter == null) {
+//		if (mGridItemAdapter == null) {
 			mGridItemAdapter = new GridItemAdapter(getContext(), arrayList);
 			mGridView.setAdapter(mGridItemAdapter);
 //		} else {

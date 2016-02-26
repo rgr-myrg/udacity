@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MovieItemVO implements Parcelable {
 
 	private String originalTitle;
@@ -36,7 +40,7 @@ public class MovieItemVO implements Parcelable {
 	}
 
 	public MovieItemVO(Parcel parcel) {
-		String[] data = new String[6];
+		String[] data = new String[7];
 
 		parcel.readStringArray(data);
 
@@ -46,7 +50,7 @@ public class MovieItemVO implements Parcelable {
 		this.releaseDate = data[3];
 		this.voteCount = Integer.valueOf(data[4]);
 		this.voteAverage = Double.valueOf(data[5]);
-		this.imageUrl = MovieVars.IMG_BASE_URL + this.posterPath;
+		this.imageUrl = data[6];
 	}
 
 	@Override
@@ -112,16 +116,35 @@ public class MovieItemVO implements Parcelable {
 			return null;
 		}
 
+		String releaseDate = jsonObject.optString(MovieVars.RELEASE_DATE, MovieVars.UNSET_VALUE);
+
+		// Format to friendly date. Ex: 2016-02-09 to February 10, 2016
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat newFormat  = new SimpleDateFormat("MMMM d, yyyy");
+			Date date = dateFormat.parse(releaseDate);
+			releaseDate = newFormat.format(date);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		return new MovieItemVO(
 				jsonObject.optString(MovieVars.ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
 				jsonObject.optString(MovieVars.POSTER_PATH, MovieVars.UNSET_VALUE),
 				jsonObject.optString(MovieVars.OVERVIEW, MovieVars.UNSET_VALUE),
-				jsonObject.optString(MovieVars.RELEASE_DATE, MovieVars.UNSET_VALUE),
+				releaseDate,
 				jsonObject.optInt(MovieVars.VOTE_COUNT, 0),
 				jsonObject.optDouble(MovieVars.VOTE_AVERAGE, 0)
 		);
 	}
 
+	private String formatDate(String dateString) throws ParseException {
+		SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
+		Date date = sourceFormat.parse(dateString);
+		return dateFormat.format(date);
+	}
 }
 
 /*
