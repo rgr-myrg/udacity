@@ -39,19 +39,19 @@ public class MovieApi {
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	public void fetchPreviousPageSortedBy(String sortBy) {
-		// Prevent multiple requests
-		if (mIsFetchingData) {
-			return;
-		}
-
-		if (mPageNumber > 1) {
-			// Decrement page number for the next request
-			mPageNumber--;
-		}
-
-		loadJsonFeedSortedBy(sortBy);
-	}
+//	public void fetchPreviousPageSortedBy(String sortBy) {
+//		// Prevent multiple requests
+//		if (mIsFetchingData) {
+//			return;
+//		}
+//
+//		if (mPageNumber > 1) {
+//			// Decrement page number for the next request
+//			mPageNumber--;
+//		}
+//
+//		loadJsonFeedSortedBy(sortBy);
+//	}
 
 	private void loadJsonFeedSortedBy(String sortBy) {
 		mIsFetchingData = true;
@@ -109,4 +109,5 @@ public class MovieApi {
 
 		return movieItems;
 	}
+
 }

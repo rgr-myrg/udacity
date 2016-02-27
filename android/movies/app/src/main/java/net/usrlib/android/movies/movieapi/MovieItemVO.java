@@ -11,6 +11,8 @@ import java.util.Date;
 
 public class MovieItemVO implements Parcelable {
 
+	public static final String NAME = MovieItemVO.class.getSimpleName();
+
 	private String originalTitle;
 	private String posterPath;
 	private String imageUrl;
@@ -19,8 +21,6 @@ public class MovieItemVO implements Parcelable {
 
 	private int voteCount;
 	private double voteAverage;
-
-	public static final String NAME = MovieItemVO.class.getSimpleName();
 
 	public MovieItemVO(
 			String originalTitle,
@@ -139,14 +139,9 @@ public class MovieItemVO implements Parcelable {
 		);
 	}
 
-	private String formatDate(String dateString) throws ParseException {
-		SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-		Date date = sourceFormat.parse(dateString);
-		return dateFormat.format(date);
-	}
 }
 
+// Sample data
 /*
 poster_path	String	/inVq3FRqcYIRl2la8iZikYYxFNR.jpg
 adult	Boolean	false

@@ -1,6 +1,7 @@
 package net.usrlib.android.movies.movieapi;
 
 public class MovieVars {
+
 	public static final String API_URL = "http://api.themoviedb.org/3/discover/movie";
 	public static final String IMG_BASE_URL = "http://image.tmdb.org/t/p/w185";
 	public static final String API_PARAM_KEY = "api_key";
