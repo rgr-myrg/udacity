@@ -17,6 +17,6 @@ public class MovieVars {
 	public static final String VOTE_COUNT = "vote_count";
 	public static final String VOTE_AVERAGE = "vote_average";
 	public static final String UNSET_VALUE = "N/A";
-	public static final String PLACE_HOLDER = "http://marvelmoviemarathon.com/posters/placeholder.png";
+	public static final String PLACE_HOLDER = "http://s30.postimg.org/zfkzb977l/placeholder.png";
 
 }

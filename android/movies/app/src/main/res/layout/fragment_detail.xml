@@ -27,9 +27,9 @@
 
 				<ImageView
 					android:id="@+id/movie_poster"
-					android:layout_width="110dp"
+					android:layout_width="@dimen/movie_poster_width"
 					android:layout_height="wrap_content"
-					android:layout_marginRight="@dimen/fab_margin"/>
+					android:layout_marginRight="@dimen/default_margin"/>
 
 				<LinearLayout
 					android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
 							android:layout_height="wrap_content"
 							android:text="@string/movie_rating_label"
 							android:textStyle="italic"
-							android:layout_marginRight="@dimen/fab_margin"
+							android:layout_marginRight="@dimen/default_margin"
 							style="@style/Base.TextAppearance.AppCompat.Medium"/>
 						<TextView
 							android:id="@+id/movie_rating"
@@ -76,7 +76,7 @@
 							android:layout_height="wrap_content"
 							android:text="@string/movie_votes_label"
 							android:textStyle="italic"
-							android:layout_marginRight="@dimen/fab_margin"
+							android:layout_marginRight="@dimen/default_margin"
 							style="@style/Base.TextAppearance.AppCompat.Medium"/>
 						<TextView
 							android:id="@+id/movie_votes"
@@ -92,20 +92,20 @@
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
-				android:layout_marginTop="@dimen/fab_margin"
+				android:layout_marginTop="@dimen/default_margin"
 				android:background="@color/gray" />
 
 			<TextView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/fab_margin"
+				android:layout_marginTop="@dimen/default_margin"
 				style="@style/TextAppearance.AppCompat.Title"
 				android:text="Synopsis"/>
 			<TextView
 				android:id="@+id/movie_overview"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/fab_margin"
+				android:layout_marginTop="@dimen/default_margin"
 				style="@style/Base.TextAppearance.AppCompat.Medium"/>
 
 		</LinearLayout>
@@ -113,11 +113,3 @@
 	</ScrollView>
 
 </RelativeLayout>
-
-<!--
-original title
-movie poster image thumbnail
-A plot synopsis (called overview in the api)
-user rating (called vote_average in the api)
-release date
--->

@@ -3,23 +3,27 @@
 			  android:orientation="vertical"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
-			  android:layout_marginTop="5dp"
-			  android:padding="5dp">
+			  android:layout_marginTop="@dimen/grid_view_item_margin_top"
+			  android:padding="@dimen/grid_view_item_padding">
 
 	<ImageView
 		android:id="@+id/grid_item_image"
-		android:layout_width="110dp"
-		android:layout_height="150dp"
-		android:scaleType="centerCrop"/>
+		android:layout_width="@dimen/grid_view_image_width"
+		android:layout_height="@dimen/grid_view_image_height"
+		android:adjustViewBounds="true"
+		android:scaleType="fitXY"/>
 
-	<TextView
-		android:id="@+id/grid_item_title"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="5dp"
-		android:gravity="center"
-		android:maxLines="2"
-		android:ellipsize="marquee"
-		android:textSize="12sp" />
+	<!--
+	Commented out for now. Save for later if I want to display title in GridItemAdapter.getView
+	-->
+	<!--<TextView-->
+		<!--android:id="@+id/grid_item_title"-->
+		<!--android:layout_width="fill_parent"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:layout_marginTop="5dp"-->
+		<!--android:gravity="center"-->
+		<!--android:maxLines="2"-->
+		<!--android:ellipsize="marquee"-->
+		<!--android:textSize="12sp" />-->
 
 </LinearLayout>

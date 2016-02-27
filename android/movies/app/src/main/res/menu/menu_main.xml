@@ -6,12 +6,12 @@
 	<item
 		android:id="@+id/action_most_popular"
 		android:orderInCategory="1"
-		android:title="@string/action_most_popular"
+		android:title="@string/title_most_popular"
 		app:showAsAction="never"/>
 	<item
 		android:id="@+id/action_highest_rated"
 		android:orderInCategory="2"
-		android:title="@string/action_highest_rated"
+		android:title="@string/title_highest_rated"
 		app:showAsAction="never"/>
 	<item
 		android:id="@+id/action_settings"

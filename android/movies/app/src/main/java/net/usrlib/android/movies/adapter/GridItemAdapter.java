@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -35,8 +34,9 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 		MovieItemVO item = mMovieItems.get(position);
 
-		TextView textView = (TextView) convertView.findViewById(R.id.grid_item_title);
-		textView.setText(item.getOriginalTitle());
+		//Commented out for now. Save for later if I want to display the title on the grid view
+		//TextView textView = (TextView) convertView.findViewById(R.id.grid_item_title);
+		//textView.setText(item.getOriginalTitle());
 
 		ImageView imageView = (ImageView) convertView.findViewById(R.id.grid_item_image);
 		Glide.with(mContext).load(item.getImageUrl()).into(imageView);

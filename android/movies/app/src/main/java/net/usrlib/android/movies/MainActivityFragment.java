@@ -45,7 +45,7 @@ public class MainActivityFragment extends Fragment {
 		initGridView(rootView);
 
 		// Start up with Most Popular Movies
-		startNewRequestSortedBy(MovieVars.MOST_POPULAR);
+		getMostPopularMovies();
 
 		return rootView;
 	}
@@ -56,11 +56,11 @@ public class MainActivityFragment extends Fragment {
 
 		switch (itemId) {
 			case R.id.action_most_popular:
-				startNewRequestSortedBy(MovieVars.MOST_POPULAR);
+				getMostPopularMovies();
 				break;
 
 			case R.id.action_highest_rated:
-				startNewRequestSortedBy(MovieVars.HIGHEST_RATED);
+				getHighestRatedMovies();
 				break;
 
 			case R.id.action_settings:
@@ -72,6 +72,16 @@ public class MainActivityFragment extends Fragment {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void getMostPopularMovies() {
+		getActivity().setTitle(getString(R.string.title_most_popular));
+		startNewRequestSortedBy(MovieVars.MOST_POPULAR);
+	}
+
+	private void getHighestRatedMovies() {
+		getActivity().setTitle(getString(R.string.title_highest_rated));
+		startNewRequestSortedBy(MovieVars.HIGHEST_RATED);
 	}
 
 	private void startNewRequestSortedBy(String sortBy) {
@@ -107,8 +117,8 @@ public class MainActivityFragment extends Fragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				// onScroll is triggered spuriously when GridView is rendering!
-				// Do nothing when totalItemCount is zero.
+				// onScroll is triggered spuriously while GridView is created.
+				// Guard clause: Do nothing when totalItemCount is zero.
 				if (totalItemCount == 0) {
 					return;
 				}
