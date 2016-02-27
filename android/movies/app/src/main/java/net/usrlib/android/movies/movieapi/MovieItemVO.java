@@ -2,6 +2,7 @@ package net.usrlib.android.movies.movieapi;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -36,7 +37,13 @@ public class MovieItemVO implements Parcelable {
 		this.releaseDate = releaseDate;
 		this.voteCount = voteCount;
 		this.voteAverage = voteAverage;
-		this.imageUrl = MovieVars.IMG_BASE_URL + posterPath;
+
+		// themoviedb api sometimes contains a null string value as a data point.
+		if (posterPath.contentEquals("null")) {
+			this.imageUrl = MovieVars.PLACE_HOLDER;
+		} else {
+			this.imageUrl = MovieVars.IMG_BASE_URL + posterPath;
+		}
 	}
 
 	public MovieItemVO(Parcel parcel) {
@@ -126,7 +133,9 @@ public class MovieItemVO implements Parcelable {
 			releaseDate = newFormat.format(date);
 
 		} catch (ParseException e) {
+			releaseDate = MovieVars.UNSET_VALUE;
 			e.printStackTrace();
+			Log.e(NAME, jsonObject.toString());
 		}
 
 		return new MovieItemVO(

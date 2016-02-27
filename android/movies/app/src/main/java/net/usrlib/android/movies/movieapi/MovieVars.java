@@ -17,8 +17,6 @@ public class MovieVars {
 	public static final String VOTE_COUNT = "vote_count";
 	public static final String VOTE_AVERAGE = "vote_average";
 	public static final String UNSET_VALUE = "N/A";
+	public static final String PLACE_HOLDER = "http://marvelmoviemarathon.com/posters/placeholder.png";
 
 }
-
-//http://api.themoviedb.org/3/discover/movie?sort_by=vote_count.desc&api_key=3ea54608cea21741f6b4b79f70cdc8c5&page=1
-//http://image.tmdb.org/t/p/w185/inVq3FRqcYIRl2la8iZikYYxFNR.jpg

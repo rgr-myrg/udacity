@@ -46,7 +46,7 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 	public void updateItemsList(ArrayList<MovieItemVO> arrayList) {
 		mMovieItems.addAll(arrayList);
-		//mMovieItems = arrayList;
 		notifyDataSetChanged();
 	}
+
 }

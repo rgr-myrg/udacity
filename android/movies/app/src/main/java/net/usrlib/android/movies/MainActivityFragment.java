@@ -22,6 +22,8 @@ public class MainActivityFragment extends Fragment {
 
 	private GridView mGridView = null;
 	private GridItemAdapter mGridItemAdapter = null;
+	private String mCurrentSortBy;
+	private boolean mIsFirstPageRequest;
 
 	private MovieApi mMovieApi = new MovieApi(
 			new MovieApi.Delegate() {
@@ -43,7 +45,7 @@ public class MainActivityFragment extends Fragment {
 		initGridView(rootView);
 
 		// Start up with Most Popular Movies
-		mMovieApi.fetchNextPageSortedBy(MovieVars.MOST_POPULAR);
+		startNewRequestSortedBy(MovieVars.MOST_POPULAR);
 
 		return rootView;
 	}
@@ -53,12 +55,12 @@ public class MainActivityFragment extends Fragment {
 		int itemId = item.getItemId();
 
 		switch (itemId) {
-			case R.id.action_highest_rated:
-				mMovieApi.fetchNextPageSortedBy(MovieVars.HIGHEST_RATED);
+			case R.id.action_most_popular:
+				startNewRequestSortedBy(MovieVars.MOST_POPULAR);
 				break;
 
-			case R.id.action_most_popular:
-				mMovieApi.fetchNextPageSortedBy(MovieVars.MOST_POPULAR);
+			case R.id.action_highest_rated:
+				startNewRequestSortedBy(MovieVars.HIGHEST_RATED);
 				break;
 
 			case R.id.action_settings:
@@ -70,6 +72,13 @@ public class MainActivityFragment extends Fragment {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void startNewRequestSortedBy(String sortBy) {
+		mCurrentSortBy = sortBy;
+		mIsFirstPageRequest = true;
+
+		mMovieApi.fetchFirstPageSortedBy(sortBy);
 	}
 
 	private void initGridView(View rootView) {
@@ -98,19 +107,26 @@ public class MainActivityFragment extends Fragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				// onScroll is triggered spuriously when GridView is rendering!
+				// Do nothing when totalItemCount is zero.
+				if (totalItemCount == 0) {
+					return;
+				}
+
 				int lastItemCount = firstVisibleItem + visibleItemCount;
 
 				if (lastItemCount == totalItemCount) {
-					mMovieApi.fetchNextPageSortedBy(MovieVars.MOST_POPULAR);
+					mMovieApi.fetchNextPageSortedBy(mCurrentSortBy);
 				}
 			}
 		});
 	}
 
 	private void onMovieFeedLoaded(ArrayList<MovieItemVO> arrayList){
-		if (mGridItemAdapter == null) {
+		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			mGridItemAdapter = new GridItemAdapter(getContext(), arrayList);
 			mGridView.setAdapter(mGridItemAdapter);
+			mIsFirstPageRequest = false;
 
 		} else {
 			mGridItemAdapter.updateItemsList(arrayList);

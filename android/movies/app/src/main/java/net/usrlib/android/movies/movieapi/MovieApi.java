@@ -27,6 +27,11 @@ public class MovieApi {
 		mDelegate = delegate;
 	}
 
+	public void fetchFirstPageSortedBy(String sortBy) {
+		mPageNumber = 1;
+		loadJsonFeedSortedBy(sortBy);
+	}
+
 	public void fetchNextPageSortedBy(String sortBy) {
 		// Prevent multiple requests
 		if (mIsFetchingData) {
@@ -39,28 +44,8 @@ public class MovieApi {
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-//	public void fetchPreviousPageSortedBy(String sortBy) {
-//		// Prevent multiple requests
-//		if (mIsFetchingData) {
-//			return;
-//		}
-//
-//		if (mPageNumber > 1) {
-//			// Decrement page number for the next request
-//			mPageNumber--;
-//		}
-//
-//		loadJsonFeedSortedBy(sortBy);
-//	}
-
 	private void loadJsonFeedSortedBy(String sortBy) {
 		mIsFetchingData = true;
-
-		// Start at the first page when sortBy changes to a new request
-		if (!sortBy.contentEquals(mCurrentSortBy)) {
-			mPageNumber = 1;
-		}
-
 		mCurrentSortBy = sortBy;
 
 		// Create a new task each request. AsyncTask only runs once.
