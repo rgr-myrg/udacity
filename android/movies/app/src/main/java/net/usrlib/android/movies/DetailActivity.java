@@ -37,6 +37,9 @@ public class DetailActivity extends AppCompatActivity {
 
 			Glide.with(this)
 					.load(movieItemVO.getImageUrl())
+					.placeholder(R.drawable.image_poster_placeholder)
+					.error(R.drawable.image_poster_placeholder)
+					.crossFade()
 					.into(imageView);
 
 			setTextViewWithValue(

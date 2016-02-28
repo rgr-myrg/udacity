@@ -31,6 +31,11 @@ public class MainActivityFragment extends Fragment {
 				public void onFeedLoaded(ArrayList<MovieItemVO> arrayList) {
 					onMovieFeedLoaded(arrayList);
 				}
+
+				@Override
+				public void onPageLimitReached() {
+					onMovieLimitReached();
+				}
 			}
 	);
 
@@ -141,6 +146,10 @@ public class MainActivityFragment extends Fragment {
 		} else {
 			mGridItemAdapter.updateItemsList(arrayList);
 		}
+	}
+
+	private void onMovieLimitReached() {
+
 	}
 
 }

@@ -21,6 +21,7 @@ public class MovieApi {
 
 	public interface Delegate {
 		void onFeedLoaded(ArrayList<MovieItemVO> arrayList);
+		void onPageLimitReached();
 	}
 
 	public MovieApi(Delegate delegate) {
@@ -45,6 +46,12 @@ public class MovieApi {
 	}
 
 	private void loadJsonFeedSortedBy(String sortBy) {
+		// Cap off requests when the limit is reached
+		if (mPageNumber >= MovieVars.PAGE_COUNT_LIMIT) {
+			mDelegate.onPageLimitReached();
+			return;
+		}
+
 		mIsFetchingData = true;
 		mCurrentSortBy = sortBy;
 
