@@ -18,6 +18,7 @@ public class MovieVars {
 	public static final String VOTE_AVERAGE = "vote_average";
 	public static final String UNSET_VALUE = "N/A";
 	public static final String PLACE_HOLDER = "http://s30.postimg.org/zfkzb977l/placeholder.png";
+	public static final String MOVIE_LIST_KEY = "movie_list";
 	public static final int PAGE_COUNT_LIMIT = 200;
 
 }

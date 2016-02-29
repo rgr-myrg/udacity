@@ -49,8 +49,13 @@ public class MainActivityFragment extends Fragment {
 		// Init and Set Up Grid View
 		initGridView(rootView);
 
-		// Start up with Most Popular Movies
-		getMostPopularMovies();
+		if (instanceState == null) {
+			// Start up with Most Popular Movies
+			getMostPopularMovies();
+		} else if (instanceState.containsKey(MovieVars.MOVIE_LIST_KEY)) {
+			// Restore Movie List
+			getMovieListFromBundle(instanceState);
+		}
 
 		return rootView;
 	}
@@ -79,6 +84,15 @@ public class MainActivityFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelableArrayList(
+				MovieVars.MOVIE_LIST_KEY,
+				mGridItemAdapter.getMovieItems()
+		);
+	}
+
 	private void getMostPopularMovies() {
 		getActivity().setTitle(getString(R.string.title_most_popular));
 		startNewRequestSortedBy(MovieVars.MOST_POPULAR);
@@ -87,6 +101,12 @@ public class MainActivityFragment extends Fragment {
 	private void getHighestRatedMovies() {
 		getActivity().setTitle(getString(R.string.title_highest_rated));
 		startNewRequestSortedBy(MovieVars.HIGHEST_RATED);
+	}
+
+	private void getMovieListFromBundle(Bundle bundle) {
+		onMovieFeedLoaded(
+				(ArrayList<MovieItemVO>) bundle.get(MovieVars.MOVIE_LIST_KEY)
+		);
 	}
 
 	private void startNewRequestSortedBy(String sortBy) {

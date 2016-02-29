@@ -35,11 +35,12 @@ public class DetailActivity extends AppCompatActivity {
 
 			ImageView imageView = (ImageView) findViewById(R.id.movie_poster);
 
+			// Invoking placeholder causes the image to misalign. Meh.
 			Glide.with(this)
 					.load(movieItemVO.getImageUrl())
-					.placeholder(R.drawable.image_poster_placeholder)
-					.error(R.drawable.image_poster_placeholder)
-					.crossFade()
+				//	.placeholder(R.drawable.image_poster_placeholder)
+				//	.error(R.drawable.image_poster_placeholder)
+				//	.crossFade()
 					.into(imageView);
 
 			setTextViewWithValue(
