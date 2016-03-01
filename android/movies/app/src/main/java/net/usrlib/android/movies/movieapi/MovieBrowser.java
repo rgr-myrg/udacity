@@ -36,7 +36,7 @@ public class MovieBrowser {
 			}
 	);
 
-	public MovieBrowser(MovieEventDelegate delegate) {
+	public MovieBrowser(final MovieEventDelegate delegate) {
 		mDelegate = delegate;
 	}
 
@@ -96,7 +96,7 @@ public class MovieBrowser {
 		startNewRequestSortedBy(MovieVars.HIGHEST_RATED);
 	}
 
-	public void getMovieListFromBundle(Bundle bundle) {
+	public void getMovieListFromBundle(final Bundle bundle) {
 		onMovieFeedLoaded(
 				(ArrayList<MovieItemVO>) bundle.get(MovieVars.MOVIE_LIST_KEY)
 		);
@@ -106,14 +106,14 @@ public class MovieBrowser {
 		return mGridItemAdapter.getMovieItems();
 	}
 
-	private void startNewRequestSortedBy(String sortBy) {
+	private void startNewRequestSortedBy(final String sortBy) {
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
 		mMovieApi.fetchFirstPageSortedBy(sortBy);
 	}
 
-	private void onMovieFeedLoaded(ArrayList<MovieItemVO> arrayList){
+	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList){
 		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			Fragment activityFragment = (Fragment) mDelegate;
 

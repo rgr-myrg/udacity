@@ -26,6 +26,7 @@ public class MainActivityFragment extends Fragment implements MovieEventDelegate
 		// Ensure onOptionsItemSelected is triggered
 		setHasOptionsMenu(true);
 
+		// Create only one MovieBrowser instance
 		if (mMovieBrowser == null) {
 			mMovieBrowser = new MovieBrowser(this);
 		}
@@ -78,6 +79,7 @@ public class MainActivityFragment extends Fragment implements MovieEventDelegate
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+
 		outState.putParcelableArrayList(
 				MovieVars.MOVIE_LIST_KEY,
 				mMovieBrowser.getMovieItems()

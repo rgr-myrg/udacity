@@ -15,6 +15,7 @@ public class MovieApi {
 
 	private Delegate mDelegate;
 	private HttpRequest mHttpRequest;
+	//To Do: Save last sort by in preferences
 	private String mCurrentSortBy = "";
 	private int mPageNumber = 0;
 	private boolean mIsFetchingData;
@@ -24,16 +25,16 @@ public class MovieApi {
 		void onPageLimitReached();
 	}
 
-	public MovieApi(Delegate delegate) {
+	public MovieApi(final Delegate delegate) {
 		mDelegate = delegate;
 	}
 
-	public void fetchFirstPageSortedBy(String sortBy) {
+	public void fetchFirstPageSortedBy(final String sortBy) {
 		mPageNumber = 1;
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	public void fetchNextPageSortedBy(String sortBy) {
+	public void fetchNextPageSortedBy(final String sortBy) {
 		// Prevent multiple requests
 		if (mIsFetchingData) {
 			return;
@@ -45,7 +46,7 @@ public class MovieApi {
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	private void loadJsonFeedSortedBy(String sortBy) {
+	private void loadJsonFeedSortedBy(final String sortBy) {
 		// Cap off requests when the limit is reached
 		if (mPageNumber >= MovieVars.PAGE_COUNT_LIMIT) {
 			mDelegate.onPageLimitReached();
@@ -87,7 +88,7 @@ public class MovieApi {
 		);
 	}
 
-	private ArrayList<MovieItemVO> parseJsonData(JSONObject jsonObject) {
+	private ArrayList<MovieItemVO> parseJsonData(final JSONObject jsonObject) {
 		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
 
 		ArrayList<MovieItemVO> movieItems = new ArrayList<MovieItemVO>();

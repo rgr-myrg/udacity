@@ -19,7 +19,7 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 	private ArrayList<MovieItemVO> mMovieItems = new ArrayList<MovieItemVO>();
 	private Context mContext;
 
-	public GridItemAdapter(Context context, ArrayList<MovieItemVO> arrayList) {
+	public GridItemAdapter(final Context context, final ArrayList<MovieItemVO> arrayList) {
 		super(context, 0, arrayList);
 
 		mContext = context;
@@ -74,7 +74,7 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		return convertView;
 	}
 
-	public void updateItemsList(ArrayList<MovieItemVO> arrayList) {
+	public void updateItemsList(final ArrayList<MovieItemVO> arrayList) {
 		mMovieItems.addAll(arrayList);
 		notifyDataSetChanged();
 	}
@@ -91,7 +91,7 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 	private static class ViewHolder {
 		public final ImageView imageView;
 
-		public ViewHolder(ImageView imageView) {
+		public ViewHolder(final ImageView imageView) {
 			this.imageView = imageView;
 		}
 	}

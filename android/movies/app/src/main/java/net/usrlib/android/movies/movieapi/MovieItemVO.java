@@ -1,5 +1,6 @@
 package net.usrlib.android.movies.movieapi;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -100,6 +101,10 @@ public class MovieItemVO implements Parcelable {
 		return 0;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	public String getOriginalTitle() {
 		return originalTitle;
 	}
@@ -162,6 +167,21 @@ public class MovieItemVO implements Parcelable {
 				jsonObject.optDouble(MovieItemKey.VOTE_AVERAGE, 0),
 				jsonObject.optDouble(MovieItemKey.POPULARITY, 0)
 		);
+	}
+
+	public ContentValues toContentValues() {
+		ContentValues values = new ContentValues();
+
+		values.put(MovieItemKey.ID, id);
+		values.put(MovieItemKey.ORIGINAL_TITLE, originalTitle);
+		values.put(MovieItemKey.IMAGE_URL, imageUrl);
+		values.put(MovieItemKey.OVERVIEW, overview);
+		values.put(MovieItemKey.RELEASE_DATE, releaseDate);
+		values.put(MovieItemKey.VOTE_COUNT, voteCount);
+		values.put(MovieItemKey.VOTE_AVERAGE, voteAverage);
+		values.put(MovieItemKey.POPULARITY, popularity);
+
+		return values;
 	}
 
 }

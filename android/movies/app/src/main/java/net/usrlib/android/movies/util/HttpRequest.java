@@ -24,16 +24,16 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 		void onError(String message);
 	}
 
-	public HttpRequest(Delegate delegate) {
+	public HttpRequest(final Delegate delegate) {
 		mRequestDelegate = delegate;
 	}
 
-	public void fetchJsonObjectWithUrl(String targetUrl) {
+	public void fetchJsonObjectWithUrl(final String targetUrl) {
 		mHasJsonRequest = true;
 		fetchWithUrl(targetUrl);
 	}
 
-	public void fetchWithUrl(String targetUrl) {
+	public void fetchWithUrl(final String targetUrl) {
 
 		try {
 			this.url = new URL(targetUrl);
@@ -91,7 +91,7 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String string) {
+	protected void onPostExecute(final String string) {
 		super.onPostExecute(string);
 
 		if (string != null) {
