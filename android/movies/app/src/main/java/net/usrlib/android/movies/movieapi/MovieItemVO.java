@@ -14,6 +14,7 @@ public class MovieItemVO implements Parcelable {
 
 	public static final String NAME = MovieItemVO.class.getSimpleName();
 
+	private int id;
 	private String originalTitle;
 	private String posterPath;
 	private String imageUrl;
@@ -22,21 +23,26 @@ public class MovieItemVO implements Parcelable {
 
 	private int voteCount;
 	private double voteAverage;
+	private double popularity;
 
 	public MovieItemVO(
+			int id,
 			String originalTitle,
 			String posterPath,
 			String overview,
 			String releaseDate,
 			int voteCount,
-			double voteAverage) {
+			double voteAverage,
+			double popularity) {
 
+		this.id = id;
 		this.originalTitle = originalTitle;
 		this.posterPath = posterPath;
 		this.overview = overview;
 		this.releaseDate = releaseDate;
 		this.voteCount = voteCount;
 		this.voteAverage = voteAverage;
+		this.popularity = popularity;
 
 		// themoviedb api sometimes contains a null string value as a data point.
 		if (posterPath.contentEquals("null")) {
@@ -47,28 +53,32 @@ public class MovieItemVO implements Parcelable {
 	}
 
 	public MovieItemVO(Parcel parcel) {
-		String[] data = new String[7];
+		String[] data = new String[9];
 
 		parcel.readStringArray(data);
 
-		this.originalTitle = data[0];
-		this.posterPath = data[1];
-		this.overview = data[2];
-		this.releaseDate = data[3];
-		this.voteCount = Integer.valueOf(data[4]);
-		this.voteAverage = Double.valueOf(data[5]);
-		this.imageUrl = data[6];
+		this.id = Integer.valueOf(data[0]);
+		this.originalTitle = data[1];
+		this.posterPath = data[2];
+		this.overview = data[3];
+		this.releaseDate = data[4];
+		this.voteCount = Integer.valueOf(data[5]);
+		this.voteAverage = Double.valueOf(data[6]);
+		this.popularity = Double.valueOf(data[7]);
+		this.imageUrl = data[8];
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeStringArray(new String[]{
+				String.valueOf(this.id),
 				this.originalTitle,
 				this.posterPath,
 				this.overview,
 				this.releaseDate,
 				String.valueOf(this.voteCount),
 				String.valueOf(this.voteAverage),
+				String.valueOf(this.popularity),
 				this.imageUrl
 		});
 	}
@@ -118,12 +128,16 @@ public class MovieItemVO implements Parcelable {
 		return voteAverage;
 	}
 
+	public double getPopularity() {
+		return popularity;
+	}
+
 	public static MovieItemVO fromJsonObject(JSONObject jsonObject) {
 		if (jsonObject == null) {
 			return null;
 		}
 
-		String releaseDate = jsonObject.optString(MovieVars.RELEASE_DATE, MovieVars.UNSET_VALUE);
+		String releaseDate = jsonObject.optString(MovieItemKey.RELEASE_DATE, MovieVars.UNSET_VALUE);
 
 		// Format to friendly date. Ex: 2016-02-09 to February 10, 2016
 		try {
@@ -139,12 +153,14 @@ public class MovieItemVO implements Parcelable {
 		}
 
 		return new MovieItemVO(
-				jsonObject.optString(MovieVars.ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
-				jsonObject.optString(MovieVars.POSTER_PATH, MovieVars.UNSET_VALUE),
-				jsonObject.optString(MovieVars.OVERVIEW, MovieVars.UNSET_VALUE),
+				jsonObject.optInt(MovieItemKey.ID, 0),
+				jsonObject.optString(MovieItemKey.ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
+				jsonObject.optString(MovieItemKey.POSTER_PATH, MovieVars.UNSET_VALUE),
+				jsonObject.optString(MovieItemKey.OVERVIEW, MovieVars.UNSET_VALUE),
 				releaseDate,
-				jsonObject.optInt(MovieVars.VOTE_COUNT, 0),
-				jsonObject.optDouble(MovieVars.VOTE_AVERAGE, 0)
+				jsonObject.optInt(MovieItemKey.VOTE_COUNT, 0),
+				jsonObject.optDouble(MovieItemKey.VOTE_AVERAGE, 0),
+				jsonObject.optDouble(MovieItemKey.POPULARITY, 0)
 		);
 	}
 
