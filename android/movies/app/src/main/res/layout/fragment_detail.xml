@@ -85,6 +85,11 @@
 							style="@style/Base.TextAppearance.AppCompat.Medium"/>
 					</LinearLayout>
 
+					<ImageView
+						android:id="@+id/button_favorite"
+						android:layout_width="@dimen/heart_button_width"
+						android:layout_height="wrap_content"/>
+
 				</LinearLayout>
 
 			</LinearLayout>

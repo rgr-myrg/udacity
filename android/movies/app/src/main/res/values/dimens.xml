@@ -10,4 +10,5 @@
 	<dimen name="grid_view_image_height">200dp</dimen>
 	<dimen name="grid_view_item_margin_top">0dp</dimen>
 	<dimen name="grid_view_item_padding">0dp</dimen>
+	<dimen name="heart_button_width">35dp</dimen>
 </resources>
