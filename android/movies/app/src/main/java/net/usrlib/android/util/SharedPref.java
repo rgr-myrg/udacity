@@ -5,29 +5,38 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import net.usrlib.android.movies.movieapi.MovieVars;
-
 public final class SharedPref {
 
-	public static final String VIEW_TITLE_KEY = "viewTitle";
+	private static SharedPreferences preferences = null;
 
-	public static final String getViewTitle(Activity activity) {
-		return getSharedPref(activity).getString(VIEW_TITLE_KEY, MovieVars.MOST_POPULAR);
+	public static final SharedPreferences getSharedPref(Activity activity) {
+		if (preferences == null) {
+			preferences = PreferenceManager.getDefaultSharedPreferences(
+					activity.getBaseContext()
+			);
+		}
+
+		return preferences;
 	}
 
-	public static final void setViewTitle(Activity activity, String title) {
+	public static final void setString(Activity activity, String key, String value) {
 		Editor editor = getSharedPref(activity).edit();
-		editor.putString(VIEW_TITLE_KEY, title);
+		editor.putString(key, value);
 		editor.commit();
 	}
 
-	public static final SharedPreferences getSharedPref(Activity activity) {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(
-						activity.getBaseContext()
-				);
+	public static final String getString(Activity activity, String key) {
+		return getSharedPref(activity).getString(key, null);
+	}
 
-		return prefs;
+	public static final void setInt(Activity activity, String key, int value) {
+		Editor editor = getSharedPref(activity).edit();
+		editor.putInt(key, value);
+		editor.commit();
+	}
+
+	public static final int getInt(Activity activity, String key) {
+		return getSharedPref(activity).getInt(key, 0);
 	}
 
 }

@@ -52,6 +52,15 @@ public class MovieApi {
 
 		loadJsonFeedSortedBy(sortBy);
 	}
+
+	public void setPageNumber(int pageNumber) {
+		mPageNumber = pageNumber;
+	}
+
+	public int getPageNumber() {
+		return mPageNumber;
+	}
+
 // To Do:
 	public void fetchMovieTrailersWithId(int id) {
 		MovieUrl.getTrailersUrl(id);

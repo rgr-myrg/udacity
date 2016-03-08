@@ -14,7 +14,6 @@ import android.widget.GridView;
 
 import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
-import net.usrlib.android.util.SharedPref;
 import net.usrlib.android.movies.movieapi.MovieApi;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
@@ -28,6 +27,7 @@ public class MainActivityFragment extends Fragment {
 	private GridView mGridView = null;
 	private GridItemAdapter mGridItemAdapter = null;
 	private String mCurrentSortBy;
+	private String mCurrentTitle;
 
 	private boolean mIsFirstPageRequest;
 	private boolean mHasEventListeners;
@@ -55,7 +55,7 @@ public class MainActivityFragment extends Fragment {
 			getMostPopularMovies();
 		} else if (instanceState.containsKey(MovieVars.MOVIE_LIST_KEY)) {
 			// Restore Movie List
-			getMovieListFromBundle(instanceState);
+			restoreValuesFromBundle(instanceState);
 		}
 
 		return rootView;
@@ -97,6 +97,10 @@ public class MainActivityFragment extends Fragment {
 				MovieVars.MOVIE_LIST_KEY,
 				mGridItemAdapter.getMovieItems()
 		);
+
+		outState.putString(MovieVars.VIEW_TITLE_KEY, mCurrentTitle);
+		outState.putString(MovieVars.SORT_PARAM_KEY, mCurrentSortBy);
+		outState.putInt(MovieVars.PAGE_PARAM_KEY, mMovieApi.getPageNumber());
 	}
 
 	public void addEventListeners() {
@@ -111,6 +115,13 @@ public class MainActivityFragment extends Fragment {
 			@Override
 			public void onError(Object eventData) {
 				// Handle gracefully
+			}
+		});
+
+		MovieEvent.RequestLimitReached.addListener(new Listener(){
+			@Override
+			public void onComplete(Object eventData) {
+				onMovieLimitReached();
 			}
 		});
 	}
@@ -160,37 +171,41 @@ public class MainActivityFragment extends Fragment {
 	}
 
 	public void getMostPopularMovies() {
-		fetchMoviesAndSetViewTitle(MovieVars.MOST_POPULAR, R.string.title_most_popular);
+		fetchMoviesAndSetValues(MovieVars.MOST_POPULAR, R.string.title_most_popular);
 	}
 
 	public void getHighestRatedMovies() {
-		fetchMoviesAndSetViewTitle(MovieVars.HIGHEST_RATED, R.string.title_highest_rated);
+		fetchMoviesAndSetValues(MovieVars.HIGHEST_RATED, R.string.title_highest_rated);
 	}
 
 	private void getFavoriteMovies() {
 
 	}
 
-	private void getMovieListFromBundle(final Bundle bundle) {
-		final Activity activity = getActivity();
-		final String viewTitle = SharedPref.getViewTitle(activity);
+	private void restoreValuesFromBundle(final Bundle bundle) {
+		final String viewTitle = bundle.getString(MovieVars.VIEW_TITLE_KEY);
 
-		activity.setTitle(viewTitle);
+		if (viewTitle != null) {
+			setViewTitle(viewTitle);
+		}
+
+		// Restore last sortBy value for the next fetchNextPageSortedBy() request
+		mCurrentSortBy = bundle.getString(MovieVars.SORT_PARAM_KEY);
+
+		// Restore last page to continue browsing where we left off
+		mMovieApi.setPageNumber(bundle.getInt(MovieVars.PAGE_PARAM_KEY));
 
 		onMovieFeedLoaded(
 				(ArrayList<MovieItemVO>) bundle.get(MovieVars.MOVIE_LIST_KEY)
 		);
+
 	}
 
-	private void fetchMoviesAndSetViewTitle(final String sortBy, final int resource) {
+	private void fetchMoviesAndSetValues(final String sortBy, final int resource) {
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
-		final Activity activity = getActivity();
-		final String viewTitle = activity.getString(resource);
-
-		activity.setTitle(viewTitle);
-		SharedPref.setViewTitle(activity, viewTitle);
+		setViewTitle(getActivity().getString(resource));
 
 		mMovieApi.fetchFirstPageSortedBy(sortBy);
 	}
@@ -207,8 +222,13 @@ public class MainActivityFragment extends Fragment {
 		}
 	}
 
+	private void setViewTitle(String viewTitle) {
+		getActivity().setTitle(viewTitle);
+		mCurrentTitle = viewTitle;
+	}
+
 	private void onMovieLimitReached() {
-		//MovieEvent.RequestLimitReached.notifyComplete();
+		// Toast Friendly Message to UI
 	}
 
 }
