@@ -1,4 +1,4 @@
-package net.usrlib.android.movies.util;
+package net.usrlib.android.util;
 
 import android.os.AsyncTask;
 

@@ -52,6 +52,7 @@ public class MoviesDB extends SQLiteOpenHelper {
 
 	public boolean isMovieSetAsFavorite(final int movieId) {
 		final SQLiteDatabase db = getWritableDatabase();
+		boolean result;
 
 		final Cursor cursor = db.rawQuery(
 				MoviesSQL.SELECT_WITH_ID,
@@ -59,8 +60,14 @@ public class MoviesDB extends SQLiteOpenHelper {
 						String.valueOf(movieId)
 				}
 		);
+
 		Log.d("MoviesDB", MoviesSQL.SELECT_WITH_ID + String.valueOf(movieId) + " --> " + String.valueOf(cursor.getCount()));
-		return cursor.getCount() != 0;
+
+		result = cursor.getCount() != 0;
+
+		cursor.close();
+
+		return result;
 	}
 
 }

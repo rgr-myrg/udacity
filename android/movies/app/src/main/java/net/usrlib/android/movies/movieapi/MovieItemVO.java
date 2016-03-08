@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import net.usrlib.android.util.MathUtil;
+
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -137,18 +139,27 @@ public class MovieItemVO implements Parcelable {
 		return popularity;
 	}
 
-	public static MovieItemVO fromJsonObject(JSONObject jsonObject) {
+	public static MovieItemVO fromJsonObject(final JSONObject jsonObject) {
 		if (jsonObject == null) {
 			return null;
 		}
 
-		String releaseDate = jsonObject.optString(MovieItemKey.RELEASE_DATE, MovieVars.UNSET_VALUE);
+		// Round vote count to the nearest decimal
+		final double voteCount = MathUtil.round(
+				jsonObject.optDouble(MovieItemKey.VOTE_AVERAGE, 0),
+				1
+		);
+
+		String releaseDate = jsonObject.optString(
+				MovieItemKey.RELEASE_DATE,
+				MovieVars.UNSET_VALUE
+		);
 
 		// Format to friendly date. Ex: 2016-02-09 to February 10, 2016
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat newFormat  = new SimpleDateFormat("MMMM d, yyyy");
-			Date date = dateFormat.parse(releaseDate);
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			final SimpleDateFormat newFormat  = new SimpleDateFormat("MMMM d, yyyy");
+			final Date date = dateFormat.parse(releaseDate);
 			releaseDate = newFormat.format(date);
 
 		} catch (ParseException e) {
@@ -164,7 +175,7 @@ public class MovieItemVO implements Parcelable {
 				jsonObject.optString(MovieItemKey.OVERVIEW, MovieVars.UNSET_VALUE),
 				releaseDate,
 				jsonObject.optInt(MovieItemKey.VOTE_COUNT, 0),
-				jsonObject.optDouble(MovieItemKey.VOTE_AVERAGE, 0),
+				voteCount,
 				jsonObject.optDouble(MovieItemKey.POPULARITY, 0)
 		);
 	}
