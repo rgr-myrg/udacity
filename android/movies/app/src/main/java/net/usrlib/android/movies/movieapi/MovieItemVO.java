@@ -185,7 +185,8 @@ public class MovieItemVO implements Parcelable {
 
 		values.put(MovieItemKey.ID, id);
 		values.put(MovieItemKey.ORIGINAL_TITLE, originalTitle);
-		values.put(MovieItemKey.IMAGE_URL, imageUrl);
+		values.put(MovieItemKey.POSTER_PATH, posterPath);
+		//values.put(MovieItemKey.IMAGE_URL, imageUrl);
 		values.put(MovieItemKey.OVERVIEW, overview);
 		values.put(MovieItemKey.RELEASE_DATE, releaseDate);
 		values.put(MovieItemKey.VOTE_COUNT, voteCount);

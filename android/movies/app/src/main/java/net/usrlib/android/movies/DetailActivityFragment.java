@@ -2,7 +2,6 @@ package net.usrlib.android.movies;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +10,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import net.usrlib.android.movies.data.MoviesDB;
-import net.usrlib.android.movies.movieapi.MovieApi;
+import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.movieapi.MovieVars;
 
-public class DetailActivityFragment extends Fragment {
-
-	private MovieApi mMovieApi = null;
-	private MoviesDB mMoviesDB = null;
+public class DetailActivityFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-		if (mMoviesDB == null) {
-			mMoviesDB = new MoviesDB(getActivity().getApplicationContext());
-		}
-
-		// Create only one mMovieApi instance
-		if (mMovieApi == null) {
-			mMovieApi = new MovieApi();
-		}
 
 		initDetailView(rootView);
 
@@ -59,7 +46,7 @@ public class DetailActivityFragment extends Fragment {
 
 			int resourceId = R.drawable.heart_unselected;
 
-			if (mMoviesDB.isMovieSetAsFavorite(movieItemVO.getId())) {
+			if (Facade.getMoviesDBHelper().isMovieSetAsFavorite(movieItemVO.getId())) {
 				resourceId = R.drawable.heart_selected;
 			}
 
@@ -111,10 +98,13 @@ public class DetailActivityFragment extends Fragment {
 		 		? R.drawable.heart_selected
 				: R.drawable.heart_unselected;
 
-		mMoviesDB.setMovieAsFavorite(movieItemVO.toContentValues(), hasSelected);
+		Facade.getMoviesDBHelper().setMovieAsFavorite(movieItemVO.toContentValues(), hasSelected);
 
 		imageView.setImageResource(imageResource);
 		imageView.setTag(imageResource);
+
+		// Set Result Code for onActivityResult
+		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE);
 	}
 
 }

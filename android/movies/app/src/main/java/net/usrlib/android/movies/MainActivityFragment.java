@@ -3,7 +3,6 @@ package net.usrlib.android.movies;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,16 +13,17 @@ import android.widget.GridView;
 
 import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
-import net.usrlib.android.movies.movieapi.MovieApi;
+import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
 
 import java.util.ArrayList;
 
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends BaseFragment {
 
-	private MovieApi mMovieApi = new MovieApi();
+	private static final int FAVORITES_REQUEST_CODE = 5;
+
 	private GridView mGridView = null;
 	private GridItemAdapter mGridItemAdapter = null;
 	private String mCurrentSortBy;
@@ -100,7 +100,7 @@ public class MainActivityFragment extends Fragment {
 
 		outState.putString(MovieVars.VIEW_TITLE_KEY, mCurrentTitle);
 		outState.putString(MovieVars.SORT_PARAM_KEY, mCurrentSortBy);
-		outState.putInt(MovieVars.PAGE_PARAM_KEY, mMovieApi.getPageNumber());
+		outState.putInt(MovieVars.PAGE_PARAM_KEY, Facade.getMovieApi().getPageNumber());
 	}
 
 	public void addEventListeners() {
@@ -118,10 +118,17 @@ public class MainActivityFragment extends Fragment {
 			}
 		});
 
-		MovieEvent.RequestLimitReached.addListener(new Listener(){
+		MovieEvent.RequestLimitReached.addListener(new Listener() {
 			@Override
 			public void onComplete(Object eventData) {
 				onMovieLimitReached();
+			}
+		});
+
+		MovieEvent.ActivityResultReady.addListener(new Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				onActivityResultReady((int) eventData);
 			}
 		});
 	}
@@ -144,7 +151,9 @@ public class MainActivityFragment extends Fragment {
 				Intent intent = new Intent(activity, DetailActivity.class);
 				intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
-				activity.startActivity(intent);
+				//activity.startActivity(intent);
+				// Use a request code to trigger onActivityResult
+				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 			}
 		});
 
@@ -163,8 +172,8 @@ public class MainActivityFragment extends Fragment {
 
 				int lastItemCount = firstVisibleItem + visibleItemCount;
 
-				if (lastItemCount == totalItemCount) {
-					mMovieApi.fetchNextPageSortedBy(mCurrentSortBy);
+				if (lastItemCount == totalItemCount && !mCurrentTitle.contentEquals("Favorites")) {
+					Facade.getMovieApi().fetchNextPageSortedBy(mCurrentSortBy);
 				}
 			}
 		});
@@ -179,7 +188,12 @@ public class MainActivityFragment extends Fragment {
 	}
 
 	private void getFavoriteMovies() {
+		mIsFirstPageRequest = true;
+		setViewTitle(getActivity().getString(R.string.title_favorites));
 
+		onMovieFeedLoaded(
+			Facade.getMoviesDBHelper().selectFromFavorites()
+		);
 	}
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
@@ -193,7 +207,7 @@ public class MainActivityFragment extends Fragment {
 		mCurrentSortBy = bundle.getString(MovieVars.SORT_PARAM_KEY);
 
 		// Restore last page to continue browsing where we left off
-		mMovieApi.setPageNumber(bundle.getInt(MovieVars.PAGE_PARAM_KEY));
+		Facade.getMovieApi().setPageNumber(bundle.getInt(MovieVars.PAGE_PARAM_KEY));
 
 		onMovieFeedLoaded(
 				(ArrayList<MovieItemVO>) bundle.get(MovieVars.MOVIE_LIST_KEY)
@@ -207,12 +221,11 @@ public class MainActivityFragment extends Fragment {
 
 		setViewTitle(getActivity().getString(resource));
 
-		mMovieApi.fetchFirstPageSortedBy(sortBy);
+		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
 	}
 
 	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList){
 		if (mGridItemAdapter == null || mIsFirstPageRequest) {
-
 			mGridItemAdapter = new GridItemAdapter(getContext(), arrayList);
 			mGridView.setAdapter(mGridItemAdapter);
 			mIsFirstPageRequest = false;
@@ -231,4 +244,15 @@ public class MainActivityFragment extends Fragment {
 		// Toast Friendly Message to UI
 	}
 
+	private void onActivityResultReady(int resultCode) {
+		// Triggered by MainActivity.onActivityResult
+		// If there was a change to Favorites get a fresh list of movies
+		if (resultCode == MovieVars.FAVORITED_RESULT_CODE
+				&& mCurrentTitle.contentEquals(
+				getActivity().getString(R.string.title_favorites))
+				) {
+			getFavoriteMovies();
+		}
+
+	}
 }

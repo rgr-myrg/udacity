@@ -20,13 +20,18 @@ public class MoviesSQL {
 				+ MovieItemKey.VOTE_COUNT + " INTEGER,"
 				+ MovieItemKey.VOTE_AVERAGE + " REAL,"
 				+ MovieItemKey.POPULARITY + " REAL,"
-				+ MovieItemKey.IMAGE_URL + " TEXT,"
+				+ MovieItemKey.POSTER_PATH + " TEXT,"
 				+ MovieItemKey.RELEASE_DATE + " TEXT,"
 				+ "UNIQUE (" + MovieItemKey.ID + ") ON CONFLICT REPLACE"
 			+ ")";
 
-	public static final String SELECT_WITH_ID = "SELECT "
+	public static final String DROP_FAVORITES_TABLE = "DROP TABLE " + TABLE_MOVIE_FAVORITES;
+
+	public static final String SELECT_FAVORITES_WITH_ID = "SELECT "
 			+ PRIMARY_ID_KEY
 			+ " FROM " + TABLE_MOVIE_FAVORITES
 			+ " WHERE " + ID_CLAUSE;
+
+	public static final String SELECT_FAVORITES = "SELECT * FROM " + TABLE_MOVIE_FAVORITES;
+
 }

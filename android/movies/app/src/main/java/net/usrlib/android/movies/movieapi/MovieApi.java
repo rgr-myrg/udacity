@@ -2,6 +2,7 @@ package net.usrlib.android.movies.movieapi;
 
 import android.util.Log;
 
+import net.usrlib.android.movies.data.MoviesDBHelper;
 import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONArray;
@@ -13,26 +14,10 @@ public class MovieApi {
 
 	public static final String NAME = MovieApi.class.getSimpleName();
 
+	private MoviesDBHelper moviesDBHelper = null;
 	private HttpRequest mHttpRequest;
-	//To Do: Save last sort by in preferences ?
-
 	private String mCurrentSortBy = "";
-	//See Log:
-/*
-03-07 22:34:22.178 32571-32571/net.usrlib.android.movies D/MovieApi: Fetching page: 4 sort by: vote_count.desc
-03-07 22:34:22.367 32571-32571/net.usrlib.android.movies D/MovieApi: Retrieved results with length: 20
-03-07 22:34:23.731 32571-32571/net.usrlib.android.movies D/MovieApi: Fetching page: 5 sort by: vote_count.desc
-03-07 22:34:23.874 32571-32571/net.usrlib.android.movies D/MovieApi: Retrieved results with length: 20
-03-07 22:34:32.286 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityPaused
-03-07 22:34:32.312 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityStopped
-03-07 22:34:32.314 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityDestroyed
-03-07 22:34:32.337 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityCreated
-03-07 22:34:32.362 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityStarted
-03-07 22:34:32.365 32571-32571/net.usrlib.android.movies D/ActivityLifecycle: onActivityResumed
-03-07 22:34:32.503 32571-32603/net.usrlib.android.movies W/EGL_emulation: eglSurfaceAttrib not implemented
-03-07 22:34:32.503 32571-32603/net.usrlib.android.movies W/OpenGLRenderer: Failed to set EGL_SWAP_BEHAVIOR on surface 0xf3fd3d00, error=EGL_SUCCESS
-03-07 22:34:36.330 32571-32571/net.usrlib.android.movies D/MovieApi: Fetching page: 1 sort by: null
- */
+
 	private int mPageNumber = 0;
 	private boolean mIsFetchingData;
 

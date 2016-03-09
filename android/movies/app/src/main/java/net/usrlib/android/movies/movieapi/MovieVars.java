@@ -18,5 +18,6 @@ public class MovieVars {
 	public static final String VIEW_TITLE_KEY = "viewTitle";
 	public static final String MOVIE_LIST_KEY = "movie_list";
 	public static final int PAGE_COUNT_LIMIT = 200;
+	public static final int FAVORITED_RESULT_CODE = 1;
 
 }
