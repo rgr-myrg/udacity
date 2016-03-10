@@ -103,8 +103,11 @@ public class DetailActivityFragment extends BaseFragment {
 		imageView.setImageResource(imageResource);
 		imageView.setTag(imageResource);
 
-		// Set Result Code for onActivityResult
-		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE);
+		Intent intent = new Intent();
+		intent.putExtra(MovieVars.IS_FAVORITED_KEY, true);
+
+		// Set Result Code and Intent for onActivityResult
+		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
 	}
 
 }

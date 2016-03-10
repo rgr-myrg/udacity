@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Notify Observers we are returning from startActivityForResult()
-		MovieEvent.ActivityResultReady.notifyComplete(resultCode);
+		MovieEvent.ActivityResultReady.notifyComplete(data);
 	}
 
 	@Override

@@ -31,6 +31,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private boolean mIsFirstPageRequest;
 	private boolean mHasEventListeners;
+	private boolean mIsViewFavoriteMovies;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle instanceState) {
@@ -128,7 +129,7 @@ public class MainActivityFragment extends BaseFragment {
 		MovieEvent.ActivityResultReady.addListener(new Listener() {
 			@Override
 			public void onComplete(Object eventData) {
-				onActivityResultReady((int) eventData);
+				onActivityResultReady((Intent) eventData);
 			}
 		});
 	}
@@ -153,7 +154,7 @@ public class MainActivityFragment extends BaseFragment {
 
 				//activity.startActivity(intent);
 				// Use a request code to trigger onActivityResult
-				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
+				activity.startActivityForResult(intent, 1);
 			}
 		});
 
@@ -244,15 +245,16 @@ public class MainActivityFragment extends BaseFragment {
 		// Toast Friendly Message to UI
 	}
 
-	private void onActivityResultReady(int resultCode) {
-		// Triggered by MainActivity.onActivityResult
-		// If there was a change to Favorites get a fresh list of movies
-		if (resultCode == MovieVars.FAVORITED_RESULT_CODE
-				&& mCurrentTitle.contentEquals(
-				getActivity().getString(R.string.title_favorites))
-				) {
+	// Triggered by MainActivity.onActivityResult
+	private void onActivityResultReady(Intent data) {
+		// Refresh favorite movie list if we're coming back to Favorites View
+		if (data != null
+				&& data.hasExtra(MovieVars.IS_FAVORITED_KEY)
+				&& data.getBooleanExtra(MovieVars.IS_FAVORITED_KEY, false)
+				&& mCurrentTitle.contentEquals(getActivity().getString(R.string.title_favorites))) {
+
 			getFavoriteMovies();
 		}
-
 	}
+
 }
