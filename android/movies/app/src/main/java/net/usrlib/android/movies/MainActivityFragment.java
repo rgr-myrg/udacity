@@ -173,7 +173,8 @@ public class MainActivityFragment extends BaseFragment {
 
 				int lastItemCount = firstVisibleItem + visibleItemCount;
 
-				if (lastItemCount == totalItemCount && !mCurrentTitle.contentEquals("Favorites")) {
+				if (lastItemCount == totalItemCount
+						&& !mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
 					Facade.getMovieApi().fetchNextPageSortedBy(mCurrentSortBy);
 				}
 			}
@@ -181,16 +182,16 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	public void getMostPopularMovies() {
-		fetchMoviesAndSetValues(MovieVars.MOST_POPULAR, R.string.title_most_popular);
+		fetchMoviesAndSetValues(MovieVars.MOST_POPULAR, Facade.Resource.getTitleMostPopular());
 	}
 
 	public void getHighestRatedMovies() {
-		fetchMoviesAndSetValues(MovieVars.HIGHEST_RATED, R.string.title_highest_rated);
+		fetchMoviesAndSetValues(MovieVars.HIGHEST_RATED, Facade.Resource.getTitleHighestRated());
 	}
 
 	private void getFavoriteMovies() {
 		mIsFirstPageRequest = true;
-		setViewTitle(getActivity().getString(R.string.title_favorites));
+		setViewTitle(Facade.Resource.getTitleFavorites());
 
 		onMovieFeedLoaded(
 			Facade.getMoviesDBHelper().selectFromFavorites()
@@ -216,11 +217,11 @@ public class MainActivityFragment extends BaseFragment {
 
 	}
 
-	private void fetchMoviesAndSetValues(final String sortBy, final int resource) {
+	private void fetchMoviesAndSetValues(final String sortBy, final String title) {
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
-		setViewTitle(getActivity().getString(resource));
+		setViewTitle(title);
 
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
 	}
@@ -251,7 +252,7 @@ public class MainActivityFragment extends BaseFragment {
 		if (data != null
 				&& data.hasExtra(MovieVars.IS_FAVORITED_KEY)
 				&& data.getBooleanExtra(MovieVars.IS_FAVORITED_KEY, false)
-				&& mCurrentTitle.contentEquals(getActivity().getString(R.string.title_favorites))) {
+				&& mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
 
 			getFavoriteMovies();
 		}
