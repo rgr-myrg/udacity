@@ -17,6 +17,16 @@ public class MovieItemVO implements Parcelable {
 
 	public static final String NAME = MovieItemVO.class.getSimpleName();
 
+	public static final String ID = "id";
+	public static final String ORIGINAL_TITLE = "original_title";
+	public static final String POSTER_PATH = "poster_path";
+	public static final String OVERVIEW = "overview";
+	public static final String RELEASE_DATE = "release_date";
+	public static final String VOTE_COUNT = "vote_count";
+	public static final String VOTE_AVERAGE = "vote_average";
+	public static final String POPULARITY = "popularity";
+	public static final String IMAGE_URL = "image_url";
+
 	private int id;
 	private String originalTitle;
 	private String posterPath;
@@ -146,12 +156,12 @@ public class MovieItemVO implements Parcelable {
 
 		// Round vote count to the nearest decimal
 		final double voteCount = MathUtil.round(
-				jsonObject.optDouble(MovieItemKey.VOTE_AVERAGE, 0),
+				jsonObject.optDouble(VOTE_AVERAGE, 0),
 				1
 		);
 
 		String releaseDate = jsonObject.optString(
-				MovieItemKey.RELEASE_DATE,
+				RELEASE_DATE,
 				MovieVars.UNSET_VALUE
 		);
 
@@ -169,28 +179,28 @@ public class MovieItemVO implements Parcelable {
 		}
 
 		return new MovieItemVO(
-				jsonObject.optInt(MovieItemKey.ID, 0),
-				jsonObject.optString(MovieItemKey.ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
-				jsonObject.optString(MovieItemKey.POSTER_PATH, MovieVars.UNSET_VALUE),
-				jsonObject.optString(MovieItemKey.OVERVIEW, MovieVars.UNSET_VALUE),
+				jsonObject.optInt(ID, 0),
+				jsonObject.optString(ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
+				jsonObject.optString(POSTER_PATH, MovieVars.UNSET_VALUE),
+				jsonObject.optString(OVERVIEW, MovieVars.UNSET_VALUE),
 				releaseDate,
-				jsonObject.optInt(MovieItemKey.VOTE_COUNT, 0),
+				jsonObject.optInt(VOTE_COUNT, 0),
 				voteCount,
-				jsonObject.optDouble(MovieItemKey.POPULARITY, 0)
+				jsonObject.optDouble(POPULARITY, 0)
 		);
 	}
 
 	public ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
 
-		values.put(MovieItemKey.ID, id);
-		values.put(MovieItemKey.ORIGINAL_TITLE, originalTitle);
-		values.put(MovieItemKey.POSTER_PATH, posterPath);
-		values.put(MovieItemKey.OVERVIEW, overview);
-		values.put(MovieItemKey.RELEASE_DATE, releaseDate);
-		values.put(MovieItemKey.VOTE_COUNT, voteCount);
-		values.put(MovieItemKey.VOTE_AVERAGE, voteAverage);
-		values.put(MovieItemKey.POPULARITY, popularity);
+		values.put(ID, id);
+		values.put(ORIGINAL_TITLE, originalTitle);
+		values.put(POSTER_PATH, posterPath);
+		values.put(OVERVIEW, overview);
+		values.put(RELEASE_DATE, releaseDate);
+		values.put(VOTE_COUNT, voteCount);
+		values.put(VOTE_AVERAGE, voteAverage);
+		values.put(POPULARITY, popularity);
 
 		return values;
 	}

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import net.usrlib.android.movies.movieapi.MovieItemKey;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 import java.util.ArrayList;
@@ -47,14 +46,14 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				movieItems.add(new MovieItemVO(
-						cursor.getInt(cursor.getColumnIndex(MovieItemKey.ID)),
-						cursor.getString(cursor.getColumnIndex(MovieItemKey.ORIGINAL_TITLE)),
-						cursor.getString(cursor.getColumnIndex(MovieItemKey.POSTER_PATH)),
-						cursor.getString(cursor.getColumnIndex(MovieItemKey.OVERVIEW)),
-						cursor.getString(cursor.getColumnIndex(MovieItemKey.RELEASE_DATE)),
-						cursor.getInt(cursor.getColumnIndex(MovieItemKey.VOTE_COUNT)),
-						cursor.getDouble(cursor.getColumnIndex(MovieItemKey.VOTE_AVERAGE)),
-						cursor.getDouble(cursor.getColumnIndex(MovieItemKey.POPULARITY))
+						cursor.getInt(cursor.getColumnIndex(MovieItemVO.ID)),
+						cursor.getString(cursor.getColumnIndex(MovieItemVO.ORIGINAL_TITLE)),
+						cursor.getString(cursor.getColumnIndex(MovieItemVO.POSTER_PATH)),
+						cursor.getString(cursor.getColumnIndex(MovieItemVO.OVERVIEW)),
+						cursor.getString(cursor.getColumnIndex(MovieItemVO.RELEASE_DATE)),
+						cursor.getInt(cursor.getColumnIndex(MovieItemVO.VOTE_COUNT)),
+						cursor.getDouble(cursor.getColumnIndex(MovieItemVO.VOTE_AVERAGE)),
+						cursor.getDouble(cursor.getColumnIndex(MovieItemVO.POPULARITY))
 				));
 			} while (cursor.moveToNext());
 		}
@@ -79,7 +78,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 					MoviesSQL.TABLE_MOVIE_FAVORITES,
 					MoviesSQL.ID_CLAUSE,
 					new String[] {
-							String.valueOf(values.get(MovieItemKey.ID))
+							String.valueOf(values.get(MovieItemVO.ID))
 					}
 			);
 
