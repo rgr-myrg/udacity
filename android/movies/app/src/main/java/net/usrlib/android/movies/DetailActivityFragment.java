@@ -22,22 +22,28 @@ import java.util.ArrayList;
 
 public class DetailActivityFragment extends BaseFragment {
 
-	private boolean mHasEventListeners;
+	private Listener mMovieTrailersListener = new Listener() {
+		@Override
+		public void onComplete(Object eventData) {
+			onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);
+		}
+
+		@Override
+		public void onError(Object eventData) {
+			onMovieTrailersError();
+		}
+	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle instanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-		if (!mHasEventListeners) {
-			mHasEventListeners = true;
-			addEventListeners();
-		}
-
+		addEventListeners();
 		initDetailView(rootView);
 
 		if (instanceState == null) {
-
+			Log.d("DETAIL", "instanceState is null");
 		} else {
 
 		}
@@ -51,17 +57,7 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	public void addEventListeners() {
-		MovieEvent.MovieTrailersLoaded.addListener(new Listener() {
-			@Override
-			public void onComplete(Object eventData) {
-				onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);
-			}
-
-			@Override
-			public void onError(Object eventData) {
-				// Handle gracefully
-			}
-		});
+		MovieEvent.MovieTrailersLoaded.addListener(mMovieTrailersListener);
 	}
 
 	private void initDetailView(final View rootView) {
@@ -157,8 +153,15 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> arrayList) {
 		Log.d("MAIN", "onMovieTrailersLoaded: " + String.valueOf(arrayList.size()));
-		// TO DO: Create ListView Adapter to display trailers!!! OMG!!! Go?!?!
+		MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
 
+		// TODO: Create ListView Adapter to display trailers!!! OMG!!! Go?!?!
+
+	}
+
+	private void onMovieTrailersError() {
+		MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
+		//TODO: Handle gracefully
 	}
 
 }

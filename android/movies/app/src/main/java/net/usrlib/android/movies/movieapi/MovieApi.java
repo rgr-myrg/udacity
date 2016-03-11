@@ -2,7 +2,6 @@ package net.usrlib.android.movies.movieapi;
 
 import android.util.Log;
 
-import net.usrlib.android.movies.data.MoviesDBHelper;
 import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONArray;
@@ -14,12 +13,19 @@ public class MovieApi {
 
 	public static final String NAME = MovieApi.class.getSimpleName();
 
-	private MoviesDBHelper moviesDBHelper = null;
 	private HttpRequest mHttpRequest;
 	private String mCurrentSortBy = "";
 
 	private int mPageNumber = 0;
 	private boolean mIsFetchingData;
+
+	public void setPageNumber(final int pageNumber) {
+		mPageNumber = pageNumber;
+	}
+
+	public int getPageNumber() {
+		return mPageNumber;
+	}
 
 	public void fetchFirstPageSortedBy(final String sortBy) {
 		mPageNumber = 1;
@@ -38,33 +44,11 @@ public class MovieApi {
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	public void setPageNumber(int pageNumber) {
-		mPageNumber = pageNumber;
-	}
-
-	public int getPageNumber() {
-		return mPageNumber;
-	}
-
-	public void fetchMovieTrailersWithId(int id) {
+	public void fetchMovieTrailersWithId(final int id) {
 		mIsFetchingData = true;
 
-		mHttpRequest = new HttpRequest(new HttpRequest.Delegate() {
-			@Override
-			public void onPostExecuteComplete(Object object) {
-				mIsFetchingData = false;
-
-				ArrayList<MovieTrailerVO> trailerItems = parseTrailersJsonData((JSONObject) object);
-				MovieEvent.MovieTrailersLoaded.notifyComplete(trailerItems);
-			}
-
-			@Override
-			public void onError(String message) {
-				mIsFetchingData = false;
-
-				MovieEvent.MovieTrailersLoaded.notifyError(message);
-			}
-		});
+		// Set 'true' for fetching Movie Trailers
+		makeHttpRequest(true);
 
 		mHttpRequest.fetchJsonObjectWithUrl(MovieUrl.getTrailersUrl(id));
 	}
@@ -79,40 +63,50 @@ public class MovieApi {
 		mIsFetchingData = true;
 		mCurrentSortBy = sortBy;
 
-		// Create a new task each request. AsyncTask only runs once.
-		startHttpRequest();
-	}
-
-	private void startHttpRequest() {
-		mHttpRequest = new HttpRequest(
-				new HttpRequest.Delegate() {
-					@Override
-					public void onPostExecuteComplete(Object object) {
-						ArrayList<MovieItemVO> arrayList = parseDiscoverJsonData((JSONObject) object);
-
-						// Trigger DiscoverFeedLoaded Event
-						MovieEvent.DiscoverFeedLoaded.notifyComplete(arrayList);
-
-						// Flag this request as completed
-						mIsFetchingData = false;
-					}
-
-					@Override
-					public void onError(String message) {
-						Log.e(NAME, message);
-
-						// Trigger DiscoverFeedLoaded Event Error
-						MovieEvent.DiscoverFeedLoaded.notifyError(message);
-
-						mIsFetchingData = false;
-					}
-				}
-		);
+		// Set to false for fetching Movies in Discovery mode
+		makeHttpRequest(false);
 
 		Log.d(NAME, "Fetching page: " + mPageNumber + " sort by: " + mCurrentSortBy);
 
 		mHttpRequest.fetchJsonObjectWithUrl(
 				MovieUrl.getDiscoverUrl(mCurrentSortBy, mPageNumber)
+		);
+	}
+
+	private void makeHttpRequest(final boolean hasMovieTrailers) {
+		// Create a new task each request. AsyncTask runs once and terminates.
+		mHttpRequest = new HttpRequest(
+				new HttpRequest.Delegate() {
+					@Override
+					public void onPostExecuteComplete(Object object) {
+						// Flag this request as completed
+						mIsFetchingData = false;
+
+						if (hasMovieTrailers) {
+							ArrayList<MovieTrailerVO> trailerItems = parseTrailersJsonData((JSONObject) object);
+
+							// Trigger MovieTrailersLoaded Event
+							MovieEvent.MovieTrailersLoaded.notifyComplete(trailerItems);
+						} else {
+							ArrayList<MovieItemVO> arrayList = parseDiscoverJsonData((JSONObject) object);
+
+							// Trigger DiscoverFeedLoaded Event
+							MovieEvent.DiscoverFeedLoaded.notifyComplete(arrayList);
+						}
+					}
+
+					@Override
+					public void onError(String message) {
+						Log.e(NAME, message);
+						mIsFetchingData = false;
+
+						if (hasMovieTrailers) {
+							MovieEvent.MovieTrailersLoaded.notifyError(message);
+						} else {
+							MovieEvent.DiscoverFeedLoaded.notifyError(message);
+						}
+					}
+				}
 		);
 	}
 
@@ -141,7 +135,6 @@ public class MovieApi {
 		for (int i = 0; i < results.length(); i++) {
 			MovieTrailerVO item = MovieTrailerVO.fromJsonObject(results.optJSONObject(i));
 			trailerItems.add(item);
-			Log.d(NAME, "site: " + item.getSite() + " : " + item.getYoutubeUrl());
 		}
 
 		return trailerItems;

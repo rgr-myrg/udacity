@@ -154,7 +154,7 @@ public class MainActivityFragment extends BaseFragment {
 
 				//activity.startActivity(intent);
 				// Use a request code to trigger onActivityResult
-				activity.startActivityForResult(intent, 1);
+				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 			}
 		});
 
@@ -252,7 +252,7 @@ public class MainActivityFragment extends BaseFragment {
 		if (data != null
 				&& data.hasExtra(MovieVars.IS_FAVORITED_KEY)
 				&& data.getBooleanExtra(MovieVars.IS_FAVORITED_KEY, false)
-				&& mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
+				&& Facade.isTitleFavorites(mCurrentTitle)) {
 
 			getFavoriteMovies();
 		}
