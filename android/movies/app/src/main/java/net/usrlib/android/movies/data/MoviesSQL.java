@@ -1,6 +1,6 @@
 package net.usrlib.android.movies.data;
 
-import net.usrlib.android.movies.movieapi.MovieItemKey;
+import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 public class MoviesSQL {
 
@@ -14,15 +14,15 @@ public class MoviesSQL {
 			+ TABLE_MOVIE_FAVORITES
 			+ "("
 				+ PRIMARY_ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ MovieItemKey.ID + " INTEGER,"
-				+ MovieItemKey.ORIGINAL_TITLE + " TEXT NOT NULL,"
-				+ MovieItemKey.OVERVIEW + " TEXT,"
-				+ MovieItemKey.VOTE_COUNT + " INTEGER,"
-				+ MovieItemKey.VOTE_AVERAGE + " REAL,"
-				+ MovieItemKey.POPULARITY + " REAL,"
-				+ MovieItemKey.POSTER_PATH + " TEXT,"
-				+ MovieItemKey.RELEASE_DATE + " TEXT,"
-				+ "UNIQUE (" + MovieItemKey.ID + ") ON CONFLICT REPLACE"
+				+ MovieItemVO.ID + " INTEGER,"
+				+ MovieItemVO.ORIGINAL_TITLE + " TEXT NOT NULL,"
+				+ MovieItemVO.OVERVIEW + " TEXT,"
+				+ MovieItemVO.VOTE_COUNT + " INTEGER,"
+				+ MovieItemVO.VOTE_AVERAGE + " REAL,"
+				+ MovieItemVO.POPULARITY + " REAL,"
+				+ MovieItemVO.POSTER_PATH + " TEXT,"
+				+ MovieItemVO.RELEASE_DATE + " TEXT,"
+				+ "UNIQUE (" + MovieItemVO.ID + ") ON CONFLICT REPLACE"
 			+ ")";
 
 	public static final String DROP_FAVORITES_TABLE = "DROP TABLE " + TABLE_MOVIE_FAVORITES;
