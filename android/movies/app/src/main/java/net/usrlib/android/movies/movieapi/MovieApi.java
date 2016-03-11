@@ -46,15 +46,32 @@ public class MovieApi {
 		return mPageNumber;
 	}
 
-// To Do:
 	public void fetchMovieTrailersWithId(int id) {
-		MovieUrl.getTrailersUrl(id);
+		mIsFetchingData = true;
+
+		mHttpRequest = new HttpRequest(new HttpRequest.Delegate() {
+			@Override
+			public void onPostExecuteComplete(Object object) {
+				mIsFetchingData = false;
+
+				ArrayList<MovieTrailerVO> trailerItems = parseTrailersJsonData((JSONObject) object);
+				MovieEvent.MovieTrailersLoaded.notifyComplete(trailerItems);
+			}
+
+			@Override
+			public void onError(String message) {
+				mIsFetchingData = false;
+
+				MovieEvent.MovieTrailersLoaded.notifyError(message);
+			}
+		});
+
+		mHttpRequest.fetchJsonObjectWithUrl(MovieUrl.getTrailersUrl(id));
 	}
 
 	private void loadJsonFeedSortedBy(final String sortBy) {
 		// Cap off requests when the limit is reached
 		if (mPageNumber >= MovieVars.PAGE_COUNT_LIMIT) {
-			//mDelegate.onPageLimitReached();
 			MovieEvent.RequestLimitReached.notifyComplete();
 			return;
 		}
@@ -71,7 +88,7 @@ public class MovieApi {
 				new HttpRequest.Delegate() {
 					@Override
 					public void onPostExecuteComplete(Object object) {
-						ArrayList<MovieItemVO> arrayList = parseJsonData((JSONObject) object);
+						ArrayList<MovieItemVO> arrayList = parseDiscoverJsonData((JSONObject) object);
 
 						// Trigger DiscoverFeedLoaded Event
 						MovieEvent.DiscoverFeedLoaded.notifyComplete(arrayList);
@@ -99,12 +116,12 @@ public class MovieApi {
 		);
 	}
 
-	private ArrayList<MovieItemVO> parseJsonData(final JSONObject jsonObject) {
+	private ArrayList<MovieItemVO> parseDiscoverJsonData(final JSONObject jsonObject) {
 		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
 
 		ArrayList<MovieItemVO> movieItems = new ArrayList<MovieItemVO>();
 
-		Log.d(NAME, "Retrieved results with length: " + String.valueOf(results.length()) );
+		Log.d(NAME, "Retrieved Movie Items with length: " + String.valueOf(results.length()) );
 
 		for (int i = 0; i < results.length(); i++) {
 			MovieItemVO item = MovieItemVO.fromJsonObject(results.optJSONObject(i));
@@ -112,6 +129,22 @@ public class MovieApi {
 		}
 
 		return movieItems;
+	}
+
+	private ArrayList<MovieTrailerVO> parseTrailersJsonData(final JSONObject jsonObject) {
+		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
+
+		ArrayList<MovieTrailerVO> trailerItems = new ArrayList<MovieTrailerVO>();
+
+		Log.d(NAME, "Retrieved Trailers with length: " + String.valueOf(results.length()));
+
+		for (int i = 0; i < results.length(); i++) {
+			MovieTrailerVO item = MovieTrailerVO.fromJsonObject(results.optJSONObject(i));
+			trailerItems.add(item);
+			Log.d(NAME, "site: " + item.getSite() + " : " + item.getYoutubeUrl());
+		}
+
+		return trailerItems;
 	}
 
 }

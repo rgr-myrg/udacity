@@ -2,6 +2,7 @@ package net.usrlib.android.movies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,20 +11,57 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.facade.Facade;
+import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+
+import java.util.ArrayList;
 
 public class DetailActivityFragment extends BaseFragment {
 
+	private boolean mHasEventListeners;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+							 Bundle instanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+		if (!mHasEventListeners) {
+			mHasEventListeners = true;
+			addEventListeners();
+		}
 
 		initDetailView(rootView);
 
+		if (instanceState == null) {
+
+		} else {
+
+		}
+
 		return rootView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
+
+	public void addEventListeners() {
+		MovieEvent.MovieTrailersLoaded.addListener(new Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);
+			}
+
+			@Override
+			public void onError(Object eventData) {
+				// Handle gracefully
+			}
+		});
 	}
 
 	private void initDetailView(final View rootView) {
@@ -33,10 +71,13 @@ public class DetailActivityFragment extends BaseFragment {
 			final Bundle data = intent.getExtras();
 			final MovieItemVO movieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
 
+			// Fetch Movie Trailers as early as possible
+			fetchMovieTrailersWithId(movieItemVO.getId());
+
 			final ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_poster);
 			final ImageView favBtnImageView = (ImageView) rootView.findViewById(R.id.button_favorite);
 
-			// Invoking placeholder causes the image to misalign. Meh.
+			// Invoking placeholder causes the image to misalign. Meh. >:(
 			Glide.with(getActivity())
 					.load(movieItemVO.getImageUrl())
 					//.placeholder(R.drawable.image_poster_placeholder)
@@ -108,6 +149,16 @@ public class DetailActivityFragment extends BaseFragment {
 
 		// Set Result Code and Intent for onActivityResult
 		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
+	}
+
+	private void fetchMovieTrailersWithId(final int id) {
+		Facade.getMovieApi().fetchMovieTrailersWithId(id);
+	}
+
+	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> arrayList) {
+		Log.d("MAIN", "onMovieTrailersLoaded: " + String.valueOf(arrayList.size()));
+		// TO DO: Create ListView Adapter to display trailers!!! OMG!!! Go?!?!
+
 	}
 
 }

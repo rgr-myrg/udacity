@@ -104,7 +104,7 @@ public class MainActivityFragment extends BaseFragment {
 		outState.putInt(MovieVars.PAGE_PARAM_KEY, Facade.getMovieApi().getPageNumber());
 	}
 
-	public void addEventListeners() {
+	private void addEventListeners() {
 		MovieEvent.DiscoverFeedLoaded.addListener(new Listener() {
 			@Override
 			public void onComplete(Object eventData) {
@@ -134,7 +134,7 @@ public class MainActivityFragment extends BaseFragment {
 		});
 	}
 
-	public void initGridView(final GridView gridView) {
+	private void initGridView(final GridView gridView) {
 		mGridView = gridView;
 
 		mGridView.setOnItemClickListener(new AbsListView.OnItemClickListener() {
@@ -181,11 +181,11 @@ public class MainActivityFragment extends BaseFragment {
 		});
 	}
 
-	public void getMostPopularMovies() {
+	private void getMostPopularMovies() {
 		fetchMoviesAndSetValues(MovieVars.MOST_POPULAR, Facade.Resource.getTitleMostPopular());
 	}
 
-	public void getHighestRatedMovies() {
+	private void getHighestRatedMovies() {
 		fetchMoviesAndSetValues(MovieVars.HIGHEST_RATED, Facade.Resource.getTitleHighestRated());
 	}
 
