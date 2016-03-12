@@ -4,6 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class Listener implements Observer {
+
+	protected boolean runOnce;
+
 	@Override
 	public void update(Observable observable, Object data) {
 		final EventPacket packet = (EventPacket) data;
@@ -19,6 +22,10 @@ public class Listener implements Observer {
 				break;
 			default:
 				break;
+		}
+
+		if (runOnce) {
+			observable.deleteObserver(this);
 		}
 	}
 

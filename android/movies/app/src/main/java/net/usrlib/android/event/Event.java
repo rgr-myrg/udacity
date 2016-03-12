@@ -20,6 +20,11 @@ public class Event extends Observable {
 		super.addObserver(listener);
 	}
 
+	public void addListenerOnce(Listener listener) {
+		listener.runOnce = true;
+		super.addObserver(listener);
+	}
+
 	public synchronized void deleteListener(Listener listener) {
 		super.deleteObserver(listener);
 	}
