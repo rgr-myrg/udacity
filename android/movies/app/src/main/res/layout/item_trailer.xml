@@ -31,7 +31,7 @@
 				android:layout_marginTop="@dimen/default_margin"/>
 			<View
 				android:layout_width="wrap_content"
-				android:layout_height="@dimen/line_height"
+				android:layout_height="@dimen/line_normal"
 				android:layout_gravity="bottom"
 				android:layout_marginTop="@dimen/view_item_spacing"
 				android:background="@color/gray"/>

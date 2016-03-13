@@ -1,6 +1,8 @@
 package net.usrlib.android.movies;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -18,6 +21,7 @@ import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieReviewVO;
 import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.util.ColorUtil;
 import net.usrlib.android.util.TextViewUtil;
 
 import java.util.ArrayList;
@@ -241,7 +245,24 @@ public class DetailActivityFragment extends BaseFragment {
 				}
 			});
 
-			TextViewUtil.setText(reviewView, R.id.review_item_title, movieReviewVO.getAuthor());
+			final TextView circle = TextViewUtil.setText(
+					reviewView,
+					R.id.review_circle_icon,
+					String.valueOf(movieReviewVO.getAuthor().charAt(0)).toUpperCase()
+			);
+
+			circle.getBackground().setColorFilter(
+					Color.parseColor(ColorUtil.getNextColor()),
+					PorterDuff.Mode.SRC
+			);
+
+			TextViewUtil.setText(reviewView, R.id.review_item_author, movieReviewVO.getAuthor());
+
+			TextViewUtil.setText(
+					reviewView,
+					R.id.review_item_content,
+					movieReviewVO.getContent().substring(0, 45) + MovieVars.DOTTED
+			);
 
 			mReviewsContainer.addView(reviewView);
 		}

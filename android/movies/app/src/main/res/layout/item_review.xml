@@ -12,42 +12,53 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<ImageView
-			android:layout_width="@dimen/tick_button_size"
-			android:layout_height="@dimen/tick_button_size"
-			android:src="@drawable/green_play_button_2"
-			android:layout_gravity="center_vertical"/>
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/circle_container_padding"
+			android:paddingBottom="@dimen/circle_container_padding"
+			android:paddingLeft="@dimen/circle_container_padding">
+
+			<TextView
+				android:id="@+id/review_circle_icon"
+				android:layout_width="@dimen/circle_size"
+				android:layout_height="@dimen/circle_size"
+				android:background="@drawable/circle"
+				android:gravity="center"
+				android:textColor="@color/white"
+				style="@style/Base.TextAppearance.AppCompat.Title"/>
+
+		</LinearLayout>
 
 		<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-
-			<LinearLayout
-				android:orientation="horizontal"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/default_margin">
+			android:layout_height="wrap_content"
+			android:padding="10dp">
 
 				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/movie_review_text"/>
-				<TextView
-					android:id="@+id/review_item_title"
+					android:id="@+id/review_item_author"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
-					style="@style/Base.TextAppearance.AppCompat.Caption"/>
+					android:text="Roger Paul"
+					style="@style/Base.TextAppearance.AppCompat.Medium"/>
 
-			</LinearLayout>
+				<TextView
+					android:id="@+id/review_item_content"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/view_item_spacing"
+					android:layout_marginBottom="@dimen/view_item_spacing"
+					android:text="Content here..."/>
 
-			<View
-				android:layout_width="wrap_content"
-				android:layout_height="@dimen/line_height"
-				android:layout_gravity="bottom"
-				android:layout_marginTop="@dimen/view_item_spacing"
-				android:background="@color/gray"/>
+				<View
+					android:layout_width="wrap_content"
+					android:layout_height="@dimen/line_thin"
+					android:layout_gravity="bottom"
+					android:layout_marginTop="@dimen/view_item_spacing"
+					android:background="@color/gray"/>
 
 		</LinearLayout>
 

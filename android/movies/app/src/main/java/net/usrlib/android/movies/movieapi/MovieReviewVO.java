@@ -21,7 +21,10 @@ public class MovieReviewVO implements Parcelable {
 	public MovieReviewVO(int id, String author, String content, String url) {
 		this.id = id;
 		this.author = author;
-		this.content = content;
+
+		// Strip out Html tags and new lines.
+		this.content = android.text.Html.fromHtml(content).toString().replaceAll("/\\n|\\r/", "");
+
 		this.url = url;
 	}
 
