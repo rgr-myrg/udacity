@@ -53,8 +53,9 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		ImageView imageView;
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_view_item,
-					parent, false);
+			convertView = LayoutInflater
+					.from(getContext())
+					.inflate(R.layout.grid_view_item, parent, false);
 
 			imageView = (ImageView) convertView.findViewById(R.id.grid_item_image);
 

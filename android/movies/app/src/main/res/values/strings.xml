@@ -8,7 +8,8 @@
 	<string name="movie_rating_label">Rating: </string>
 	<string name="movie_rating_range">/10</string>
 	<string name="movie_votes_label">Votes: </string>
-	<string name="movie_synopsis_label">Synopsis</string>
+	<!--<string name="movie_synopsis_label">Synopsis</string>-->
 	<string name="movie_trailers_label">Trailers</string>
+	<string name="movie_reviews_label">Reviews</string>
 	<string name="content_authority">net.usrlib.android.movies</string>
 </resources>

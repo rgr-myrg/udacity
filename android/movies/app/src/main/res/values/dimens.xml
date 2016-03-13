@@ -11,4 +11,6 @@
 	<dimen name="grid_view_item_margin_top">0dp</dimen>
 	<dimen name="grid_view_item_padding">0dp</dimen>
 	<dimen name="heart_button_width">35dp</dimen>
+	<dimen name="play_button_size">50dp</dimen>
+	<dimen name="line_height">1dp</dimen>
 </resources>

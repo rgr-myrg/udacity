@@ -1,13 +1,13 @@
 package net.usrlib.android.movies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -17,10 +17,13 @@ import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.util.TextViewUtil;
 
 import java.util.ArrayList;
 
 public class DetailActivityFragment extends BaseFragment {
+
+	private ViewGroup mTrailersContainer = null;
 
 	private Listener mMovieTrailersListener = new Listener() {
 		@Override
@@ -40,6 +43,7 @@ public class DetailActivityFragment extends BaseFragment {
 		final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
 		addEventListeners();
+
 		initDetailView(rootView);
 
 		if (instanceState == null) {
@@ -57,75 +61,72 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	public void addEventListeners() {
-		MovieEvent.MovieTrailersLoaded.addListener(mMovieTrailersListener);
+		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
 	}
 
 	private void initDetailView(final View rootView) {
 		Intent intent = getActivity().getIntent();
 
-		if (intent != null && intent.hasExtra(MovieItemVO.NAME)) {
-			final Bundle data = intent.getExtras();
-			final MovieItemVO movieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
-
-			// Fetch Movie Trailers as early as possible
-			fetchMovieTrailersWithId(movieItemVO.getId());
-
-			final ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_poster);
-			final ImageView favBtnImageView = (ImageView) rootView.findViewById(R.id.button_favorite);
-
-			// Invoking placeholder causes the image to misalign. Meh. >:(
-			Glide.with(getActivity())
-					.load(movieItemVO.getImageUrl())
-					//.placeholder(R.drawable.image_poster_placeholder)
-					//.error(R.drawable.image_poster_placeholder)
-					//.crossFade()
-					.into(posterImageView);
-
-			int resourceId = R.drawable.heart_unselected;
-
-			if (Facade.getMoviesDBHelper().isMovieSetAsFavorite(movieItemVO.getId())) {
-				resourceId = R.drawable.heart_selected;
-			}
-
-			favBtnImageView.setImageResource(resourceId);
-			favBtnImageView.setTag(resourceId);
-
-			favBtnImageView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					setMovieIfLiked(movieItemVO, (ImageView) v);
-				}
-			});
-
-			setTextViewWithValue(
-					rootView,
-					R.id.movie_title,
-					movieItemVO.getOriginalTitle()
-			);
-
-			setTextViewWithValue(
-					rootView,
-					R.id.movie_release_date,
-					movieItemVO.getReleaseDate()
-			);
-
-			setTextViewWithValue(
-					rootView,
-					R.id.movie_rating,
-					String.valueOf(movieItemVO.getVoteAverage())
-			);
-
-			setTextViewWithValue(
-					rootView,
-					R.id.movie_overview,
-					movieItemVO.getOverview()
-			);
+		if (intent == null || !intent.hasExtra(MovieItemVO.NAME)) {
+			return;
 		}
-	}
 
-	private void setTextViewWithValue(final View view, final int id, final String value) {
-		TextView textView = (TextView) view.findViewById(id);
-		textView.setText(value);
+		final Bundle data = intent.getExtras();
+		final MovieItemVO movieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
+
+		// Fetch Movie Trailers as early as possible
+		fetchMovieTrailersWithId(movieItemVO.getId());
+
+		final ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_poster);
+		final ImageView favBtnImageView = (ImageView) rootView.findViewById(R.id.button_favorite);
+
+		// Invoking placeholder causes the image to misalign. Meh. >:(
+		Glide.with(getActivity())
+				.load(movieItemVO.getImageUrl())
+						//.placeholder(R.drawable.image_poster_placeholder)
+						//.error(R.drawable.image_poster_placeholder)
+						//.crossFade()
+				.into(posterImageView);
+
+		int resourceId = R.drawable.heart_unselected;
+
+		if (Facade.getMoviesDBHelper().isMovieSetAsFavorite(movieItemVO.getId())) {
+			resourceId = R.drawable.heart_selected;
+		}
+
+		favBtnImageView.setImageResource(resourceId);
+		favBtnImageView.setTag(resourceId);
+
+		favBtnImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setMovieIfLiked(movieItemVO, (ImageView) v);
+			}
+		});
+
+		TextViewUtil.setText(
+				rootView,
+				R.id.movie_title,
+				movieItemVO.getOriginalTitle()
+		);
+
+		TextViewUtil.setText(
+				rootView,
+				R.id.movie_release_date,
+				movieItemVO.getReleaseDate()
+		);
+
+		TextViewUtil.setText(
+				rootView,
+				R.id.movie_rating,
+				String.valueOf(movieItemVO.getVoteAverage())
+		);
+
+		TextViewUtil.setText(
+				rootView,
+				R.id.movie_overview,
+				movieItemVO.getOverview()
+		);
 	}
 
 	private void setMovieIfLiked(final MovieItemVO movieItemVO, final ImageView imageView) {
@@ -151,12 +152,40 @@ public class DetailActivityFragment extends BaseFragment {
 		Facade.getMovieApi().fetchMovieTrailersWithId(id);
 	}
 
-	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> arrayList) {
-		Log.d("MAIN", "onMovieTrailersLoaded: " + String.valueOf(arrayList.size()));
-		MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
+	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
+		if (movieTrailers.size() == 0) {
+			return;
+		}
 
-		// TODO: Create ListView Adapter to display trailers!!! OMG!!! Go?!?!
+		if (mTrailersContainer == null) {
+			mTrailersContainer = (ViewGroup) getActivity().findViewById(R.id.movie_trailers_container);
+		}
 
+		final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+		for (final MovieTrailerVO trailerVO : movieTrailers) {
+			Log.d("MAIN", "onMovieTrailersLoaded: " + trailerVO.getName());
+
+			final View trailerView = inflater.inflate(R.layout.trailer_item, mTrailersContainer, false);
+
+			trailerView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse(
+									trailerVO.getYoutubeUrl()
+							)
+					);
+
+					startActivity(intent);
+				}
+			});
+
+			TextViewUtil.setText(trailerView, R.id.trailer_item_title, trailerVO.getName());
+
+			mTrailersContainer.addView(trailerView);
+		}
 	}
 
 	private void onMovieTrailersError() {
