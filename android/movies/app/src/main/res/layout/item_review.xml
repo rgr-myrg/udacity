@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:id="@+id/item_review"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:paddingTop="@dimen/view_item_spacing"
+			  android:paddingBottom="@dimen/view_item_spacing">
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:layout_width="@dimen/tick_button_size"
+			android:layout_height="@dimen/tick_button_size"
+			android:src="@drawable/green_play_button_2"
+			android:layout_gravity="center_vertical"/>
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/default_margin">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/movie_review_text"/>
+				<TextView
+					android:id="@+id/review_item_title"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="bottom"
+					style="@style/Base.TextAppearance.AppCompat.Caption"/>
+
+			</LinearLayout>
+
+			<View
+				android:layout_width="wrap_content"
+				android:layout_height="@dimen/line_height"
+				android:layout_gravity="bottom"
+				android:layout_marginTop="@dimen/view_item_spacing"
+				android:background="@color/gray"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

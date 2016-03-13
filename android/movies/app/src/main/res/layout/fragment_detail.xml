@@ -103,8 +103,6 @@
 
 			</LinearLayout>
 
-			<!--<include layout="@layout/divider_line"/>-->
-
 			<TextView
 				android:id="@+id/movie_overview"
 				android:layout_width="wrap_content"

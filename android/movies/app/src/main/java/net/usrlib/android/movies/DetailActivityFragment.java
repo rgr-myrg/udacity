@@ -15,6 +15,7 @@ import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.movieapi.MovieReviewVO;
 import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.util.TextViewUtil;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class DetailActivityFragment extends BaseFragment {
 
 	private ViewGroup mTrailersContainer = null;
+	private ViewGroup mReviewsContainer = null;
 
 	private Listener mMovieTrailersListener = new Listener() {
 		@Override
@@ -34,6 +36,18 @@ public class DetailActivityFragment extends BaseFragment {
 		@Override
 		public void onError(Object eventData) {
 			onMovieTrailersError();
+		}
+	};
+
+	private Listener mMovieReviewsListener = new Listener() {
+		@Override
+		public void onComplete(Object eventData) {
+			onMovieReviewsLoaded((ArrayList<MovieReviewVO>) eventData);
+		}
+
+		@Override
+		public void onError(Object eventData) {
+			onMovieReviewsError();
 		}
 	};
 
@@ -62,6 +76,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 	public void addEventListeners() {
 		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
+		MovieEvent.MovieReviewsLoaded.addListenerOnce(mMovieReviewsListener);
 	}
 
 	private void initDetailView(final View rootView) {
@@ -74,8 +89,9 @@ public class DetailActivityFragment extends BaseFragment {
 		final Bundle data = intent.getExtras();
 		final MovieItemVO movieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
 
-		// Fetch Movie Trailers as early as possible
+		// Fetch Movie Trailers and Reviews as early as possible
 		fetchMovieTrailersWithId(movieItemVO.getId());
+		fetchMovieReviewsWithId(movieItemVO.getId());
 
 		final ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_poster);
 		final ImageView favBtnImageView = (ImageView) rootView.findViewById(R.id.button_favorite);
@@ -152,6 +168,10 @@ public class DetailActivityFragment extends BaseFragment {
 		Facade.getMovieApi().fetchMovieTrailersWithId(id);
 	}
 
+	private void fetchMovieReviewsWithId(final int id) {
+		Facade.getMovieApi().fetchMovieReviewsWithId(id);
+	}
+
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
 		if (movieTrailers.size() == 0) {
 			return;
@@ -166,7 +186,7 @@ public class DetailActivityFragment extends BaseFragment {
 		for (final MovieTrailerVO trailerVO : movieTrailers) {
 			Log.d("MAIN", "onMovieTrailersLoaded: " + trailerVO.getName());
 
-			final View trailerView = inflater.inflate(R.layout.trailer_item, mTrailersContainer, false);
+			final View trailerView = inflater.inflate(R.layout.item_trailer, mTrailersContainer, false);
 
 			trailerView.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -189,8 +209,45 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void onMovieTrailersError() {
-		MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
+		//MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
 		//TODO: Handle gracefully
 	}
 
+	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
+		if (movieReviews.size() == 0) {
+			return;
+		}
+
+		if (mReviewsContainer == null) {
+			mReviewsContainer = (ViewGroup) getActivity().findViewById(R.id.movie_reviews_container);
+		}
+
+		final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+		for (final MovieReviewVO movieReviewVO : movieReviews) {
+			final View reviewView = inflater.inflate(R.layout.item_review, mReviewsContainer, false);
+
+			reviewView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse(
+									movieReviewVO.getUrl()
+							)
+					);
+
+					startActivity(intent);
+				}
+			});
+
+			TextViewUtil.setText(reviewView, R.id.review_item_title, movieReviewVO.getAuthor());
+
+			mReviewsContainer.addView(reviewView);
+		}
+	}
+
+	private void onMovieReviewsError() {
+		//MovieEvent.MovieReviewsLoaded.deleteListener();
+	}
 }

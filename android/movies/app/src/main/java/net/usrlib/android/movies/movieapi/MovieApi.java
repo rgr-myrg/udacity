@@ -2,6 +2,7 @@ package net.usrlib.android.movies.movieapi;
 
 import android.util.Log;
 
+import net.usrlib.android.event.Event;
 import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONArray;
@@ -18,6 +19,12 @@ public class MovieApi {
 
 	private int mPageNumber = 0;
 	private boolean mIsFetchingData;
+
+	private enum RequestType {
+		DISCOVER_FEED,
+		TRAILERS,
+		REVIEWS
+	};
 
 	public void setPageNumber(final int pageNumber) {
 		mPageNumber = pageNumber;
@@ -47,10 +54,17 @@ public class MovieApi {
 	public void fetchMovieTrailersWithId(final int id) {
 		mIsFetchingData = true;
 
-		// Set 'true' for fetching Movie Trailers
-		makeHttpRequest(true);
+		makeHttpRequest(MovieEvent.MovieTrailersLoaded, RequestType.TRAILERS);
 
 		mHttpRequest.fetchJsonObjectWithUrl(MovieUrl.getTrailersUrl(id));
+	}
+
+	public void fetchMovieReviewsWithId(final int id) {
+		mIsFetchingData = true;
+
+		makeHttpRequest(MovieEvent.MovieReviewsLoaded, RequestType.REVIEWS);
+
+		mHttpRequest.fetchJsonObjectWithUrl(MovieUrl.getReviewsUrl(id));
 	}
 
 	private void loadJsonFeedSortedBy(final String sortBy) {
@@ -63,8 +77,7 @@ public class MovieApi {
 		mIsFetchingData = true;
 		mCurrentSortBy = sortBy;
 
-		// Set to false for fetching Movies in Discovery mode
-		makeHttpRequest(false);
+		makeHttpRequest(MovieEvent.DiscoverFeedLoaded, RequestType.DISCOVER_FEED);
 
 		Log.d(NAME, "Fetching page: " + mPageNumber + " sort by: " + mCurrentSortBy);
 
@@ -73,7 +86,7 @@ public class MovieApi {
 		);
 	}
 
-	private void makeHttpRequest(final boolean hasMovieTrailers) {
+	private void makeHttpRequest(final Event event, final RequestType requestType) {
 		// Create a new task each request. AsyncTask runs once and terminates.
 		mHttpRequest = new HttpRequest(
 				new HttpRequest.Delegate() {
@@ -82,32 +95,42 @@ public class MovieApi {
 						// Flag this request as completed
 						mIsFetchingData = false;
 
-						if (hasMovieTrailers) {
-							ArrayList<MovieTrailerVO> trailerItems = parseTrailersJsonData((JSONObject) object);
-
-							// Trigger MovieTrailersLoaded Event
-							MovieEvent.MovieTrailersLoaded.notifyComplete(trailerItems);
-						} else {
-							ArrayList<MovieItemVO> arrayList = parseDiscoverJsonData((JSONObject) object);
-
-							// Trigger DiscoverFeedLoaded Event
-							MovieEvent.DiscoverFeedLoaded.notifyComplete(arrayList);
-						}
+						// Trigger Movie Event
+						event.notifyComplete(
+								parseJsonData((JSONObject) object, requestType)
+						);
 					}
 
 					@Override
 					public void onError(String message) {
 						Log.e(NAME, message);
-						mIsFetchingData = false;
 
-						if (hasMovieTrailers) {
-							MovieEvent.MovieTrailersLoaded.notifyError(message);
-						} else {
-							MovieEvent.DiscoverFeedLoaded.notifyError(message);
-						}
+						mIsFetchingData = false;
+						event.notifyError(message);
 					}
 				}
 		);
+	}
+
+	private ArrayList<?> parseJsonData(final JSONObject jsonObject, final RequestType type) {
+		// List can be of different types, i.e., MovieTrailerVO, MovieItemVO
+		ArrayList<?> items = null;
+
+		switch (type) {
+			case DISCOVER_FEED:
+				items = parseDiscoverJsonData(jsonObject);
+				break;
+
+			case TRAILERS:
+				items = parseTrailersJsonData(jsonObject);
+				break;
+
+			case REVIEWS:
+				items = parseReviewsJsonData(jsonObject);
+				break;
+		}
+
+		return items;
 	}
 
 	private ArrayList<MovieItemVO> parseDiscoverJsonData(final JSONObject jsonObject) {
@@ -138,6 +161,19 @@ public class MovieApi {
 		}
 
 		return trailerItems;
+	}
+
+	private ArrayList<MovieReviewVO> parseReviewsJsonData(final JSONObject jsonObject) {
+		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
+
+		ArrayList<MovieReviewVO> reviewItems = new ArrayList<MovieReviewVO>();
+
+		for (int i = 0; i < results.length(); i++) {
+			MovieReviewVO item = MovieReviewVO.fromJsonObject(results.optJSONObject(i));
+			reviewItems.add(item);
+		}
+
+		return reviewItems;
 	}
 
 }

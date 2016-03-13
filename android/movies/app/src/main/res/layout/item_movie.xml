@@ -7,7 +7,7 @@
 			  android:padding="@dimen/grid_view_item_padding">
 
 	<ImageView
-		android:id="@+id/grid_item_image"
+		android:id="@+id/movie_item_image"
 		android:layout_width="@dimen/grid_view_image_width"
 		android:layout_height="@dimen/grid_view_image_height"
 		android:adjustViewBounds="true"

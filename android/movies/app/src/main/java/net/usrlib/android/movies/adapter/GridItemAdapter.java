@@ -26,28 +26,6 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		mMovieItems = arrayList;
 	}
 
-/*	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_view_item, parent, false);
-		}
-
-		MovieItemVO item = mMovieItems.get(position);
-
-		//Commented out for now. Save for later if I want to display the title on the grid view
-		//TextView textView = (TextView) convertView.findViewById(R.id.grid_item_title);
-		//textView.setText(item.getOriginalTitle());
-
-		ImageView imageView = (ImageView) convertView.findViewById(R.id.grid_item_image);
-		Glide.with(mContext)
-				.load(item.getImageUrl())
-				.placeholder(R.drawable.image_poster_placeholder)
-				.error(R.drawable.image_poster_placeholder)
-				.into(imageView);
-
-		return convertView;
-	}
-*/
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageView;
@@ -55,9 +33,9 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		if (convertView == null) {
 			convertView = LayoutInflater
 					.from(getContext())
-					.inflate(R.layout.grid_view_item, parent, false);
+					.inflate(R.layout.item_movie, parent, false);
 
-			imageView = (ImageView) convertView.findViewById(R.id.grid_item_image);
+			imageView = (ImageView) convertView.findViewById(R.id.movie_item_image);
 
 			convertView.setTag(new ViewHolder(imageView));
 		} else {
