@@ -1,6 +1,7 @@
 package net.usrlib.android.movies;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -306,12 +307,18 @@ public class DetailActivityFragment extends BaseFragment {
 			TextViewUtil.setText(reviewView, R.id.review_item_author, movieReviewVO.getAuthor());
 
 			final String content = movieReviewVO.getContent();
+			int previewLength = MovieVars.CONTENT_PREVIEW_LENGTH;
+
+			// Try to display more preview text depending on device orientation
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				previewLength = previewLength * 2;
+			}
 
 			TextViewUtil.setText(
 					reviewView,
 					R.id.review_item_content,
-					content.length() > MovieVars.CONTENT_PREVIEW_LENGTH
-							? content.substring(0, MovieVars.CONTENT_PREVIEW_LENGTH) + MovieVars.DOTTED
+					content.length() > previewLength
+							? content.substring(0, previewLength) + MovieVars.DOTTED
 							: content
 			);
 
