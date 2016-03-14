@@ -12,6 +12,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:stretchMode="columnWidth"
+		android:padding="@dimen/grid_view_item_padding"
 		android:adjustViewBounds="true"
 		android:scaleType="centerInside"/>
 
