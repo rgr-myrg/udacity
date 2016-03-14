@@ -10,6 +10,7 @@
 	<string name="movie_votes_label">Votes: </string>
 	<string name="movie_trailers_label">Trailers</string>
 	<string name="movie_reviews_label">Reviews</string>
-	<string name="movie_review_text">Review by\u00A0</string>
+	<string name="space_non_breaking">\u00A0</string>
+	<string name="triangle_right">\u25B6</string>
 	<string name="content_authority">net.usrlib.android.movies</string>
 </resources>

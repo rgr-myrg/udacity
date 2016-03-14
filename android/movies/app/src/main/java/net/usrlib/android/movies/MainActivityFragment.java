@@ -94,10 +94,12 @@ public class MainActivityFragment extends BaseFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putParcelableArrayList(
-				MovieVars.MOVIE_LIST_KEY,
-				mGridItemAdapter.getMovieItems()
-		);
+		if (mGridItemAdapter != null) {
+			outState.putParcelableArrayList(
+					MovieVars.MOVIE_LIST_KEY,
+					mGridItemAdapter.getMovieItems()
+			);
+		}
 
 		outState.putString(MovieVars.VIEW_TITLE_KEY, mCurrentTitle);
 		outState.putString(MovieVars.SORT_PARAM_KEY, mCurrentSortBy);

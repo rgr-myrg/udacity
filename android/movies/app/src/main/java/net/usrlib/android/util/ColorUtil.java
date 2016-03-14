@@ -24,16 +24,16 @@ public class ColorUtil {
 			"#7CB342"
 	};
 
-	private static int index = 0;
+	private static int sIndex = 0;
 
 	public static final String getNextColor() {
-		if (index > sColorCodes.length) {
-			index = 0;
+		if (sIndex > sColorCodes.length) {
+			sIndex = 0;
 		}
 
-		index++;
+		sIndex++;
 
-		return sColorCodes[index];
+		return sColorCodes[sIndex];
 	}
 
 }

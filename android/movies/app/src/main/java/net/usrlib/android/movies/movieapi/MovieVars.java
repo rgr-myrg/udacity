@@ -27,6 +27,8 @@ public class MovieVars {
 	public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 	public static final String YOUTUBE_SITE = "YouTube";
 
+	public static final String NO_REVIEWS = "No Reviews Found";
+	public static final String NO_TRAILERS = "No Trailers Found";
 	public static final String DOTTED = "...";
 
 	public static final int PAGE_COUNT_LIMIT = 200;

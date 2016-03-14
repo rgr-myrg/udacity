@@ -12,29 +12,37 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<ImageView
-			android:layout_width="@dimen/play_button_size"
-			android:layout_height="@dimen/play_button_size"
-			android:src="@drawable/green_play_button_2"
-			android:layout_gravity="center_vertical"/>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/circle_container_padding"
+			android:paddingBottom="@dimen/circle_container_padding"
+			android:paddingLeft="@dimen/circle_container_padding">
+
+			<TextView
+				android:id="@+id/trailer_triangle_icon"
+				android:layout_width="@dimen/circle_size"
+				android:layout_height="@dimen/circle_size"
+				android:gravity="center"
+				android:textColor="@color/colorPrimary"
+				android:text="@string/triangle_right"
+				android:textSize="@dimen/heart_button_width"/>
+
+		</LinearLayout>
 
 		<LinearLayout
-			android:orientation="vertical"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="10dp">
 
 			<TextView
 				android:id="@+id/trailer_item_title"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="bottom"
-				android:layout_marginTop="@dimen/default_margin"/>
-			<View
-				android:layout_width="wrap_content"
-				android:layout_height="@dimen/line_normal"
-				android:layout_gravity="bottom"
-				android:layout_marginTop="@dimen/view_item_spacing"
-				android:background="@color/gray"/>
+				android:paddingTop="@dimen/circle_container_padding"
+				android:text="Roger Paul"
+				style="@style/Base.TextAppearance.AppCompat.Medium"/>
 
 		</LinearLayout>
 

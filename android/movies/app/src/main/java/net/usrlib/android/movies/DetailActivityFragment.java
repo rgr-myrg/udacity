@@ -178,6 +178,8 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
 		if (movieTrailers.size() == 0) {
+			TextViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS);
+
 			return;
 		}
 
@@ -219,6 +221,8 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
 		if (movieReviews.size() == 0) {
+			TextViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS);
+
 			return;
 		}
 
@@ -271,4 +275,5 @@ public class DetailActivityFragment extends BaseFragment {
 	private void onMovieReviewsError() {
 		//MovieEvent.MovieReviewsLoaded.deleteListener();
 	}
+
 }

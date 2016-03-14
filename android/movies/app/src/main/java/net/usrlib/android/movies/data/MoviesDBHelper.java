@@ -20,7 +20,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(MoviesSQL.CREATE_FAVORITES_TABLE);
-		db.close();
+		//db.close();
 	}
 
 	@Override
@@ -28,11 +28,11 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
 	}
 
-	public void dropFavoritesTable() {
-		final SQLiteDatabase db = getWritableDatabase();
-		db.execSQL(MoviesSQL.DROP_FAVORITES_TABLE);
-		db.close();
-	}
+//	public void dropFavoritesTable() {
+//		final SQLiteDatabase db = getWritableDatabase();
+//		db.execSQL(MoviesSQL.DROP_FAVORITES_TABLE);
+//		db.close();
+//	}
 
 	public ArrayList<MovieItemVO> selectFromFavorites() {
 		ArrayList<MovieItemVO> movieItems = new ArrayList<MovieItemVO>();
@@ -59,7 +59,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		}
 
 		cursor.close();
-		db.close();
+		//db.close();
 
 		Log.d("MoviesDBHelper", "selected " +String.valueOf(movieItems.size()));
 		return movieItems;
@@ -85,7 +85,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			result = rows > 0;
 		}
 
-		db.close();
+		//db.close();
 
 		Log.d("MoviesDBHelper", "setMovieAsFavorite result: " + String.valueOf(result));
 		return result;
@@ -108,7 +108,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		result = cursor.getCount() != 0;
 
 		cursor.close();
-		db.close();
+		//db.close();
 
 		return result;
 	}
