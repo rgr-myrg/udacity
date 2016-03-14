@@ -23,7 +23,8 @@ import net.usrlib.android.movies.movieapi.MovieReviewVO;
 import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.util.ColorUtil;
-import net.usrlib.android.util.TextViewUtil;
+import net.usrlib.android.util.HttpRequest;
+import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 		@Override
 		public void onError(Object eventData) {
-			onMovieTrailersError();
+			onFeedError((String) eventData);
 		}
 	};
 
@@ -58,7 +59,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 		@Override
 		public void onError(Object eventData) {
-			onMovieReviewsError();
+			onFeedError((String) eventData);
 		}
 	};
 
@@ -140,6 +141,16 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void loadMovieDetail() {
+		if (mMovieItemVO == null) {
+			UiViewUtil.setText(
+					mRootView,
+					R.id.movie_title,
+					"Unable to load Movie details"
+			);
+
+			return;
+		}
+
 		final ImageView posterImageView = (ImageView) mRootView.findViewById(R.id.movie_poster);
 		final ImageView favBtnImageView = (ImageView) mRootView.findViewById(R.id.button_favorite);
 
@@ -170,25 +181,25 @@ public class DetailActivityFragment extends BaseFragment {
 			}
 		});
 
-		TextViewUtil.setText(
+		UiViewUtil.setText(
 				mRootView,
 				R.id.movie_title,
 				mMovieItemVO.getOriginalTitle()
 		);
 
-		TextViewUtil.setText(
+		UiViewUtil.setText(
 				mRootView,
 				R.id.movie_release_date,
 				mMovieItemVO.getReleaseDate()
 		);
 
-		TextViewUtil.setText(
+		UiViewUtil.setText(
 				mRootView,
 				R.id.movie_rating,
 				String.valueOf(mMovieItemVO.getVoteAverage())
 		);
 
-		TextViewUtil.setText(
+		UiViewUtil.setText(
 				mRootView,
 				R.id.movie_overview,
 				mMovieItemVO.getOverview()
@@ -215,18 +226,16 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
-		if (movieTrailers.size() == 0) {
-			TextViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS);
+		if (movieTrailers == null || movieTrailers.size() == 0) {
+			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS);
 
 			return;
 		}
 
 		mMovieTrailers = movieTrailers;
 
-		Log.d("MAIN", "onMovieTrailersLoaded Activity: " + getActivity().toString());
 		if (mTrailersContainer == null) {
 			mTrailersContainer = (ViewGroup) mRootView.findViewById(R.id.movie_trailers_container);
-			Log.d("MAIN", "onMovieTrailersLoaded: " + mTrailersContainer.toString());
 		}
 
 		final LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -250,20 +259,15 @@ public class DetailActivityFragment extends BaseFragment {
 				}
 			});
 
-			TextViewUtil.setText(trailerView, R.id.trailer_item_title, trailerVO.getName());
+			UiViewUtil.setText(trailerView, R.id.trailer_item_title, trailerVO.getName());
 
 			mTrailersContainer.addView(trailerView);
 		}
 	}
 
-	private void onMovieTrailersError() {
-		//MovieEvent.MovieTrailersLoaded.deleteListener(mMovieTrailersListener);
-		//TODO: Handle gracefully
-	}
-
 	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
-		if (movieReviews.size() == 0) {
-			TextViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS);
+		if (movieReviews == null || movieReviews.size() == 0) {
+			UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS);
 
 			return;
 		}
@@ -293,7 +297,7 @@ public class DetailActivityFragment extends BaseFragment {
 				}
 			});
 
-			final TextView circle = TextViewUtil.setText(
+			final TextView circle = UiViewUtil.setText(
 					reviewView,
 					R.id.review_circle_icon,
 					String.valueOf(movieReviewVO.getAuthor().charAt(0)).toUpperCase()
@@ -304,7 +308,7 @@ public class DetailActivityFragment extends BaseFragment {
 					PorterDuff.Mode.SRC
 			);
 
-			TextViewUtil.setText(reviewView, R.id.review_item_author, movieReviewVO.getAuthor());
+			UiViewUtil.setText(reviewView, R.id.review_item_author, movieReviewVO.getAuthor());
 
 			final String content = movieReviewVO.getContent();
 			int previewLength = MovieVars.CONTENT_PREVIEW_LENGTH;
@@ -314,7 +318,7 @@ public class DetailActivityFragment extends BaseFragment {
 				previewLength = previewLength * 2;
 			}
 
-			TextViewUtil.setText(
+			UiViewUtil.setText(
 					reviewView,
 					R.id.review_item_content,
 					content.length() > previewLength
@@ -326,8 +330,8 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 	}
 
-	private void onMovieReviewsError() {
-		//MovieEvent.MovieReviewsLoaded.deleteListener();
+	private void onFeedError(String message) {
+		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
 	}
 
 }

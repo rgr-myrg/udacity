@@ -3,6 +3,7 @@ package net.usrlib.android.movies;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.util.HttpRequest;
+import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
@@ -118,6 +121,7 @@ public class MainActivityFragment extends BaseFragment {
 			@Override
 			public void onError(Object eventData) {
 				// Handle gracefully
+				onMovieFeedError();
 			}
 		});
 
@@ -196,7 +200,7 @@ public class MainActivityFragment extends BaseFragment {
 		setViewTitle(Facade.Resource.getTitleFavorites());
 
 		onMovieFeedLoaded(
-			Facade.getMoviesDBHelper().selectFromFavorites()
+				Facade.getMoviesDBHelper().selectFromFavorites()
 		);
 	}
 
@@ -258,6 +262,11 @@ public class MainActivityFragment extends BaseFragment {
 
 			getFavoriteMovies();
 		}
+	}
+
+	private void onMovieFeedError() {
+		Log.d("MAIN", "onMovieFeedError");
+		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
 	}
 
 }

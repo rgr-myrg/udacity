@@ -15,6 +15,9 @@ import java.net.URL;
 
 public class HttpRequest extends AsyncTask<Void, Void, String> {
 
+	public static final String JSON_NULL_ERROR = "Json Object is Null";
+	public static final String CONNECTIVY_ERROR = "No Internet Connection";
+
 	private Delegate mRequestDelegate;
 	private boolean mHasJsonRequest;
 	private URL url;
@@ -98,7 +101,11 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 			try {
 				if (mHasJsonRequest) {
 					JSONObject jsonObject = new JSONObject(string);
-					mRequestDelegate.onPostExecuteComplete(jsonObject);
+					if (jsonObject != null ) {
+						mRequestDelegate.onPostExecuteComplete(jsonObject);
+					} else {
+						mRequestDelegate.onError(JSON_NULL_ERROR);
+					}
 				} else {
 					mRequestDelegate.onPostExecuteComplete(string);
 				}
@@ -110,4 +117,5 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 			}
 		}
 	}
+
 }
