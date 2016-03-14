@@ -33,5 +33,6 @@ public class MovieVars {
 
 	public static final int PAGE_COUNT_LIMIT = 200;
 	public static final int FAVORITED_RESULT_CODE = 1;
+	public static final int CONTENT_PREVIEW_LENGTH = 40;
 
 }

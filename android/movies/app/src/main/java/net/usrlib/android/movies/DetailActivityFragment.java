@@ -262,10 +262,14 @@ public class DetailActivityFragment extends BaseFragment {
 
 			TextViewUtil.setText(reviewView, R.id.review_item_author, movieReviewVO.getAuthor());
 
+			final String content = movieReviewVO.getContent();
+
 			TextViewUtil.setText(
 					reviewView,
 					R.id.review_item_content,
-					movieReviewVO.getContent().substring(0, 45) + MovieVars.DOTTED
+					content.length() > MovieVars.CONTENT_PREVIEW_LENGTH
+							? content.substring(0, MovieVars.CONTENT_PREVIEW_LENGTH) + MovieVars.DOTTED
+							: content
 			);
 
 			mReviewsContainer.addView(reviewView);

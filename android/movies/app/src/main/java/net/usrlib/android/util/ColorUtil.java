@@ -27,13 +27,17 @@ public class ColorUtil {
 	private static int sIndex = 0;
 
 	public static final String getNextColor() {
-		if (sIndex > sColorCodes.length) {
+		String selectedColor;
+
+		if (sIndex > sColorCodes.length - 1) {
 			sIndex = 0;
 		}
 
+		selectedColor = sColorCodes[sIndex];
+
 		sIndex++;
 
-		return sColorCodes[sIndex];
+		return selectedColor;
 	}
 
 }
