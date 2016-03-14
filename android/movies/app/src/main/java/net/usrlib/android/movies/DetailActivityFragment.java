@@ -31,7 +31,9 @@ public class DetailActivityFragment extends BaseFragment {
 	private View mRootView = null;
 	private ViewGroup mTrailersContainer = null;
 	private ViewGroup mReviewsContainer = null;
+
 	private MovieItemVO mMovieItemVO = null;
+
 	private ArrayList<MovieTrailerVO> mMovieTrailers = null;
 	private ArrayList<MovieReviewVO> mMovieReviews = null;
 
@@ -65,7 +67,6 @@ public class DetailActivityFragment extends BaseFragment {
 		mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
 		if (instanceState == null) {
-			Log.d("MAIN", "instanceState is null");
 			addEventListeners();
 			parseIntentAndFetchData();
 
@@ -78,7 +79,6 @@ public class DetailActivityFragment extends BaseFragment {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		Log.d("MAIN", "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
 		if (mMovieItemVO != null) {
@@ -113,13 +113,11 @@ public class DetailActivityFragment extends BaseFragment {
 		loadMovieDetail();
 
 		// Fetch Movie Trailers and Reviews as early as possible
-		fetchMovieTrailersWithId(mMovieItemVO.getId());
-		fetchMovieReviewsWithId(mMovieItemVO.getId());
+		Facade.getMovieApi().fetchMovieTrailersWithId(mMovieItemVO.getId());
+		Facade.getMovieApi().fetchMovieReviewsWithId(mMovieItemVO.getId());
 	}
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
-		Log.d("MAIN", "restoreValuesFromBundle");
-
 		if (bundle.containsKey(MovieVars.DETAIL_KEY)) {
 			mMovieItemVO = (MovieItemVO) bundle.get(MovieVars.DETAIL_KEY);
 		}
@@ -160,6 +158,8 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 
 		favBtnImageView.setImageResource(resourceId);
+
+		// Set Tag to help toggle favorites icon on/off in setMovieIfLiked()
 		favBtnImageView.setTag(resourceId);
 
 		favBtnImageView.setOnClickListener(new View.OnClickListener() {
@@ -209,16 +209,8 @@ public class DetailActivityFragment extends BaseFragment {
 		Intent intent = new Intent();
 		intent.putExtra(MovieVars.IS_FAVORITED_KEY, true);
 
-		// Set Result Code and Intent for onActivityResult
+		// Set Result Code and Intent for onActivityResult()
 		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
-	}
-
-	private void fetchMovieTrailersWithId(final int id) {
-		Facade.getMovieApi().fetchMovieTrailersWithId(id);
-	}
-
-	private void fetchMovieReviewsWithId(final int id) {
-		Facade.getMovieApi().fetchMovieReviewsWithId(id);
 	}
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {

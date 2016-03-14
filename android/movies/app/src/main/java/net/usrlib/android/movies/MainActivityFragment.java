@@ -184,11 +184,11 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void getMostPopularMovies() {
-		fetchMoviesAndSetValues(MovieVars.MOST_POPULAR, Facade.Resource.getTitleMostPopular());
+		fetchMovieFeed(MovieVars.MOST_POPULAR, Facade.Resource.getTitleMostPopular());
 	}
 
 	private void getHighestRatedMovies() {
-		fetchMoviesAndSetValues(MovieVars.HIGHEST_RATED, Facade.Resource.getTitleHighestRated());
+		fetchMovieFeed(MovieVars.HIGHEST_RATED, Facade.Resource.getTitleHighestRated());
 	}
 
 	private void getFavoriteMovies() {
@@ -219,7 +219,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	}
 
-	private void fetchMoviesAndSetValues(final String sortBy, final String title) {
+	private void fetchMovieFeed(final String sortBy, final String title) {
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 

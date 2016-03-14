@@ -4,6 +4,7 @@
 			  android:layout_width="fill_parent"
 			  android:layout_height="wrap_content"
 			  android:layout_marginTop="@dimen/grid_view_item_margin_top"
+			  android:background="@color/black"
 			  android:padding="@dimen/grid_view_item_padding">
 
 	<ImageView
@@ -13,18 +14,5 @@
 		android:stretchMode="columnWidth"
 		android:adjustViewBounds="true"
 		android:scaleType="centerInside"/>
-
-	<!--
-	Commented out for now. Save for later if I want to display title in GridItemAdapter.getView
-	-->
-	<!--<TextView-->
-		<!--android:id="@+id/grid_item_title"-->
-		<!--android:layout_width="fill_parent"-->
-		<!--android:layout_height="wrap_content"-->
-		<!--android:layout_marginTop="5dp"-->
-		<!--android:gravity="center"-->
-		<!--android:maxLines="2"-->
-		<!--android:ellipsize="marquee"-->
-		<!--android:textSize="12sp" />-->
 
 </LinearLayout>
