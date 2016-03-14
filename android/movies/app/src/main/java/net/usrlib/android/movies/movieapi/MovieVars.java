@@ -7,6 +7,10 @@ public class MovieVars {
 	public static final String BASE_URL = "http://api.themoviedb.org/3";
 	public static final String DISCOVER_MOVIE_URL = BASE_URL + "/discover/movie";
 
+	// Change to the following new api endpoints if needed:
+	//http://api.themoviedb.org/3/movie/popular?api_key=
+	//http://api.themoviedb.org/3/movie/top_rated?api_key=
+
 	public static final String TRAILERS_URL = BASE_URL + "/movie/" + ID_TOKEN + "/videos";
 	public static final String REVIEWS_URL = BASE_URL + "/movie/" + ID_TOKEN + "/reviews";
 	public static final String IMG_BASE_URL = "http://image.tmdb.org/t/p/w185";
@@ -22,6 +26,9 @@ public class MovieVars {
 
 	public static final String VIEW_TITLE_KEY = "viewTitle";
 	public static final String MOVIE_LIST_KEY = "movie_list";
+	public static final String DETAIL_KEY = "movie_detail";
+	public static final String TRAILERS_KEY = "movie_trailers";
+	public static final String REVIEWS_KEY = "movie_reviews";
 	public static final String IS_FAVORITED_KEY = "is_favorited";
 
 	public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";

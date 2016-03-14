@@ -48,6 +48,7 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 				.load(item.getImageUrl())
 				.placeholder(R.drawable.image_poster_placeholder)
 				.error(R.drawable.image_poster_placeholder)
+				.fitCenter() //Glide doesn't scale image properly!
 				.into(imageView);
 
 		return convertView;

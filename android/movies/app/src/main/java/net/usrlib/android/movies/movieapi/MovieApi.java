@@ -3,12 +3,10 @@ package net.usrlib.android.movies.movieapi;
 import android.util.Log;
 
 import net.usrlib.android.event.Event;
+import net.usrlib.android.task.ParseDataTask;
 import net.usrlib.android.util.HttpRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class MovieApi {
 
@@ -90,15 +88,26 @@ public class MovieApi {
 		// Create a new task each request. AsyncTask runs once and terminates.
 		mHttpRequest = new HttpRequest(
 				new HttpRequest.Delegate() {
+
 					@Override
 					public void onPostExecuteComplete(Object object) {
 						// Flag this request as completed
 						mIsFetchingData = false;
+						final JSONObject jsonObject = (JSONObject) object;
 
-						// Trigger Movie Event
-						event.notifyComplete(
-								parseJsonData((JSONObject) object, requestType)
-						);
+						switch (requestType) {
+							case DISCOVER_FEED:
+								ParseDataTask.parseMoviesFromJson(jsonObject);
+								break;
+
+							case TRAILERS:
+								ParseDataTask.parseTrailersFromJson(jsonObject);
+								break;
+
+							case REVIEWS:
+								ParseDataTask.parseReviewsFromJson(jsonObject);
+								break;
+						}
 					}
 
 					@Override
@@ -106,74 +115,11 @@ public class MovieApi {
 						Log.e(NAME, message);
 
 						mIsFetchingData = false;
+						// Notify Observers an Error occurred.
 						event.notifyError(message);
 					}
 				}
 		);
-	}
-
-	private ArrayList<?> parseJsonData(final JSONObject jsonObject, final RequestType type) {
-		// List can be of different types, i.e., MovieTrailerVO, MovieItemVO
-		ArrayList<?> items = null;
-
-		switch (type) {
-			case DISCOVER_FEED:
-				items = parseDiscoverJsonData(jsonObject);
-				break;
-
-			case TRAILERS:
-				items = parseTrailersJsonData(jsonObject);
-				break;
-
-			case REVIEWS:
-				items = parseReviewsJsonData(jsonObject);
-				break;
-		}
-
-		return items;
-	}
-
-	private ArrayList<MovieItemVO> parseDiscoverJsonData(final JSONObject jsonObject) {
-		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
-
-		ArrayList<MovieItemVO> movieItems = new ArrayList<MovieItemVO>();
-
-		Log.d(NAME, "Retrieved Movie Items with length: " + String.valueOf(results.length()) );
-
-		for (int i = 0; i < results.length(); i++) {
-			MovieItemVO item = MovieItemVO.fromJsonObject(results.optJSONObject(i));
-			movieItems.add(item);
-		}
-
-		return movieItems;
-	}
-
-	private ArrayList<MovieTrailerVO> parseTrailersJsonData(final JSONObject jsonObject) {
-		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
-
-		ArrayList<MovieTrailerVO> trailerItems = new ArrayList<MovieTrailerVO>();
-
-		Log.d(NAME, "Retrieved Trailers with length: " + String.valueOf(results.length()));
-
-		for (int i = 0; i < results.length(); i++) {
-			MovieTrailerVO item = MovieTrailerVO.fromJsonObject(results.optJSONObject(i));
-			trailerItems.add(item);
-		}
-
-		return trailerItems;
-	}
-
-	private ArrayList<MovieReviewVO> parseReviewsJsonData(final JSONObject jsonObject) {
-		JSONArray results = jsonObject.optJSONArray(MovieVars.RESULTS_KEY);
-
-		ArrayList<MovieReviewVO> reviewItems = new ArrayList<MovieReviewVO>();
-
-		for (int i = 0; i < results.length(); i++) {
-			MovieReviewVO item = MovieReviewVO.fromJsonObject(results.optJSONObject(i));
-			reviewItems.add(item);
-		}
-
-		return reviewItems;
 	}
 
 }

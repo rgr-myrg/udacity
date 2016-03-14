@@ -48,7 +48,7 @@ public class MainActivityFragment extends BaseFragment {
 
 		// Init and Set Up Grid View
 		initGridView(
-				(GridView) rootView.findViewById(R.id.grid_view)
+				(GridView) rootView.findViewById(R.id.movie_grid_view)
 		);
 
 		if (instanceState == null) {

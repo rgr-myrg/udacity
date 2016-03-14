@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  android:orientation="vertical"
-			  android:layout_width="wrap_content"
+			  android:layout_width="fill_parent"
 			  android:layout_height="wrap_content"
 			  android:layout_marginTop="@dimen/grid_view_item_margin_top"
 			  android:padding="@dimen/grid_view_item_padding">
 
 	<ImageView
 		android:id="@+id/movie_item_image"
-		android:layout_width="@dimen/grid_view_image_width"
-		android:layout_height="@dimen/grid_view_image_height"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:stretchMode="columnWidth"
 		android:adjustViewBounds="true"
-		android:scaleType="fitXY"/>
+		android:scaleType="centerInside"/>
 
 	<!--
 	Commented out for now. Save for later if I want to display title in GridItemAdapter.getView

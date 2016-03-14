@@ -10,9 +10,9 @@
 				tools:showIn="@layout/activity_main">
 
 	<GridView
-		android:layout_width="match_parent"
+		android:id="@+id/movie_grid_view"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/grid_view"
 		android:columnWidth="@dimen/grid_view_column_width"
 		android:numColumns="auto_fit"
 		android:verticalSpacing="@dimen/view_item_spacing"
@@ -21,3 +21,13 @@
 		android:gravity="center"/>
 
 </RelativeLayout>
+	<!--android:id="@+id/myGrid"-->
+	<!--android:layout_width="fill_parent"-->
+	<!--android:layout_height="fill_parent"-->
+	<!--android:padding="10dp"-->
+	<!--android:verticalSpacing="10dp"-->
+	<!--android:horizontalSpacing="10dp"-->
+	<!--android:numColumns="auto_fit"-->
+	<!--android:columnWidth="60dp"-->
+	<!--android:stretchMode="columnWidth"-->
+	<!--android:gravity="center"-->

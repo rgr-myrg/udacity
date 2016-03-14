@@ -42,7 +42,6 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="bottom"
-					android:text="Roger Paul"
 					style="@style/Base.TextAppearance.AppCompat.Medium"/>
 
 				<TextView
@@ -50,8 +49,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/view_item_spacing"
-					android:layout_marginBottom="@dimen/view_item_spacing"
-					android:text="Content here..."/>
+					android:layout_marginBottom="@dimen/view_item_spacing"/>
 
 				<View
 					android:layout_width="wrap_content"
