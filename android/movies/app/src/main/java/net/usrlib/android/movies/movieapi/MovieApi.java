@@ -3,7 +3,7 @@ package net.usrlib.android.movies.movieapi;
 import android.util.Log;
 
 import net.usrlib.android.event.Event;
-import net.usrlib.android.task.ParseDataTask;
+import net.usrlib.android.movies.task.ParseDataTask;
 import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package net.usrlib.android.movies;
+package net.usrlib.android.movies.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

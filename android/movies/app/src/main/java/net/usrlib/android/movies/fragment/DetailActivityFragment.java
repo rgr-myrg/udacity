@@ -1,4 +1,4 @@
-package net.usrlib.android.movies;
+package net.usrlib.android.movies.fragment;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -17,7 +17,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.usrlib.android.event.Listener;
+import net.usrlib.android.movies.DetailActivity;
+import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
+import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieReviewVO;
@@ -98,10 +101,6 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 	}
 
-	public void onShareButtonClicked(View view) {
-		Log.d("MAIN", "Clicked!!!");
-	}
-
 	private void addEventListeners() {
 		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
 		MovieEvent.MovieReviewsLoaded.addListenerOnce(mMovieReviewsListener);
@@ -151,7 +150,7 @@ public class DetailActivityFragment extends BaseFragment {
 			UiViewUtil.setText(
 					mRootView,
 					R.id.movie_title,
-					"Unable to load Movie details"
+					MovieVars.NO_MOVIES_MSG
 			);
 
 			return;
@@ -160,7 +159,7 @@ public class DetailActivityFragment extends BaseFragment {
 		final ImageView posterImageView = (ImageView) mRootView.findViewById(R.id.movie_poster);
 		final ImageView favBtnImageView = (ImageView) mRootView.findViewById(R.id.button_favorite);
 
-		// Invoking placeholder causes the image to misalign. Meh. >:(
+		// Invoking placeholder causes the image to misalign. >:(
 		Glide.with(getActivity())
 				.load(mMovieItemVO.getImageUrl())
 						//.placeholder(R.drawable.image_poster_placeholder)
@@ -233,7 +232,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
 		if (movieTrailers == null || movieTrailers.size() == 0) {
-			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS);
+			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
 
 			return;
 		}
@@ -276,7 +275,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
 		if (movieReviews == null || movieReviews.size() == 0) {
-			UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS);
+			UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS_MSG);
 
 			return;
 		}

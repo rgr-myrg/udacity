@@ -1,9 +1,8 @@
-package net.usrlib.android.movies;
+package net.usrlib.android.movies.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +12,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import net.usrlib.android.event.Listener;
+import net.usrlib.android.movies.DetailActivity;
+import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
 import net.usrlib.android.movies.facade.Facade;
+import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
@@ -265,7 +267,6 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void onMovieFeedError() {
-		Log.d("MAIN", "onMovieFeedError");
 		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
 	}
 

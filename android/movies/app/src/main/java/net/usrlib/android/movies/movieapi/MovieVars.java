@@ -38,8 +38,10 @@ public class MovieVars {
 	public static final String SHARE_TEXT = "Share This Movie!";
 	public static final String EXTRA_TEXT = "Check out this Movie! ";
 
-	public static final String NO_REVIEWS = "No Reviews Found";
-	public static final String NO_TRAILERS = "No Trailers Found";
+	public static final String NO_MOVIES_MSG = "Unable to load Movie details";
+	public static final String NO_REVIEWS_MSG = "No Reviews Found";
+	public static final String NO_TRAILERS_MSG = "No Trailers Found";
+
 	public static final String DOTTED = "...";
 
 	public static final int PAGE_COUNT_LIMIT = 200;
