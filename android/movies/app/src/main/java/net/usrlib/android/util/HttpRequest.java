@@ -37,7 +37,6 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 	}
 
 	public void fetchWithUrl(final String targetUrl) {
-
 		try {
 			this.url = new URL(targetUrl);
 		} catch (MalformedURLException e) {

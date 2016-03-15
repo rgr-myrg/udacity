@@ -28,6 +28,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private static final int FAVORITES_REQUEST_CODE = 5;
 
+	private View mRootView = null;
 	private GridView mGridView = null;
 	private GridItemAdapter mGridItemAdapter = null;
 	private String mCurrentSortBy;
@@ -35,11 +36,11 @@ public class MainActivityFragment extends BaseFragment {
 
 	private boolean mIsFirstPageRequest;
 	private boolean mHasEventListeners;
-	private boolean mIsViewFavoriteMovies;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle instanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+		mRootView = rootView;
 
 		// Ensure onOptionsItemSelected is triggered
 		setHasOptionsMenu(true);
@@ -115,7 +116,7 @@ public class MainActivityFragment extends BaseFragment {
 			@Override
 			public void onComplete(Object eventData) {
 				onMovieFeedLoaded(
-						(ArrayList<MovieItemVO>) eventData
+						(ArrayList < MovieItemVO >) eventData
 				);
 			}
 
@@ -159,7 +160,6 @@ public class MainActivityFragment extends BaseFragment {
 				Intent intent = new Intent(activity, DetailActivity.class);
 				intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
-				//activity.startActivity(intent);
 				// Use a request code to trigger onActivityResult
 				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 			}
@@ -173,6 +173,7 @@ public class MainActivityFragment extends BaseFragment {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				// onScroll is triggered spuriously while GridView is created.
+				// GridView seems to auto scroll a bit and jitter on some devices.
 				// Guard clause: Do nothing when totalItemCount is zero.
 				if (totalItemCount == 0) {
 					return;
@@ -242,6 +243,9 @@ public class MainActivityFragment extends BaseFragment {
 		} else {
 			mGridItemAdapter.updateItemsList(arrayList);
 		}
+
+		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.
+		UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
 	private void setViewTitle(String viewTitle) {
@@ -272,6 +276,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private void onMovieFeedError() {
 		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
+		UiViewUtil.setViewAsVisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
 }

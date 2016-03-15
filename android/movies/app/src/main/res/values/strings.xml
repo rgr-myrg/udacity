@@ -13,4 +13,5 @@
 	<string name="space_non_breaking">\u00A0</string>
 	<string name="triangle_right">\u25B6</string>
 	<string name="content_authority">net.usrlib.android.movies</string>
+	<string name="no_internet_message">Connect to the Internet and Try again.</string>
 </resources>

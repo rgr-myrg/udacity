@@ -46,4 +46,34 @@ public class UiViewUtil {
 		);
 	}
 
+	public static final void setViewAsVisible(final Activity activity, final View view) {
+		if (activity == null || view == null) {
+			return;
+		}
+
+		activity.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						view.setVisibility(View.VISIBLE);
+					}
+				}
+		);
+	}
+
+	public static final void setViewAsInvisible(final Activity activity, final View view) {
+		if (activity == null || view == null) {
+			return;
+		}
+
+		activity.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						view.setVisibility(View.INVISIBLE);
+					}
+				}
+		);
+	}
+
 }

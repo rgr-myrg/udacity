@@ -10,9 +10,11 @@
 	<dimen name="grid_view_image_height">300dp</dimen>
 	<dimen name="grid_view_item_margin_top">0dp</dimen>
 	<dimen name="grid_view_item_padding">0dp</dimen>
+	<dimen name="movie_overview_padding">10dp</dimen>
 	<dimen name="heart_button_width">35dp</dimen>
 	<dimen name="share_button_width">60dp</dimen>
 	<dimen name="play_button_size">40dp</dimen>
+	<dimen name="spinner_size">15dp</dimen>
 	<dimen name="circle_size">40dp</dimen>
 	<dimen name="circle_container_padding">10dp</dimen>
 	<dimen name="line_normal">2dp</dimen>
