@@ -16,7 +16,6 @@ import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
 import net.usrlib.android.movies.facade.Facade;
-import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
@@ -246,7 +245,12 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void setViewTitle(String viewTitle) {
-		getActivity().setTitle(viewTitle);
+		final Activity activity = getActivity();
+
+		if (activity != null) {
+			getActivity().setTitle(viewTitle);
+		}
+
 		mCurrentTitle = viewTitle;
 	}
 
