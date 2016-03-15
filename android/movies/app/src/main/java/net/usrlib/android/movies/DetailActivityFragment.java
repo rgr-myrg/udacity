@@ -1,5 +1,6 @@
 package net.usrlib.android.movies;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import net.usrlib.android.util.UiViewUtil;
 import java.util.ArrayList;
 
 public class DetailActivityFragment extends BaseFragment {
+	public static final String NAME = DetailActivity.class.getSimpleName();
 
 	private View mRootView = null;
 	private ViewGroup mTrailersContainer = null;
@@ -96,7 +98,11 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 	}
 
-	public void addEventListeners() {
+	public void onShareButtonClicked(View view) {
+		Log.d("MAIN", "Clicked!!!");
+	}
+
+	private void addEventListeners() {
 		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
 		MovieEvent.MovieReviewsLoaded.addListenerOnce(mMovieReviewsListener);
 	}
@@ -238,6 +244,9 @@ public class DetailActivityFragment extends BaseFragment {
 			mTrailersContainer = (ViewGroup) mRootView.findViewById(R.id.movie_trailers_container);
 		}
 
+		// Set up Share Intent with the first Trailer item
+		setShareButtonOnClickListener(mMovieTrailers.get(0));
+
 		final LayoutInflater inflater = LayoutInflater.from(getActivity());
 
 		for (final MovieTrailerVO trailerVO : movieTrailers) {
@@ -328,6 +337,36 @@ public class DetailActivityFragment extends BaseFragment {
 
 			mReviewsContainer.addView(reviewView);
 		}
+	}
+
+	private void setShareButtonOnClickListener(final MovieTrailerVO movieTrailerVO) {
+
+		final ImageView shareBtnImageView = (ImageView) mRootView.findViewById(R.id.button_share);
+
+		shareBtnImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_SEND);
+				intent.setType(MovieVars.SHARE_TYPE);
+				intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+
+				intent.putExtra(
+						Intent.EXTRA_SUBJECT,
+						movieTrailerVO.getName()
+				);
+
+				intent.putExtra(
+						Intent.EXTRA_TEXT,
+						MovieVars.EXTRA_TEXT + movieTrailerVO.getYoutubeUrl()
+				);
+
+				try {
+					startActivity(Intent.createChooser(intent, MovieVars.SHARE_TEXT));
+				} catch (ActivityNotFoundException e) {
+					Log.e(NAME, e.getMessage());
+				}
+			}
+		});
 	}
 
 	private void onFeedError(String message) {

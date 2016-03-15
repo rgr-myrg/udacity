@@ -94,10 +94,24 @@
 							<!--style="@style/Base.TextAppearance.AppCompat.Medium"/>-->
 					<!--</LinearLayout>-->
 
-					<ImageView
-						android:id="@+id/button_favorite"
-						android:layout_width="@dimen/heart_button_width"
-						android:layout_height="wrap_content"/>
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content">
+
+						<ImageView
+							android:id="@+id/button_favorite"
+							android:layout_width="@dimen/heart_button_width"
+							android:layout_height="wrap_content"
+							android:layout_gravity="bottom"/>
+						<ImageView
+							android:id="@+id/button_share"
+							android:src="@drawable/green_share_button_1"
+							android:layout_width="@dimen/share_button_width"
+							android:layout_height="@dimen/share_button_width"
+							android:layout_gravity="center_vertical"/>
+
+					</LinearLayout>
 
 				</LinearLayout>
 
