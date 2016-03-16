@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import org.json.JSONObject;
 
-public class MovieReviewVO implements Parcelable {
+public final class MovieReviewVO implements Parcelable {
 
 	public static final String ID_KEY = "id";
 	public static final String AUTHOR_KEY = "author";
@@ -62,23 +62,23 @@ public class MovieReviewVO implements Parcelable {
 	};
 
 	@Override
-	public int describeContents() {
+	public final int describeContents() {
 		return 0;
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 
-	public String getAuthor() {
+	public final String getAuthor() {
 		return author;
 	}
 
-	public String getContent() {
+	public final String getContent() {
 		return content;
 	}
 
-	public String getUrl() {
+	public final String getUrl() {
 		return url;
 	}
 
@@ -95,7 +95,7 @@ public class MovieReviewVO implements Parcelable {
 		);
 	}
 
-	public ContentValues toContentValues() {
+	public final ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
 
 		values.put(ID_KEY, id);

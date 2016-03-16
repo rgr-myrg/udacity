@@ -13,9 +13,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ParseDataTask {
+public final class ParseDataTask {
 
-	public static void parseMoviesFromJson(final JSONObject jsonObject) {
+	public final static void parseMoviesFromJson(final JSONObject jsonObject) {
 		new AsyncTask<Void, Void, ArrayList<MovieItemVO>>() {
 
 			@Override
@@ -39,7 +39,7 @@ public class ParseDataTask {
 		}.execute();
 	}
 
-	public static void parseTrailersFromJson(final JSONObject jsonObject) {
+	public final static void parseTrailersFromJson(final JSONObject jsonObject) {
 		new AsyncTask<Void, Void, ArrayList<MovieTrailerVO>>() {
 
 			@Override
@@ -63,7 +63,7 @@ public class ParseDataTask {
 		}.execute();
 	}
 
-	public static void parseReviewsFromJson(final JSONObject jsonObject) {
+	public final static void parseReviewsFromJson(final JSONObject jsonObject) {
 		new AsyncTask<Void, Void, ArrayList<MovieReviewVO>>() {
 
 			@Override

@@ -13,7 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpRequest extends AsyncTask<Void, Void, String> {
+public final class HttpRequest extends AsyncTask<Void, Void, String> {
 
 	public static final String JSON_NULL_ERROR = "Json Object is Null";
 	public static final String CONNECTIVY_ERROR = "No Internet Connection";
@@ -31,12 +31,12 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 		mRequestDelegate = delegate;
 	}
 
-	public void fetchJsonObjectWithUrl(final String targetUrl) {
+	public final void fetchJsonObjectWithUrl(final String targetUrl) {
 		mHasJsonRequest = true;
 		fetchWithUrl(targetUrl);
 	}
 
-	public void fetchWithUrl(final String targetUrl) {
+	public final void fetchWithUrl(final String targetUrl) {
 		try {
 			this.url = new URL(targetUrl);
 		} catch (MalformedURLException e) {

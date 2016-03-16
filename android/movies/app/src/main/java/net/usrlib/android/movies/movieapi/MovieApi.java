@@ -8,7 +8,7 @@ import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONObject;
 
-public class MovieApi {
+public final class MovieApi {
 
 	public static final String NAME = MovieApi.class.getSimpleName();
 
@@ -24,20 +24,20 @@ public class MovieApi {
 		REVIEWS
 	};
 
-	public void setPageNumber(final int pageNumber) {
+	public final void setPageNumber(final int pageNumber) {
 		mPageNumber = pageNumber;
 	}
 
-	public int getPageNumber() {
+	public final int getPageNumber() {
 		return mPageNumber;
 	}
 
-	public void fetchFirstPageSortedBy(final String sortBy) {
+	public final void fetchFirstPageSortedBy(final String sortBy) {
 		mPageNumber = 1;
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	public void fetchNextPageSortedBy(final String sortBy) {
+	public final void fetchNextPageSortedBy(final String sortBy) {
 		// Prevent multiple requests
 		if (mIsFetchingData) {
 			return;
@@ -49,7 +49,7 @@ public class MovieApi {
 		loadJsonFeedSortedBy(sortBy);
 	}
 
-	public void fetchMovieTrailersWithId(final int id) {
+	public final void fetchMovieTrailersWithId(final int id) {
 		mIsFetchingData = true;
 
 		makeHttpRequest(MovieEvent.MovieTrailersLoaded, RequestType.TRAILERS);
@@ -65,7 +65,7 @@ public class MovieApi {
 		mHttpRequest.fetchJsonObjectWithUrl(MovieUrl.getReviewsUrl(id));
 	}
 
-	private void loadJsonFeedSortedBy(final String sortBy) {
+	private final void loadJsonFeedSortedBy(final String sortBy) {
 		// Cap off requests when the limit is reached
 		if (mPageNumber >= MovieVars.PAGE_COUNT_LIMIT) {
 			MovieEvent.RequestLimitReached.notifyComplete();
@@ -84,7 +84,7 @@ public class MovieApi {
 		);
 	}
 
-	private void makeHttpRequest(final Event event, final RequestType requestType) {
+	private final void makeHttpRequest(final Event event, final RequestType requestType) {
 		// Create a new task each request. AsyncTask runs once and terminates.
 		mHttpRequest = new HttpRequest(
 				new HttpRequest.Delegate() {

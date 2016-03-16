@@ -1,25 +1,25 @@
 package net.usrlib.android.event;
 
-public class EventPacket {
+public final class EventPacket {
 
-	private EventType type;
-	private Object data;
+	private EventType mType;
+	private Object mData;
 
 	public EventPacket(EventType type, Object data) {
-		this.type = type;
-		this.data = data;
+		this.mType = type;
+		this.mData = data;
 	}
 
 	public EventPacket(EventType type) {
-		this.type = type;
+		this.mType = type;
 	}
 
-	public EventType getType() {
-		return type;
+	public final EventType getType() {
+		return mType;
 	}
 
-	public Object getData() {
-		return data;
+	public final Object getData() {
+		return mData;
 	}
 
 }

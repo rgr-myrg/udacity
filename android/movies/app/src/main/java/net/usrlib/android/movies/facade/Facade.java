@@ -6,7 +6,7 @@ import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.data.MoviesDBHelper;
 import net.usrlib.android.movies.movieapi.MovieApi;
 
-public class Facade {
+public final class Facade {
 	private static Context sAppContext;
 	private static MovieApi sMovieApi = null;
 	private static MoviesDBHelper sMoviesDBHelper = null;

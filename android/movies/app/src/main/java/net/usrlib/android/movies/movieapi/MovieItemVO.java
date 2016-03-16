@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MovieItemVO implements Parcelable {
+public final class MovieItemVO implements Parcelable {
 
 	public static final String NAME = MovieItemVO.class.getSimpleName();
 
@@ -113,43 +113,43 @@ public class MovieItemVO implements Parcelable {
 		return 0;
 	}
 
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 
-	public String getOriginalTitle() {
+	public final String getOriginalTitle() {
 		return originalTitle;
 	}
 
-	public String getPosterPath() {
+	public final String getPosterPath() {
 		return posterPath;
 	}
 
-	public String getImageUrl() {
+	public final String getImageUrl() {
 		return imageUrl;
 	}
 
-	public String getOverview() {
+	public final String getOverview() {
 		return overview;
 	}
 
-	public String getReleaseDate() {
+	public final String getReleaseDate() {
 		return releaseDate;
 	}
 
-	public int getVoteCount() {
+	public final int getVoteCount() {
 		return voteCount;
 	}
 
-	public Number getVoteAverage() {
+	public final Number getVoteAverage() {
 		return voteAverage;
 	}
 
-	public double getPopularity() {
+	public final double getPopularity() {
 		return popularity;
 	}
 
-	public static MovieItemVO fromJsonObject(final JSONObject jsonObject) {
+	public final static MovieItemVO fromJsonObject(final JSONObject jsonObject) {
 		if (jsonObject == null) {
 			return null;
 		}

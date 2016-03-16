@@ -1,6 +1,6 @@
 package net.usrlib.android.util;
 
-public class ColorUtil {
+public final class ColorUtil {
 
 	// Color list from http://htmlcolorcodes.com/color-chart/material-design-color-chart/
 	private static final String[] sColorCodes = {

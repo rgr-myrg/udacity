@@ -5,10 +5,10 @@ import java.util.Observer;
 
 public class Listener implements Observer {
 
-	protected boolean runOnce;
+	private boolean mRunOnce;
 
 	@Override
-	public void update(Observable observable, Object data) {
+	public void update(final Observable observable, final Object data) {
 		final EventPacket packet = (EventPacket) data;
 		final EventType eventType = packet.getType();
 		final Object eventData = packet.getData();
@@ -24,9 +24,13 @@ public class Listener implements Observer {
 				break;
 		}
 
-		if (runOnce) {
+		if (mRunOnce) {
 			observable.deleteObserver(this);
 		}
+	}
+
+	public final void setRunOnce(boolean runOnce) {
+		this.mRunOnce = runOnce;
 	}
 
 	// Must override in each instance.

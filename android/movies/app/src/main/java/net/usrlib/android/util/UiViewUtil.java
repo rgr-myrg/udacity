@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class UiViewUtil {
+public final class UiViewUtil {
 
 	public static final TextView setText(final View view, final int id, final String value) {
 		if (view == null || value == null) {

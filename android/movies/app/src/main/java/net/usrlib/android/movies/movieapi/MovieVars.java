@@ -1,6 +1,6 @@
 package net.usrlib.android.movies.movieapi;
 
-public class MovieVars {
+public final class MovieVars {
 
 	public static final String ID_TOKEN = "{id}";
 

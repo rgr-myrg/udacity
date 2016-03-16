@@ -14,7 +14,7 @@ import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 import java.util.ArrayList;
 
-public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
+public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 	private ArrayList<MovieItemVO> mMovieItems = new ArrayList<MovieItemVO>();
 	private Context mContext;
@@ -40,10 +40,11 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 			convertView.setTag(new ViewHolder(imageView));
 		} else {
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			imageView = viewHolder.imageView;
+			imageView = viewHolder.getImageView();
 		}
 
 		MovieItemVO item = mMovieItems.get(position);
+
 		Glide.with(mContext)
 				.load(item.getImageUrl())
 				.placeholder(R.drawable.image_poster_placeholder)
@@ -54,12 +55,12 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		return convertView;
 	}
 
-	public void updateItemsList(final ArrayList<MovieItemVO> arrayList) {
+	public final void updateItemsList(final ArrayList<MovieItemVO> arrayList) {
 		mMovieItems.addAll(arrayList);
 		notifyDataSetChanged();
 	}
 
-	public ArrayList<MovieItemVO> getMovieItems() {
+	public final ArrayList<MovieItemVO> getMovieItems() {
 		return mMovieItems;
 	}
 
@@ -68,12 +69,18 @@ public class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		 * See: https://youtu.be/wDBM6wVEO70?t=10m39s
 		 * And: http://www.piwai.info/android-adapter-good-practices/
 		 */
-	private static class ViewHolder {
-		public final ImageView imageView;
+	private final static class ViewHolder {
+
+		private final ImageView mImageView;
 
 		public ViewHolder(final ImageView imageView) {
-			this.imageView = imageView;
+			this.mImageView = imageView;
 		}
+
+		public final ImageView getImageView() {
+			return mImageView;
+		}
+
 	}
 
 }
