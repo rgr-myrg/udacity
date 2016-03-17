@@ -17,10 +17,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.usrlib.android.event.Listener;
+import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
-import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieReviewVO;
@@ -81,11 +81,18 @@ public class DetailActivityFragment extends BaseFragment {
 			restoreValuesFromBundle(instanceState);
 		}
 
+		Intent intent = new Intent();
+		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
+
+		// Set Result Code and Intent for onActivityResult()
+		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
+
 		return mRootView;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		if (BuildConfig.DEBUG) Log.d("MAIN", "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
 		if (mMovieItemVO != null) {
@@ -107,6 +114,7 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void parseIntentAndFetchData() {
+		if (BuildConfig.DEBUG) Log.d("MAIN", "parseIntentAndFetchData");
 		final Intent intent = getActivity().getIntent();
 
 		if (intent == null || !intent.hasExtra(MovieItemVO.NAME)) {
@@ -125,6 +133,7 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
+		if (BuildConfig.DEBUG) Log.d("MAIN", "restoreValuesFromBundle");
 		if (bundle.containsKey(MovieVars.DETAIL_KEY)) {
 			mMovieItemVO = (MovieItemVO) bundle.get(MovieVars.DETAIL_KEY);
 		}
@@ -146,7 +155,7 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void loadMovieDetail() {
-		if (mMovieItemVO == null) {
+		if (mMovieItemVO == null || getActivity() == null) {
 			UiViewUtil.setText(
 					mRootView,
 					R.id.movie_title,
@@ -223,15 +232,15 @@ public class DetailActivityFragment extends BaseFragment {
 		imageView.setImageResource(imageResource);
 		imageView.setTag(imageResource);
 
-		Intent intent = new Intent();
-		intent.putExtra(MovieVars.IS_FAVORITED_KEY, true);
-
-		// Set Result Code and Intent for onActivityResult()
-		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
+//		Intent intent = new Intent();
+//		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
+//
+//		// Set Result Code and Intent for onActivityResult()
+//		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
 	}
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
-		if (movieTrailers == null || movieTrailers.size() == 0) {
+		if (movieTrailers == null || movieTrailers.size() == 0 || getActivity() == null) {
 			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
 
 			return;
@@ -249,7 +258,7 @@ public class DetailActivityFragment extends BaseFragment {
 		final LayoutInflater inflater = LayoutInflater.from(getActivity());
 
 		for (final MovieTrailerVO trailerVO : movieTrailers) {
-			Log.d("MAIN", "onMovieTrailersLoaded: " + trailerVO.getName());
+			if (BuildConfig.DEBUG) Log.d("MAIN", "onMovieTrailersLoaded: " + trailerVO.getName());
 
 			final View trailerView = inflater.inflate(R.layout.item_trailer, mTrailersContainer, false);
 
@@ -274,7 +283,7 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
-		if (movieReviews == null || movieReviews.size() == 0) {
+		if (movieReviews == null || movieReviews.size() == 0 || getActivity() == null) {
 			UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS_MSG);
 
 			return;
@@ -370,6 +379,9 @@ public class DetailActivityFragment extends BaseFragment {
 
 	private void onFeedError(String message) {
 		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
+		// No items to Display. Update UI accordingly.
+		UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
+		UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS_MSG);
 	}
 
 }

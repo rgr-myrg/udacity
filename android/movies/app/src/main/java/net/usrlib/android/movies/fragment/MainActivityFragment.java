@@ -1,8 +1,11 @@
 package net.usrlib.android.movies.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import net.usrlib.android.event.Listener;
+import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
@@ -26,6 +30,9 @@ import java.util.ArrayList;
 
 public class MainActivityFragment extends BaseFragment {
 
+	public static final String NAME = MainActivityFragment.class.getSimpleName();
+
+	private static final int ITEM_SCROLL_BUFFER = 10;
 	private static final int FAVORITES_REQUEST_CODE = 5;
 
 	private View mRootView = null;
@@ -38,25 +45,36 @@ public class MainActivityFragment extends BaseFragment {
 	private boolean mHasEventListeners;
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d(NAME, "onCreate getContext: " + getContext().toString());
+		Facade.setAppContext(getContext());
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle instanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		mRootView = rootView;
+		mRootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 		// Ensure onOptionsItemSelected is triggered
 		setHasOptionsMenu(true);
 
-		if (!mHasEventListeners) {
-			mHasEventListeners = true;
-			// Wire up Event Listeners
-			addEventListeners();
-		}
-
 		// Init and Set Up Grid View
 		initGridView(
-				(GridView) rootView.findViewById(R.id.movie_grid_view)
+				(GridView) mRootView.findViewById(R.id.movie_grid_view)
 		);
 
+		Log.d(NAME, "onCreateView getContext: " + getContext().toString());
+//		Facade.setAppContext(getContext());
+
+//		if (!mHasEventListeners) {
+//			mHasEventListeners = true;
+//			addEventListenersOnce();
+//		}
+
 		if (instanceState == null) {
+			// Add Listeners
+			addEventListenersOnce();
+
 			// Start up with Most Popular Movies
 			getMostPopularMovies();
 		} else if (instanceState.containsKey(MovieVars.MOVIE_LIST_KEY)) {
@@ -64,7 +82,7 @@ public class MainActivityFragment extends BaseFragment {
 			restoreValuesFromBundle(instanceState);
 		}
 
-		return rootView;
+		return mRootView;
 	}
 
 	@Override
@@ -111,12 +129,38 @@ public class MainActivityFragment extends BaseFragment {
 		outState.putInt(MovieVars.PAGE_PARAM_KEY, Facade.getMovieApi().getPageNumber());
 	}
 
-	private void addEventListeners() {
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (BuildConfig.DEBUG) Log.d(NAME, "onActivityResult mCurrentTitle: " + mCurrentTitle);
+		// Determine if Favorites should be refreshed.
+		if (data != null
+				&& data.hasExtra(MovieVars.IS_DETAIL_ACTIVITY)
+				&& data.getBooleanExtra(MovieVars.IS_DETAIL_ACTIVITY, false)
+				&& mCurrentTitle != null
+				&& mCurrentTitle == Facade.Resource.getTitleFavorites())  {
+
+			Log.d(NAME, "Refreshing Favorites");
+			getFavoriteMovies();
+		}
+	}
+
+	private void addEventListenersOnce() {
+		if (BuildConfig.DEBUG){
+			Log.d(NAME, "addEventListenersOnce mHasEventListeners: "
+					+ String.valueOf(mHasEventListeners));
+		}
+
+		if (mHasEventListeners) {
+			return;
+		}
+
 		MovieEvent.DiscoverFeedLoaded.addListener(new Listener() {
 			@Override
 			public void onComplete(Object eventData) {
 				onMovieFeedLoaded(
-						(ArrayList < MovieItemVO >) eventData
+						(ArrayList<MovieItemVO>) eventData
 				);
 			}
 
@@ -134,12 +178,7 @@ public class MainActivityFragment extends BaseFragment {
 			}
 		});
 
-		MovieEvent.ActivityResultReady.addListener(new Listener() {
-			@Override
-			public void onComplete(Object eventData) {
-				onActivityResultReady((Intent) eventData);
-			}
-		});
+		mHasEventListeners = true;
 	}
 
 	private void initGridView(final GridView gridView) {
@@ -160,7 +199,7 @@ public class MainActivityFragment extends BaseFragment {
 				Intent intent = new Intent(activity, DetailActivity.class);
 				intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
-				// Use a request code to trigger onActivityResult
+				// Use a request code to trigger onActivityResult on MainActivity
 				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 			}
 		});
@@ -172,6 +211,11 @@ public class MainActivityFragment extends BaseFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//				Log.d(NAME, "onScroll -----> " + "\n"
+//						+ "firstVisibleItem: " + firstVisibleItem + "\n"
+//						+ "visibleItemCount: " + visibleItemCount + "\n"
+//						+ "totalItemCount: " + totalItemCount + "\n");
+
 				// onScroll is triggered spuriously while GridView is created.
 				// GridView seems to auto scroll a bit and jitter on some devices.
 				// Guard clause: Do nothing when totalItemCount is zero.
@@ -179,10 +223,13 @@ public class MainActivityFragment extends BaseFragment {
 					return;
 				}
 
-				int lastItemCount = firstVisibleItem + visibleItemCount;
+				//int lastItemCount = firstVisibleItem + visibleItemCount;
 
-				if (lastItemCount == totalItemCount
+				//if (lastItemCount > totalItemCount - visibleItemCount
+				if (firstVisibleItem > totalItemCount - ITEM_SCROLL_BUFFER
 						&& !mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
+
+					if (BuildConfig.DEBUG) Log.d(NAME, "onScroll invoking fetchNextPageSortedBy");
 					Facade.getMovieApi().fetchNextPageSortedBy(mCurrentSortBy);
 				}
 			}
@@ -199,6 +246,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private void getFavoriteMovies() {
 		mIsFirstPageRequest = true;
+
 		setViewTitle(Facade.Resource.getTitleFavorites());
 
 		onMovieFeedLoaded(
@@ -207,6 +255,7 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
+		if (BuildConfig.DEBUG) Log.d(NAME, "restoreValuesFromBundle");
 		final String viewTitle = bundle.getString(MovieVars.VIEW_TITLE_KEY);
 
 		if (viewTitle != null) {
@@ -226,17 +275,42 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void fetchMovieFeed(final String sortBy, final String title) {
+		if (BuildConfig.DEBUG) Log.d(NAME, "fetchMovieFeed");
+
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
+		//addEventListenersOnce();
 		setViewTitle(title);
 
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
 	}
 
-	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList){
-		if (mGridItemAdapter == null || mIsFirstPageRequest) {
-			mGridItemAdapter = new GridItemAdapter(getContext(), arrayList);
+	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList) {
+		Context context = getContext();
+
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, "onMovieFeedLoaded arrayList size: "
+							+ String.valueOf(arrayList.size()) + "\n"
+							+ "mIsFirstPageRequest: "
+							+ String.valueOf(mIsFirstPageRequest) + "\n"
+			);
+
+			if (context == null) {
+				Log.d(NAME, "Context is null. Facade: " + Facade.getAppContext().toString());
+			}
+
+			if (mGridItemAdapter == null) {
+				Log.d(NAME, "mGridItemAdapter is null.");
+			}
+		}
+
+		if (mGridItemAdapter == null || mIsFirstPageRequest || context == null) {
+			mGridItemAdapter = new GridItemAdapter(
+					context != null ? context : Facade.getAppContext(),
+					arrayList
+			);
+
 			mGridView.setAdapter(mGridItemAdapter);
 			mIsFirstPageRequest = false;
 
@@ -245,7 +319,7 @@ public class MainActivityFragment extends BaseFragment {
 		}
 
 		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.
-		UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
+		//UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
 	private void setViewTitle(String viewTitle) {
@@ -255,23 +329,17 @@ public class MainActivityFragment extends BaseFragment {
 			getActivity().setTitle(viewTitle);
 		}
 
+		// Clear items before loading new items
+		if (mGridItemAdapter != null) {
+			mGridItemAdapter.clear();
+		}
+
 		mCurrentTitle = viewTitle;
 	}
 
 	private void onMovieLimitReached() {
 		// Toast Friendly Message to UI
-	}
-
-	// Triggered by MainActivity.onActivityResult
-	private void onActivityResultReady(Intent data) {
-		// Refresh favorite movie list if we're coming back to Favorites View
-		if (data != null
-				&& data.hasExtra(MovieVars.IS_FAVORITED_KEY)
-				&& data.getBooleanExtra(MovieVars.IS_FAVORITED_KEY, false)
-				&& Facade.isTitleFavorites(mCurrentTitle)) {
-
-			getFavoriteMovies();
-		}
+		UiViewUtil.displayToastMessage(getActivity(), MovieVars.LIMIT_REACHED_MSG);
 	}
 
 	private void onMovieFeedError() {

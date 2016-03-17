@@ -7,11 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 import java.util.ArrayList;
 
 public class MoviesDBHelper extends SQLiteOpenHelper {
+	public static final String NAME = MoviesDBHelper.class.getSimpleName();
 
 	public MoviesDBHelper(Context context) {
 		super(context, MoviesSQL.DB_NAME, null, MoviesSQL.DB_VERSION);
@@ -61,7 +63,8 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		cursor.close();
 		//db.close();
 
-		Log.d("MoviesDBHelper", "selected " +String.valueOf(movieItems.size()));
+		if (BuildConfig.DEBUG) Log.d(NAME, "selected " + String.valueOf(movieItems.size()));
+
 		return movieItems;
 	}
 
@@ -69,7 +72,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		final SQLiteDatabase db = getWritableDatabase();
 		boolean result = false;
 
-		Log.d("MoviesDBHelper", "setMovieAsFavorite isLiked: " + String.valueOf(isLiked));
 		if (isLiked) {
 			final long id = db.insert(MoviesSQL.TABLE_MOVIE_FAVORITES, null, values);
 			result = id != -1;
@@ -87,7 +89,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
 		//db.close();
 
-		Log.d("MoviesDBHelper", "setMovieAsFavorite result: " + String.valueOf(result));
+		if (BuildConfig.DEBUG) Log.d(NAME, "setMovieAsFavorite result: " + String.valueOf(result));
 		return result;
 	}
 
@@ -102,8 +104,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 				}
 		);
 
-		Log.d("MoviesDBHelper", MoviesSQL.SELECT_FAVORITES_WITH_ID
-				+ String.valueOf(movieId) + " --> " + String.valueOf(cursor.getCount()));
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, MoviesSQL.SELECT_FAVORITES_WITH_ID
+					+ String.valueOf(movieId) + " --> " + String.valueOf(cursor.getCount()));
+		}
 
 		result = cursor.getCount() != 0;
 

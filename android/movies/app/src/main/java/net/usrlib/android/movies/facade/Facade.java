@@ -11,9 +11,9 @@ public final class Facade {
 	private static MovieApi sMovieApi = null;
 	private static MoviesDBHelper sMoviesDBHelper = null;
 
-	private static String sTitleMostPopular;
-	private static String sTitleHighestRated;
-	private static String sTitleFavorites;
+	private static String sTitleMostPopular = null;
+	private static String sTitleHighestRated = null;
+	private static String sTitleFavorites = null;
 
 	public static final void onCreate(Context context) {
 		sAppContext = context;
@@ -39,9 +39,20 @@ public final class Facade {
 		return sMoviesDBHelper;
 	}
 
-	public static final boolean isTitleFavorites(final String title) {
-		return title.contentEquals(sTitleFavorites);
+	public static final Context getAppContext() {
+		return sAppContext;
 	}
+
+	public static void setAppContext(Context context) {
+		sAppContext = context;
+	}
+
+	//	public static final boolean isTitleFavorites(final String title) {
+//		if (title == null) {
+//			return false;
+//		}
+//		return title.contentEquals(sTitleFavorites);
+//	}
 
 	public static final class Resource {
 

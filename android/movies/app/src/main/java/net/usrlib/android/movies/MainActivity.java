@@ -3,12 +3,12 @@ package net.usrlib.android.movies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import net.usrlib.android.movies.lifecycle.ActivityLifecycle;
-import net.usrlib.android.movies.movieapi.MovieEvent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,8 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Notify Observers we are returning from startActivityForResult()
-		MovieEvent.ActivityResultReady.notifyComplete(data);
+		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+
+		if (fragment != null) {
+			// Message MainActivityFragment onActivityResult was triggered
+			fragment.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override

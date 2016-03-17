@@ -13,13 +13,21 @@ public final class UiViewUtil {
 			return null;
 		}
 
+		final Activity activity = (Activity) view.getContext();
 		final TextView textView = (TextView) view.findViewById(id);
 
-		if (textView == null) {
+		if (activity == null || textView == null) {
 			return null;
 		}
 
-		textView.setText(value);
+		activity.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						textView.setText(value);
+					}
+				}
+		);
 
 		return textView;
 	}

@@ -1,6 +1,7 @@
 package net.usrlib.android.movies.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,15 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 import java.util.ArrayList;
 
 public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
+
+	public static final String NAME = GridItemAdapter.class.getSimpleName();
 
 	private ArrayList<MovieItemVO> mMovieItems = new ArrayList<MovieItemVO>();
 	private Context mContext;
@@ -24,6 +28,10 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 		mContext = context;
 		mMovieItems = arrayList;
+
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, "GridItemAdapter context: " + context.toString());
+		}
 	}
 
 	@Override
@@ -56,6 +64,10 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 	}
 
 	public final void updateItemsList(final ArrayList<MovieItemVO> arrayList) {
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, "updateItemsList size: " + String.valueOf(arrayList.size()));
+		}
+
 		mMovieItems.addAll(arrayList);
 		notifyDataSetChanged();
 	}

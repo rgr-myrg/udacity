@@ -29,7 +29,7 @@ public final class MovieVars {
 	public static final String DETAIL_KEY = "movie_detail";
 	public static final String TRAILERS_KEY = "movie_trailers";
 	public static final String REVIEWS_KEY = "movie_reviews";
-	public static final String IS_FAVORITED_KEY = "is_favorited";
+	public static final String IS_DETAIL_ACTIVITY = "is_detail_activity";
 
 	public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 	public static final String YOUTUBE_SITE = "YouTube";
@@ -41,6 +41,7 @@ public final class MovieVars {
 	public static final String NO_MOVIES_MSG = "Unable to load Movie details";
 	public static final String NO_REVIEWS_MSG = "No Reviews Found";
 	public static final String NO_TRAILERS_MSG = "No Trailers Found";
+	public static final String LIMIT_REACHED_MSG = "Request Limit Reached";
 
 	public static final String DOTTED = "...";
 

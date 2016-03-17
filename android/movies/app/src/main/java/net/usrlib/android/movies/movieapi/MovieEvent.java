@@ -8,6 +8,5 @@ public final class MovieEvent {
 	public static final Event RequestLimitReached = new Event();
 	public static final Event MovieTrailersLoaded = new Event();
 	public static final Event MovieReviewsLoaded  = new Event();
-	public static final Event ActivityResultReady = new Event();
 
 }

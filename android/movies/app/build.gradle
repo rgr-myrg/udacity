@@ -8,7 +8,7 @@ android {
 
 	defaultConfig {
 		applicationId "net.usrlib.android.movies"
-		minSdkVersion 10
+		minSdkVersion 11
 		targetSdkVersion 23
 		versionCode 1
 		versionName "1.0"
@@ -18,6 +18,9 @@ android {
 		release {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+		debug {
+
 		}
 	}
 }

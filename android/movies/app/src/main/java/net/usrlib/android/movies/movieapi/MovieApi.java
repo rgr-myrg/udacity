@@ -3,6 +3,7 @@ package net.usrlib.android.movies.movieapi;
 import android.util.Log;
 
 import net.usrlib.android.event.Event;
+import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.task.ParseDataTask;
 import net.usrlib.android.util.HttpRequest;
 
@@ -38,6 +39,8 @@ public final class MovieApi {
 	}
 
 	public final void fetchNextPageSortedBy(final String sortBy) {
+		if (BuildConfig.DEBUG) Log.d(NAME, "mIsFetchingData: " + String.valueOf(mIsFetchingData));
+
 		// Prevent multiple requests
 		if (mIsFetchingData) {
 			return;
@@ -77,7 +80,9 @@ public final class MovieApi {
 
 		makeHttpRequest(MovieEvent.DiscoverFeedLoaded, RequestType.DISCOVER_FEED);
 
-		Log.d(NAME, "Fetching page: " + mPageNumber + " sort by: " + mCurrentSortBy);
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, "Fetching page: " + mPageNumber + " sort by: " + mCurrentSortBy);
+		}
 
 		mHttpRequest.fetchJsonObjectWithUrl(
 				MovieUrl.getDiscoverUrl(mCurrentSortBy, mPageNumber)
