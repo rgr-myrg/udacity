@@ -100,6 +100,7 @@ public final class HttpRequest extends AsyncTask<Void, Void, String> {
 			try {
 				if (mHasJsonRequest) {
 					JSONObject jsonObject = new JSONObject(string);
+
 					if (jsonObject != null ) {
 						mRequestDelegate.onPostExecuteComplete(jsonObject);
 					} else {

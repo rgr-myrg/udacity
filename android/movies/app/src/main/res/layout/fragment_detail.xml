@@ -10,9 +10,10 @@
 				tools:context=".fragment.DetailActivityFragment"
 				tools:showIn="@layout/activity_detail">
 
+	<!-- Int: Use a layout_height of 0dp instead of wrap_content for better performance -->
 	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="0dp"
 		android:orientation="vertical"
 		android:layout_weight="1"
 		android:id="@+id/detail_scroll_view">

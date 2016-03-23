@@ -29,11 +29,12 @@ import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unchecked")
 public class MainActivityFragment extends BaseFragment {
 
-	public static final String NAME = MainActivityFragment.class.getSimpleName();
+	private static final String NAME = MainActivityFragment.class.getSimpleName();
 
-	private static final int ITEM_SCROLL_BUFFER = 10;
+	//private static final int ITEM_SCROLL_BUFFER = 10;
 	private static final int FAVORITES_REQUEST_CODE = 5;
 
 	private View mRootView = null;
@@ -139,7 +140,8 @@ public class MainActivityFragment extends BaseFragment {
 				&& data.hasExtra(MovieVars.IS_DETAIL_ACTIVITY)
 				&& data.getBooleanExtra(MovieVars.IS_DETAIL_ACTIVITY, false)
 				&& mCurrentTitle != null
-				&& mCurrentTitle == ResourceHolder.getTitleFavorites())  {
+				&& mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())) {
+			//	&& mCurrentTitle == ResourceHolder.getTitleFavorites())  {
 
 			getFavoriteMovies();
 		}

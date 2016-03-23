@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 public final class MovieApi {
 
-	public static final String NAME = MovieApi.class.getSimpleName();
+	private static final String NAME = MovieApi.class.getSimpleName();
 
 	private HttpRequest mHttpRequest;
 	private String mCurrentSortBy = "";
@@ -23,7 +23,7 @@ public final class MovieApi {
 		DISCOVER_FEED,
 		TRAILERS,
 		REVIEWS
-	};
+	}
 
 	public final void setPageNumber(final int pageNumber) {
 		mPageNumber = pageNumber;

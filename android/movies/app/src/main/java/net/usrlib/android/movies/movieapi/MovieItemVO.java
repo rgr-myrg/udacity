@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public final class MovieItemVO implements Parcelable {
 
@@ -167,8 +168,8 @@ public final class MovieItemVO implements Parcelable {
 
 		// Format to friendly date. Ex: 2016-02-09 to February 10, 2016
 		try {
-			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			final SimpleDateFormat newFormat  = new SimpleDateFormat("MMMM d, yyyy");
+			final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+			final SimpleDateFormat newFormat  = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
 			final Date date = dateFormat.parse(releaseDate);
 			releaseDate = newFormat.format(date);
 

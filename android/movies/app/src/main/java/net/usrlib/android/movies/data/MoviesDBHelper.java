@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import net.usrlib.android.movies.BuildConfig;
+import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 import java.util.ArrayList;
@@ -70,21 +71,27 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
 	public boolean setMovieAsFavorite(final ContentValues values, final boolean isLiked) {
 		final SQLiteDatabase db = getWritableDatabase();
-		boolean result = false;
+		boolean result;
 
 		if (isLiked) {
 			final long id = db.insert(MoviesSQL.TABLE_MOVIE_FAVORITES, null, values);
 			result = id != -1;
+			if (result) {
+				MovieEvent.MovieSetAsFavorite.notifyComplete(null);
+			}
 		} else {
 			final int rows = db.delete(
 					MoviesSQL.TABLE_MOVIE_FAVORITES,
 					MoviesSQL.ID_CLAUSE,
-					new String[] {
+					new String[]{
 							String.valueOf(values.get(MovieItemVO.ID))
 					}
 			);
 
 			result = rows > 0;
+			if (result) {
+				MovieEvent.MovieUnsetAsFavorite .notifyComplete(null);
+			}
 		}
 
 		//db.close();

@@ -26,6 +26,7 @@ import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieReviewVO;
 import net.usrlib.android.movies.movieapi.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.movies.viewholder.ReviewViewHolder;
 import net.usrlib.android.movies.viewholder.TrailerViewHolder;
 import net.usrlib.android.util.ColorUtil;
@@ -34,8 +35,9 @@ import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unchecked")
 public class DetailActivityFragment extends BaseFragment {
-	public static final String NAME = DetailActivity.class.getSimpleName();
+	private static final String NAME = DetailActivity.class.getSimpleName();
 
 	private View mRootView = null;
 	private ViewGroup mTrailersContainer = null;
@@ -113,6 +115,20 @@ public class DetailActivityFragment extends BaseFragment {
 	private void addEventListeners() {
 		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
 		MovieEvent.MovieReviewsLoaded.addListenerOnce(mMovieReviewsListener);
+
+		MovieEvent.MovieSetAsFavorite.addListener(new Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				UiViewUtil.displayToastMessage(getActivity(), ResourceHolder.getSavedFavoriteMsg());
+			}
+		});
+
+		MovieEvent.MovieUnsetAsFavorite.addListener(new Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				UiViewUtil.displayToastMessage(getActivity(), ResourceHolder.getRemovedFavoriteMsg());
+			}
+		});
 	}
 
 	private void parseIntentAndFetchData() {
@@ -171,7 +187,7 @@ public class DetailActivityFragment extends BaseFragment {
 		final ImageView posterImageView = (ImageView) mRootView.findViewById(R.id.movie_poster);
 		final ImageView favBtnImageView = (ImageView) mRootView.findViewById(R.id.button_favorite);
 
-		// Invoking placeholder causes the image to misalign. >:(
+		// Invoking placeholder causes the image to become misaligned. >:(
 		Glide.with(getActivity())
 				.load(mMovieItemVO.getImageUrl())
 						//.placeholder(R.drawable.image_poster_placeholder)
