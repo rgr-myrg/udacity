@@ -39,6 +39,7 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 		ImageView imageView;
 
 		if (convertView == null) {
+			Log.d("MAIN", "getView convertView is null");
 			convertView = LayoutInflater
 					.from(getContext())
 					.inflate(R.layout.item_movie, parent, false);
@@ -47,6 +48,7 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 			convertView.setTag(new ViewHolder(imageView));
 		} else {
+			Log.d("MAIN", "getView viewHolder");
 			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 			imageView = viewHolder.getImageView();
 		}

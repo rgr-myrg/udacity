@@ -47,13 +47,6 @@ public final class Facade {
 		sAppContext = context;
 	}
 
-	//	public static final boolean isTitleFavorites(final String title) {
-//		if (title == null) {
-//			return false;
-//		}
-//		return title.contentEquals(sTitleFavorites);
-//	}
-
 	public static final class Resource {
 
 		public static final String getTitleMostPopular() {

@@ -47,7 +47,9 @@ public class MainActivityFragment extends BaseFragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(NAME, "onCreate getContext: " + getContext().toString());
+
+		// Investigating an issue where the context is null on the fragment.
+		// Save the context to debug later. Not intended for production.
 		Facade.setAppContext(getContext());
 	}
 
@@ -63,18 +65,12 @@ public class MainActivityFragment extends BaseFragment {
 				(GridView) mRootView.findViewById(R.id.movie_grid_view)
 		);
 
-		Log.d(NAME, "onCreateView getContext: " + getContext().toString());
-//		Facade.setAppContext(getContext());
-
-//		if (!mHasEventListeners) {
-//			mHasEventListeners = true;
-//			addEventListenersOnce();
-//		}
+		if (!mHasEventListeners) {
+			mHasEventListeners = true;
+			addEventListeners();
+		}
 
 		if (instanceState == null) {
-			// Add Listeners
-			addEventListenersOnce();
-
 			// Start up with Most Popular Movies
 			getMostPopularMovies();
 		} else if (instanceState.containsKey(MovieVars.MOVIE_LIST_KEY)) {
@@ -117,6 +113,8 @@ public class MainActivityFragment extends BaseFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
+		if (BuildConfig.DEBUG) Log.d(NAME, "onSaveInstanceState");
+
 		if (mGridItemAdapter != null) {
 			outState.putParcelableArrayList(
 					MovieVars.MOVIE_LIST_KEY,
@@ -134,6 +132,7 @@ public class MainActivityFragment extends BaseFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (BuildConfig.DEBUG) Log.d(NAME, "onActivityResult mCurrentTitle: " + mCurrentTitle);
+
 		// Determine if Favorites should be refreshed.
 		if (data != null
 				&& data.hasExtra(MovieVars.IS_DETAIL_ACTIVITY)
@@ -141,19 +140,14 @@ public class MainActivityFragment extends BaseFragment {
 				&& mCurrentTitle != null
 				&& mCurrentTitle == Facade.Resource.getTitleFavorites())  {
 
-			Log.d(NAME, "Refreshing Favorites");
 			getFavoriteMovies();
 		}
 	}
 
-	private void addEventListenersOnce() {
+	private void addEventListeners() {
 		if (BuildConfig.DEBUG){
-			Log.d(NAME, "addEventListenersOnce mHasEventListeners: "
+			Log.d(NAME, "addEventListeners mHasEventListeners: "
 					+ String.valueOf(mHasEventListeners));
-		}
-
-		if (mHasEventListeners) {
-			return;
 		}
 
 		MovieEvent.DiscoverFeedLoaded.addListener(new Listener() {
@@ -223,10 +217,10 @@ public class MainActivityFragment extends BaseFragment {
 					return;
 				}
 
-				//int lastItemCount = firstVisibleItem + visibleItemCount;
+				int lastItemCount = firstVisibleItem + visibleItemCount;
 
-				//if (lastItemCount > totalItemCount - visibleItemCount
-				if (firstVisibleItem > totalItemCount - ITEM_SCROLL_BUFFER
+				if (lastItemCount > totalItemCount - visibleItemCount
+				//if (firstVisibleItem > totalItemCount - ITEM_SCROLL_BUFFER
 						&& !mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
 
 					if (BuildConfig.DEBUG) Log.d(NAME, "onScroll invoking fetchNextPageSortedBy");
@@ -256,6 +250,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
 		if (BuildConfig.DEBUG) Log.d(NAME, "restoreValuesFromBundle");
+
 		final String viewTitle = bundle.getString(MovieVars.VIEW_TITLE_KEY);
 
 		if (viewTitle != null) {
@@ -275,12 +270,12 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void fetchMovieFeed(final String sortBy, final String title) {
-		if (BuildConfig.DEBUG) Log.d(NAME, "fetchMovieFeed");
+		if (BuildConfig.DEBUG) Log.d(NAME, "fetchMovieFeed sortBy: " + sortBy);
 
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
-		//addEventListenersOnce();
+		//addEventListeners();
 		setViewTitle(title);
 
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
@@ -305,7 +300,7 @@ public class MainActivityFragment extends BaseFragment {
 			}
 		}
 
-		if (mGridItemAdapter == null || mIsFirstPageRequest || context == null) {
+		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			mGridItemAdapter = new GridItemAdapter(
 					context != null ? context : Facade.getAppContext(),
 					arrayList
@@ -316,6 +311,9 @@ public class MainActivityFragment extends BaseFragment {
 
 		} else {
 			mGridItemAdapter.updateItemsList(arrayList);
+
+			//mGridItemAdapter.addAll(arrayList);
+			//mGridItemAdapter.notifyDataSetChanged();
 		}
 
 		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.

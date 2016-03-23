@@ -39,8 +39,6 @@ public final class MovieApi {
 	}
 
 	public final void fetchNextPageSortedBy(final String sortBy) {
-		if (BuildConfig.DEBUG) Log.d(NAME, "mIsFetchingData: " + String.valueOf(mIsFetchingData));
-
 		// Prevent multiple requests
 		if (mIsFetchingData) {
 			return;
