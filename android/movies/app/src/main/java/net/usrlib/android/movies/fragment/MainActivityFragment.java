@@ -23,6 +23,7 @@ import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
 
@@ -138,7 +139,7 @@ public class MainActivityFragment extends BaseFragment {
 				&& data.hasExtra(MovieVars.IS_DETAIL_ACTIVITY)
 				&& data.getBooleanExtra(MovieVars.IS_DETAIL_ACTIVITY, false)
 				&& mCurrentTitle != null
-				&& mCurrentTitle == Facade.Resource.getTitleFavorites())  {
+				&& mCurrentTitle == ResourceHolder.getTitleFavorites())  {
 
 			getFavoriteMovies();
 		}
@@ -205,11 +206,6 @@ public class MainActivityFragment extends BaseFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				Log.d(NAME, "onScroll -----> " + "\n"
-//						+ "firstVisibleItem: " + firstVisibleItem + "\n"
-//						+ "visibleItemCount: " + visibleItemCount + "\n"
-//						+ "totalItemCount: " + totalItemCount + "\n");
-
 				// onScroll is triggered spuriously while GridView is created.
 				// GridView seems to auto scroll a bit and jitter on some devices.
 				// Guard clause: Do nothing when totalItemCount is zero.
@@ -221,7 +217,7 @@ public class MainActivityFragment extends BaseFragment {
 
 				if (lastItemCount > totalItemCount - visibleItemCount
 				//if (firstVisibleItem > totalItemCount - ITEM_SCROLL_BUFFER
-						&& !mCurrentTitle.contentEquals(Facade.Resource.getTitleFavorites())) {
+						&& !mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())) {
 
 					if (BuildConfig.DEBUG) Log.d(NAME, "onScroll invoking fetchNextPageSortedBy");
 					Facade.getMovieApi().fetchNextPageSortedBy(mCurrentSortBy);
@@ -231,17 +227,17 @@ public class MainActivityFragment extends BaseFragment {
 	}
 
 	private void getMostPopularMovies() {
-		fetchMovieFeed(MovieVars.MOST_POPULAR, Facade.Resource.getTitleMostPopular());
+		fetchMovieFeed(MovieVars.MOST_POPULAR, ResourceHolder.getTitleMostPopular());
 	}
 
 	private void getHighestRatedMovies() {
-		fetchMovieFeed(MovieVars.HIGHEST_RATED, Facade.Resource.getTitleHighestRated());
+		fetchMovieFeed(MovieVars.HIGHEST_RATED, ResourceHolder.getTitleHighestRated());
 	}
 
 	private void getFavoriteMovies() {
 		mIsFirstPageRequest = true;
 
-		setViewTitle(Facade.Resource.getTitleFavorites());
+		setActivityTitle(ResourceHolder.getTitleFavorites());
 
 		onMovieFeedLoaded(
 				Facade.getMoviesDBHelper().selectFromFavorites()
@@ -254,7 +250,7 @@ public class MainActivityFragment extends BaseFragment {
 		final String viewTitle = bundle.getString(MovieVars.VIEW_TITLE_KEY);
 
 		if (viewTitle != null) {
-			setViewTitle(viewTitle);
+			setActivityTitle(viewTitle);
 		}
 
 		// Restore last sortBy value for the next fetchNextPageSortedBy() request
@@ -276,7 +272,7 @@ public class MainActivityFragment extends BaseFragment {
 		mIsFirstPageRequest = true;
 
 		//addEventListeners();
-		setViewTitle(title);
+		setActivityTitle(title);
 
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
 	}
@@ -320,7 +316,7 @@ public class MainActivityFragment extends BaseFragment {
 		//UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
-	private void setViewTitle(String viewTitle) {
+	private void setActivityTitle(String viewTitle) {
 		final Activity activity = getActivity();
 
 		if (activity != null) {
