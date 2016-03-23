@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.viewholder.ItemViewHolder;
 
 import java.util.ArrayList;
 
@@ -36,23 +36,16 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ImageView imageView;
-
 		if (convertView == null) {
-			Log.d("MAIN", "getView convertView is null");
 			convertView = LayoutInflater
 					.from(getContext())
 					.inflate(R.layout.item_movie, parent, false);
 
-			imageView = (ImageView) convertView.findViewById(R.id.movie_item_image);
-
-			convertView.setTag(new ViewHolder(imageView));
-		} else {
-			Log.d("MAIN", "getView viewHolder");
-			ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-			imageView = viewHolder.getImageView();
+			// Use a view holder to store findViewById items
+			convertView.setTag(new ItemViewHolder(convertView));
 		}
 
+		ItemViewHolder viewHolder = (ItemViewHolder) convertView.getTag();
 		MovieItemVO item = mMovieItems.get(position);
 
 		Glide.with(mContext)
@@ -60,7 +53,7 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 				.placeholder(R.drawable.image_poster_placeholder)
 				.error(R.drawable.image_poster_placeholder)
 				.fitCenter() //Glide doesn't scale image properly!
-				.into(imageView);
+				.into(viewHolder.imageView);
 
 		return convertView;
 	}
@@ -76,25 +69,6 @@ public final class GridItemAdapter extends ArrayAdapter<MovieItemVO> {
 
 	public final ArrayList<MovieItemVO> getMovieItems() {
 		return mMovieItems;
-	}
-
-	/* ViewHolder: Google best practices. Create a static holder for data.
-		 * This holder addresses performance issues for large lists.
-		 * See: https://youtu.be/wDBM6wVEO70?t=10m39s
-		 * And: http://www.piwai.info/android-adapter-good-practices/
-		 */
-	private final static class ViewHolder {
-
-		private final ImageView mImageView;
-
-		public ViewHolder(final ImageView imageView) {
-			this.mImageView = imageView;
-		}
-
-		public final ImageView getImageView() {
-			return mImageView;
-		}
-
 	}
 
 }

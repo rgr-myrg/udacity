@@ -34,7 +34,7 @@ public final class MovieVars {
 	public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 	public static final String YOUTUBE_SITE = "YouTube";
 
-	public static final String SHARE_TYPE = "text/*";
+	public static final String INTENT_TEXT_TYPE = "text/*";
 	public static final String SHARE_TEXT = "Share This Movie!";
 	public static final String EXTRA_TEXT = "Check out this Movie! ";
 
