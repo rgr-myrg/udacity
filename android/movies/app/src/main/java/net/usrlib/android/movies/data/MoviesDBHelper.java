@@ -76,6 +76,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		if (isLiked) {
 			final long id = db.insert(MoviesSQL.TABLE_MOVIE_FAVORITES, null, values);
 			result = id != -1;
+
 			if (result) {
 				MovieEvent.MovieSetAsFavorite.notifyComplete(null);
 			}
@@ -89,8 +90,9 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			);
 
 			result = rows > 0;
+
 			if (result) {
-				MovieEvent.MovieUnsetAsFavorite .notifyComplete(null);
+				MovieEvent.MovieUnsetAsFavorite.notifyComplete(null);
 			}
 		}
 
