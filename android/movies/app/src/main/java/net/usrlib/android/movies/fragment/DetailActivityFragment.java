@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
 public class DetailActivityFragment extends BaseFragment {
-	private static final String NAME = DetailActivity.class.getSimpleName();
+	public static final String NAME = DetailActivity.class.getSimpleName();
 
 	private View mRootView = null;
 	private ViewGroup mTrailersContainer = null;
@@ -77,7 +77,11 @@ public class DetailActivityFragment extends BaseFragment {
 							 Bundle instanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-		if (instanceState == null) {
+		if (getArguments() != null) {
+			parseBundleAndFetchData();
+		}
+
+		else if (instanceState == null) {
 			addEventListeners();
 			parseIntentAndFetchData();
 
@@ -129,6 +133,28 @@ public class DetailActivityFragment extends BaseFragment {
 				UiViewUtil.displayToastMessage(getActivity(), ResourceHolder.getRemovedFavoriteMsg());
 			}
 		});
+	}
+
+	private void parseBundleAndFetchData() {
+		if (BuildConfig.DEBUG) Log.d("MAIN", "parseBundleAndFetchData");
+		final Bundle bundle = getArguments();
+
+		if (bundle == null) {
+			return;
+		}
+
+		mMovieItemVO = (MovieItemVO) bundle.getParcelable(MovieItemVO.NAME);
+
+		if (mMovieItemVO == null) {
+			return;
+		}
+
+		// Populate Detail Fragment
+		loadMovieDetail();
+
+		// Fetch Movie Trailers and Reviews as early as possible
+		Facade.getMovieApi().fetchMovieTrailersWithId(mMovieItemVO.getId());
+		Facade.getMovieApi().fetchMovieReviewsWithId(mMovieItemVO.getId());
 	}
 
 	private void parseIntentAndFetchData() {
@@ -253,7 +279,7 @@ public class DetailActivityFragment extends BaseFragment {
 
 //		Intent intent = new Intent();
 //		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
-//
+
 //		// Set Result Code and Intent for onActivityResult()
 //		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
 	}
@@ -358,14 +384,14 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
-		if (BuildConfig.DEBUG) {
-			Log.d(NAME, "onMovieTrailersLoaded: " + String.valueOf(movieTrailers.size()));
-		}
-
 		if (movieTrailers == null || movieTrailers.size() == 0 || getActivity() == null) {
 			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
 
 			return;
+		}
+
+		if (BuildConfig.DEBUG) {
+			Log.d(NAME, "onMovieTrailersLoaded: " + String.valueOf(movieTrailers.size()));
 		}
 
 		mMovieTrailers = movieTrailers;

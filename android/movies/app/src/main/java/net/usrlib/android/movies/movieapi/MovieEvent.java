@@ -10,5 +10,6 @@ public final class MovieEvent {
 	public static final Event MovieReviewsLoaded   = new Event();
 	public static final Event MovieSetAsFavorite   = new Event();
 	public static final Event MovieUnsetAsFavorite = new Event();
+	public static final Event LoadDetailFragment   = new Event();
 
 }

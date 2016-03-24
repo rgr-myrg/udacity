@@ -6,9 +6,15 @@ import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 
+import net.usrlib.android.event.Listener;
+import net.usrlib.android.movies.facade.Facade;
+import net.usrlib.android.movies.fragment.DetailActivityFragment;
 import net.usrlib.android.movies.lifecycle.ActivityLifecycle;
+import net.usrlib.android.movies.movieapi.MovieEvent;
+import net.usrlib.android.movies.movieapi.MovieItemVO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +28,48 @@ public class MainActivity extends AppCompatActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+
+		// Check if master_container is available to determine we're on a Tablet
+		if (findViewById(R.id.master_container) != null) {
+			Log.d("MAIN", "Tablet!!!");
+			Facade.setIsTablet(true);
+
+			MovieEvent.LoadDetailFragment.addListener(
+					new Listener() {
+						@Override
+						public void onComplete(Object eventData) {
+							onLoadDetailFragment((MovieItemVO) eventData);
+						}
+					}
+			);
+
+			if (savedInstanceState == null) {
+				// Begin Fragment Transaction for Tablet
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(
+								R.id.detail_container,
+								new DetailActivityFragment(),
+								DetailActivityFragment.NAME
+						)
+						.commit();
+			}
+		} else {
+			Facade.setIsTablet(false);
+		}
+	}
+
+	private void onLoadDetailFragment(MovieItemVO movieItemVO) {
+		Log.d("MAIN", "LoadDetailFragment.onComplete");
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(MovieItemVO.NAME, movieItemVO);
+
+		DetailActivityFragment fragment = new DetailActivityFragment();
+		fragment.setArguments(bundle);
+
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.detail_container, fragment, DetailActivityFragment.NAME)
+				.commit();
 	}
 
 	@Override

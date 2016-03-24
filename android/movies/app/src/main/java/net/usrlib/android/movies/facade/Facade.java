@@ -10,6 +10,7 @@ public final class Facade {
 	private static Context sAppContext;
 	private static MovieApi sMovieApi = null;
 	private static MoviesDBHelper sMoviesDBHelper = null;
+	private static boolean sIsTablet;
 
 	public static final void onCreate(Context context) {
 		sAppContext = context;
@@ -37,8 +38,16 @@ public final class Facade {
 		return sAppContext;
 	}
 
-	public static void setAppContext(Context context) {
+	public static final void setAppContext(final Context context) {
 		sAppContext = context;
+	}
+
+	public static final void setIsTablet(final boolean isTablet) {
+		sIsTablet = isTablet;
+	}
+
+	public static final boolean getIsTablet() {
+		return sIsTablet;
 	}
 
 }

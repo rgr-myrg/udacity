@@ -178,6 +178,28 @@ public class MainActivityFragment extends BaseFragment {
 		mHasEventListeners = true;
 	}
 
+	private void onMovieItemClicked() {
+		/*
+		if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
+        }
+		 */
+	}
 	private void initGridView(final GridView gridView) {
 		mGridView = gridView;
 
@@ -193,11 +215,15 @@ public class MainActivityFragment extends BaseFragment {
 					return;
 				}
 
-				Intent intent = new Intent(activity, DetailActivity.class);
-				intent.putExtra(MovieItemVO.NAME, movieItemVO);
+				if (!Facade.getIsTablet()) {
+					Intent intent = new Intent(activity, DetailActivity.class);
+					intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
-				// Use a request code to trigger onActivityResult on MainActivity
-				activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
+					// Use a request code to trigger onActivityResult on MainActivity
+					activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
+				} else {
+					MovieEvent.LoadDetailFragment.notifyComplete(movieItemVO);
+				}
 			}
 		});
 

@@ -22,6 +22,7 @@
 
 	<FrameLayout
 		android:id="@+id/detail_container"
+		android:name="net.usrlib.android.movies.fragment.DetailActivityFragment"
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
 		android:layout_weight="1">
