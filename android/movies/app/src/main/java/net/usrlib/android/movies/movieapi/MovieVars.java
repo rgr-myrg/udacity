@@ -26,9 +26,6 @@ public final class MovieVars {
 
 	public static final String VIEW_TITLE_KEY = "viewTitle";
 	public static final String MOVIE_LIST_KEY = "movie_list";
-	public static final String DETAIL_KEY = "movie_detail";
-	public static final String TRAILERS_KEY = "movie_trailers";
-	public static final String REVIEWS_KEY = "movie_reviews";
 	public static final String IS_DETAIL_ACTIVITY = "is_detail_activity";
 
 	public static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";

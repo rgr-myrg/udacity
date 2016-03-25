@@ -1,23 +1,45 @@
 package net.usrlib.android.movies.movieapi;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
+import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.UiViewUtil;
 
 public class MovieDetails {
 
 	public static final String NAME = MovieDetails.class.getSimpleName();
+
 	private BaseFragment mFragment = null;
 
 	public MovieDetails(BaseFragment fragment) {
 		mFragment = fragment;
+
+		MovieEvent.MovieSetAsFavorite.addListener(new Event.Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				UiViewUtil.displayToastMessage(
+						mFragment.getActivity(), ResourceHolder.getSavedFavoriteMsg()
+				);
+			}
+		});
+
+		MovieEvent.MovieUnsetAsFavorite.addListener(new Event.Listener() {
+			@Override
+			public void onComplete(Object eventData) {
+				UiViewUtil.displayToastMessage(
+						mFragment.getActivity(), ResourceHolder.getRemovedFavoriteMsg()
+				);
+			}
+		});
 	}
 
 	public final void loadMovieDetail(final MovieItemVO movieItemVO) {
@@ -99,11 +121,11 @@ public class MovieDetails {
 		imageView.setImageResource(imageResource);
 		imageView.setTag(imageResource);
 
-//		Intent intent = new Intent();
-//		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
+		Intent intent = new Intent();
+		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
 
-//		// Set Result Code and Intent for onActivityResult()
-//		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
+		// Set Result Code and Intent for onActivityResult()
+		mFragment.getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
 	}
 
 }

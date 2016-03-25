@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import net.usrlib.android.event.Listener;
+import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.DetailActivityFragment;
 import net.usrlib.android.movies.lifecycle.ActivityLifecycle;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 			Facade.setIsTablet(true);
 
 			MovieEvent.LoadDetailFragment.addListener(
-					new Listener() {
+					new Event.Listener() {
 						@Override
 						public void onComplete(Object eventData) {
 							onLoadDetailFragment((MovieItemVO) eventData);

@@ -14,15 +14,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import net.usrlib.android.event.Listener;
+import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
@@ -34,7 +34,6 @@ public class MainActivityFragment extends BaseFragment {
 
 	private static final String NAME = MainActivityFragment.class.getSimpleName();
 
-	//private static final int ITEM_SCROLL_BUFFER = 10;
 	private static final int FAVORITES_REQUEST_CODE = 5;
 
 	private View mRootView = null;
@@ -141,7 +140,6 @@ public class MainActivityFragment extends BaseFragment {
 				&& data.getBooleanExtra(MovieVars.IS_DETAIL_ACTIVITY, false)
 				&& mCurrentTitle != null
 				&& mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())) {
-			//	&& mCurrentTitle == ResourceHolder.getTitleFavorites())  {
 
 			getFavoriteMovies();
 		}
@@ -153,7 +151,7 @@ public class MainActivityFragment extends BaseFragment {
 					+ String.valueOf(mHasEventListeners));
 		}
 
-		MovieEvent.DiscoverFeedLoaded.addListener(new Listener() {
+		MovieEvent.DiscoverFeedLoaded.addListener(new Event.Listener() {
 			@Override
 			public void onComplete(Object eventData) {
 				onMovieFeedLoaded(
@@ -168,7 +166,7 @@ public class MainActivityFragment extends BaseFragment {
 			}
 		});
 
-		MovieEvent.RequestLimitReached.addListener(new Listener() {
+		MovieEvent.RequestLimitReached.addListener(new Event.Listener() {
 			@Override
 			public void onComplete(Object eventData) {
 				onMovieLimitReached();
@@ -178,28 +176,6 @@ public class MainActivityFragment extends BaseFragment {
 		mHasEventListeners = true;
 	}
 
-	private void onMovieItemClicked() {
-		/*
-		if (mTwoPane) {
-            // In two-pane mode, show the detail view in this activity by
-            // adding or replacing the detail fragment using a
-            // fragment transaction.
-            Bundle args = new Bundle();
-            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
-
-            DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
-                    .commit();
-        } else {
-            Intent intent = new Intent(this, DetailActivity.class)
-                    .setData(contentUri);
-            startActivity(intent);
-        }
-		 */
-	}
 	private void initGridView(final GridView gridView) {
 		mGridView = gridView;
 

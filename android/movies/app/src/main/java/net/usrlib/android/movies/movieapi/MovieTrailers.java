@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.usrlib.android.event.Listener;
+import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
@@ -36,7 +36,7 @@ public final class MovieTrailers {
 		mFragment = fragment;
 
 		MovieEvent.MovieTrailersLoaded.addListener(
-				new Listener() {
+				new Event.Listener() {
 					@Override
 					public void onComplete(Object eventData) {
 						onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);

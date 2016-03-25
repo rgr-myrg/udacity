@@ -7,20 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.movieapi.MovieDetails;
-import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieReviews;
 import net.usrlib.android.movies.movieapi.MovieTrailers;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.parcelable.MovieReviewVO;
 import net.usrlib.android.movies.parcelable.MovieTrailerVO;
-import net.usrlib.android.movies.viewholder.ResourceHolder;
-import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
@@ -32,7 +28,6 @@ public class DetailActivityFragment extends BaseFragment {
 	private MovieDetails mMovieDetails = null;
 	private MovieTrailers mMovieTrailers = null;
 	private MovieReviews mMovieReviews = null;
-
 	private MovieItemVO mMovieItemVO = null;
 
 	@Override
@@ -54,14 +49,12 @@ public class DetailActivityFragment extends BaseFragment {
 
 		if (getArguments() != null) {
 			parseBundleAndFetchData();
-		}
 
-		else if (instanceState == null) {
-			addEventListeners();
+		} else if (instanceState == null) {
 			parseIntentAndFetchData();
 
 		} else {
-			restoreValuesFromBundle(instanceState);
+			restoreMovieItemFromBundle(instanceState);
 		}
 
 		Intent intent = new Intent();
@@ -75,70 +68,51 @@ public class DetailActivityFragment extends BaseFragment {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		if (BuildConfig.DEBUG) Log.d("MAIN", "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 
+		if (BuildConfig.DEBUG) Log.d(NAME, "onSaveInstanceState");
+
 		if (mMovieItemVO != null) {
-			outState.putParcelable(MovieVars.DETAIL_KEY, mMovieItemVO);
+			outState.putParcelable(MovieItemVO.NAME, mMovieItemVO);
 		}
 
 		if (mMovieReviews.getReviews() != null) {
-			outState.putParcelableArrayList(MovieVars.REVIEWS_KEY, mMovieReviews.getReviews());
+			outState.putParcelableArrayList(MovieReviews.NAME, mMovieReviews.getReviews());
 		}
 
 		if (mMovieTrailers.getTrailers() != null) {
-			outState.putParcelableArrayList(MovieVars.TRAILERS_KEY, mMovieTrailers.getTrailers());
+			outState.putParcelableArrayList(MovieTrailers.NAME, mMovieTrailers.getTrailers());
 		}
 	}
 
-	private void addEventListeners() {
-		MovieEvent.MovieSetAsFavorite.addListener(new Listener() {
-			@Override
-			public void onComplete(Object eventData) {
-				UiViewUtil.displayToastMessage(getActivity(), ResourceHolder.getSavedFavoriteMsg());
-			}
-		});
-
-		MovieEvent.MovieUnsetAsFavorite.addListener(new Listener() {
-			@Override
-			public void onComplete(Object eventData) {
-				UiViewUtil.displayToastMessage(getActivity(), ResourceHolder.getRemovedFavoriteMsg());
-			}
-		});
-	}
-
 	private void parseBundleAndFetchData() {
-		if (BuildConfig.DEBUG) Log.d("MAIN", "parseBundleAndFetchData");
+		if (BuildConfig.DEBUG) Log.d(NAME, "parseBundleAndFetchData");
+
 		final Bundle bundle = getArguments();
 
 		if (bundle == null) {
 			return;
 		}
 
-		mMovieItemVO = (MovieItemVO) bundle.getParcelable(MovieItemVO.NAME);
-
-		if (mMovieItemVO == null) {
-			return;
-		}
-
-		// Populate Detail Fragment
-		mMovieDetails.loadMovieDetail(mMovieItemVO);
-
-		// Fetch Movie Trailers and Reviews as early as possible
-		mMovieTrailers.fetchMovieTrailersWithId(mMovieItemVO.getId());
-		mMovieReviews.fetchMovieReviewsWithId(mMovieItemVO.getId());
+		loadMovieItemFromBundle(bundle);
 	}
 
 	private void parseIntentAndFetchData() {
-		if (BuildConfig.DEBUG) Log.d("MAIN", "parseIntentAndFetchData");
+		if (BuildConfig.DEBUG) Log.d(NAME, "parseIntentAndFetchData");
+
 		final Intent intent = getActivity().getIntent();
 
 		if (intent == null || !intent.hasExtra(MovieItemVO.NAME)) {
 			return;
 		}
 
-		final Bundle data = intent.getExtras();
-		mMovieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
+		final Bundle bundle = intent.getExtras();
+
+		loadMovieItemFromBundle(bundle);
+	}
+
+	private void loadMovieItemFromBundle(final Bundle bundle) {
+		mMovieItemVO = (MovieItemVO) bundle.getParcelable(MovieItemVO.NAME);
 
 		// Populate Detail Fragment
 		mMovieDetails.loadMovieDetail(mMovieItemVO);
@@ -148,25 +122,27 @@ public class DetailActivityFragment extends BaseFragment {
 		mMovieReviews.fetchMovieReviewsWithId(mMovieItemVO.getId());
 	}
 
-	private void restoreValuesFromBundle(final Bundle bundle) {
-		if (BuildConfig.DEBUG) Log.d("MAIN", "restoreValuesFromBundle");
+	private void restoreMovieItemFromBundle(final Bundle bundle) {
+		if (BuildConfig.DEBUG) Log.d(NAME, "restoreMovieItemFromBundle");
 
-		if (bundle.containsKey(MovieVars.DETAIL_KEY)) {
-			mMovieItemVO = (MovieItemVO) bundle.get(MovieVars.DETAIL_KEY);
+		if (bundle.containsKey(MovieItemVO.NAME)) {
+			mMovieItemVO = (MovieItemVO) bundle.get(MovieItemVO.NAME);
 		}
 
 		// Populate Detail Fragment
 		mMovieDetails.loadMovieDetail(mMovieItemVO);
 
 		// Populate Trailers
-		if (bundle.containsKey(MovieVars.TRAILERS_KEY)) {
-			mMovieTrailers.onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) bundle.get(MovieVars.TRAILERS_KEY));
+		if (bundle.containsKey(MovieTrailers.NAME)) {
+			mMovieTrailers.onMovieTrailersLoaded(
+					(ArrayList<MovieTrailerVO>) bundle.get(MovieTrailers.NAME)
+			);
 		}
 
 		// Populate Reviews
-		if (bundle.containsKey(MovieVars.REVIEWS_KEY)) {
+		if (bundle.containsKey(MovieReviews.NAME)) {
 			mMovieReviews.onMovieReviewsLoaded(
-					(ArrayList<MovieReviewVO>) bundle.get(MovieVars.REVIEWS_KEY)
+					(ArrayList<MovieReviewVO>) bundle.get(MovieReviews.NAME)
 			);
 		}
 	}
