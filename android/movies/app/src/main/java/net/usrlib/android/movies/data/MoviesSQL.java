@@ -1,6 +1,6 @@
 package net.usrlib.android.movies.data;
 
-import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
 
 public class MoviesSQL {
 

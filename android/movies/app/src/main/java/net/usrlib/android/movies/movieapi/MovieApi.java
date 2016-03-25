@@ -4,7 +4,7 @@ import android.util.Log;
 
 import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
-import net.usrlib.android.movies.task.ParseDataTask;
+import net.usrlib.android.movies.asynctask.ParseDataTask;
 import net.usrlib.android.util.HttpRequest;
 
 import org.json.JSONObject;

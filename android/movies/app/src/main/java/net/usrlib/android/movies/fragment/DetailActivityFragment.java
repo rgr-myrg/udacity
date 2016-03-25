@@ -1,81 +1,56 @@
 package net.usrlib.android.movies.fragment;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import net.usrlib.android.event.Listener;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
-import net.usrlib.android.movies.facade.Facade;
+import net.usrlib.android.movies.movieapi.MovieDetails;
 import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.movieapi.MovieItemVO;
-import net.usrlib.android.movies.movieapi.MovieReviewVO;
-import net.usrlib.android.movies.movieapi.MovieTrailerVO;
+import net.usrlib.android.movies.movieapi.MovieReviews;
+import net.usrlib.android.movies.movieapi.MovieTrailers;
 import net.usrlib.android.movies.movieapi.MovieVars;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieReviewVO;
+import net.usrlib.android.movies.parcelable.MovieTrailerVO;
 import net.usrlib.android.movies.viewholder.ResourceHolder;
-import net.usrlib.android.movies.viewholder.ReviewViewHolder;
-import net.usrlib.android.movies.viewholder.TrailerViewHolder;
-import net.usrlib.android.util.ColorUtil;
-import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
 
 import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
 public class DetailActivityFragment extends BaseFragment {
+
 	public static final String NAME = DetailActivity.class.getSimpleName();
 
-	private View mRootView = null;
-	private ViewGroup mTrailersContainer = null;
-	private ViewGroup mReviewsContainer = null;
+	private MovieDetails mMovieDetails = null;
+	private MovieTrailers mMovieTrailers = null;
+	private MovieReviews mMovieReviews = null;
 
 	private MovieItemVO mMovieItemVO = null;
-
-	private ArrayList<MovieTrailerVO> mMovieTrailers = null;
-	private ArrayList<MovieReviewVO> mMovieReviews = null;
-
-	private Listener mMovieTrailersListener = new Listener() {
-		@Override
-		public void onComplete(Object eventData) {
-			onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);
-		}
-
-		@Override
-		public void onError(Object eventData) {
-			onFeedError((String) eventData);
-		}
-	};
-
-	private Listener mMovieReviewsListener = new Listener() {
-		@Override
-		public void onComplete(Object eventData) {
-			onMovieReviewsLoaded((ArrayList<MovieReviewVO>) eventData);
-		}
-
-		@Override
-		public void onError(Object eventData) {
-			onFeedError((String) eventData);
-		}
-	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle instanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+		if (mMovieDetails == null) {
+			mMovieDetails = new MovieDetails(this);
+		}
+
+		if (mMovieTrailers == null) {
+			mMovieTrailers = new MovieTrailers(this);
+		}
+
+		if (mMovieReviews == null) {
+			mMovieReviews = new MovieReviews(this);
+		}
 
 		if (getArguments() != null) {
 			parseBundleAndFetchData();
@@ -107,19 +82,16 @@ public class DetailActivityFragment extends BaseFragment {
 			outState.putParcelable(MovieVars.DETAIL_KEY, mMovieItemVO);
 		}
 
-		if (mMovieReviews != null) {
-			outState.putParcelableArrayList(MovieVars.REVIEWS_KEY, mMovieReviews);
+		if (mMovieReviews.getReviews() != null) {
+			outState.putParcelableArrayList(MovieVars.REVIEWS_KEY, mMovieReviews.getReviews());
 		}
 
-		if (mMovieTrailers != null) {
-			outState.putParcelableArrayList(MovieVars.TRAILERS_KEY, mMovieTrailers);
+		if (mMovieTrailers.getTrailers() != null) {
+			outState.putParcelableArrayList(MovieVars.TRAILERS_KEY, mMovieTrailers.getTrailers());
 		}
 	}
 
 	private void addEventListeners() {
-		MovieEvent.MovieTrailersLoaded.addListenerOnce(mMovieTrailersListener);
-		MovieEvent.MovieReviewsLoaded.addListenerOnce(mMovieReviewsListener);
-
 		MovieEvent.MovieSetAsFavorite.addListener(new Listener() {
 			@Override
 			public void onComplete(Object eventData) {
@@ -150,11 +122,11 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 
 		// Populate Detail Fragment
-		loadMovieDetail();
+		mMovieDetails.loadMovieDetail(mMovieItemVO);
 
 		// Fetch Movie Trailers and Reviews as early as possible
-		Facade.getMovieApi().fetchMovieTrailersWithId(mMovieItemVO.getId());
-		Facade.getMovieApi().fetchMovieReviewsWithId(mMovieItemVO.getId());
+		mMovieTrailers.fetchMovieTrailersWithId(mMovieItemVO.getId());
+		mMovieReviews.fetchMovieReviewsWithId(mMovieItemVO.getId());
 	}
 
 	private void parseIntentAndFetchData() {
@@ -169,11 +141,11 @@ public class DetailActivityFragment extends BaseFragment {
 		mMovieItemVO = (MovieItemVO) data.getParcelable(MovieItemVO.NAME);
 
 		// Populate Detail Fragment
-		loadMovieDetail();
+		mMovieDetails.loadMovieDetail(mMovieItemVO);
 
 		// Fetch Movie Trailers and Reviews as early as possible
-		Facade.getMovieApi().fetchMovieTrailersWithId(mMovieItemVO.getId());
-		Facade.getMovieApi().fetchMovieReviewsWithId(mMovieItemVO.getId());
+		mMovieTrailers.fetchMovieTrailersWithId(mMovieItemVO.getId());
+		mMovieReviews.fetchMovieReviewsWithId(mMovieItemVO.getId());
 	}
 
 	private void restoreValuesFromBundle(final Bundle bundle) {
@@ -183,250 +155,19 @@ public class DetailActivityFragment extends BaseFragment {
 			mMovieItemVO = (MovieItemVO) bundle.get(MovieVars.DETAIL_KEY);
 		}
 
-		if (bundle.containsKey(MovieVars.REVIEWS_KEY)) {
-			mMovieReviews = (ArrayList<MovieReviewVO>) bundle.get(MovieVars.REVIEWS_KEY);
-		}
-
-		if (bundle.containsKey(MovieVars.TRAILERS_KEY)) {
-			mMovieTrailers = (ArrayList<MovieTrailerVO>) bundle.get(MovieVars.TRAILERS_KEY);
-		}
-
 		// Populate Detail Fragment
-		loadMovieDetail();
+		mMovieDetails.loadMovieDetail(mMovieItemVO);
 
-		// Populate Trailers and Reviews
-		onMovieTrailersLoaded(mMovieTrailers);
-		onMovieReviewsLoaded(mMovieReviews);
-	}
+		// Populate Trailers
+		if (bundle.containsKey(MovieVars.TRAILERS_KEY)) {
+			mMovieTrailers.onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) bundle.get(MovieVars.TRAILERS_KEY));
+		}
 
-	private void loadMovieDetail() {
-		if (mMovieItemVO == null || getActivity() == null) {
-			UiViewUtil.setText(
-					mRootView,
-					R.id.movie_title,
-					MovieVars.NO_MOVIES_MSG
+		// Populate Reviews
+		if (bundle.containsKey(MovieVars.REVIEWS_KEY)) {
+			mMovieReviews.onMovieReviewsLoaded(
+					(ArrayList<MovieReviewVO>) bundle.get(MovieVars.REVIEWS_KEY)
 			);
-
-			return;
-		}
-
-		final ImageView posterImageView = (ImageView) mRootView.findViewById(R.id.movie_poster);
-		final ImageView favBtnImageView = (ImageView) mRootView.findViewById(R.id.button_favorite);
-
-		// Invoking placeholder causes the image to become misaligned. >:(
-		Glide.with(getActivity())
-				.load(mMovieItemVO.getImageUrl())
-						//.placeholder(R.drawable.image_poster_placeholder)
-						//.error(R.drawable.image_poster_placeholder)
-						//.crossFade()
-				.fitCenter()
-				.into(posterImageView);
-
-		int resourceId = R.drawable.heart_unselected;
-
-		if (Facade.getMoviesDBHelper().isMovieSetAsFavorite(mMovieItemVO.getId())) {
-			resourceId = R.drawable.heart_selected;
-		}
-
-		favBtnImageView.setImageResource(resourceId);
-
-		// Set Tag to help toggle favorites icon on/off in setMovieIfLiked()
-		favBtnImageView.setTag(resourceId);
-
-		favBtnImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setMovieIfLiked(mMovieItemVO, (ImageView) v);
-			}
-		});
-
-		UiViewUtil.setText(
-				mRootView,
-				R.id.movie_title,
-				mMovieItemVO.getOriginalTitle()
-		);
-
-		UiViewUtil.setText(
-				mRootView,
-				R.id.movie_release_date,
-				mMovieItemVO.getReleaseDate()
-		);
-
-		UiViewUtil.setText(
-				mRootView,
-				R.id.movie_rating,
-				String.valueOf(mMovieItemVO.getVoteAverage())
-		);
-
-		UiViewUtil.setText(
-				mRootView,
-				R.id.movie_overview,
-				mMovieItemVO.getOverview()
-		);
-	}
-
-	private void setMovieIfLiked(final MovieItemVO movieItemVO, final ImageView imageView) {
-		final boolean hasSelected = (Integer) imageView.getTag() != R.drawable.heart_selected;
-
-		final int imageResource = hasSelected
-		 		? R.drawable.heart_selected
-				: R.drawable.heart_unselected;
-
-		Facade.getMoviesDBHelper().setMovieAsFavorite(movieItemVO.toContentValues(), hasSelected);
-
-		imageView.setImageResource(imageResource);
-		imageView.setTag(imageResource);
-
-//		Intent intent = new Intent();
-//		intent.putExtra(MovieVars.IS_DETAIL_ACTIVITY, true);
-
-//		// Set Result Code and Intent for onActivityResult()
-//		getActivity().setResult(MovieVars.FAVORITED_RESULT_CODE, intent);
-	}
-
-	private void setShareButtonOnClickListener(final MovieTrailerVO movieTrailerVO) {
-		final ImageView shareBtnImageView = (ImageView) mRootView.findViewById(R.id.button_share);
-
-		shareBtnImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType(MovieVars.INTENT_TEXT_TYPE);
-				intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-
-				intent.putExtra(
-						Intent.EXTRA_SUBJECT,
-						movieTrailerVO.getName()
-				);
-
-				intent.putExtra(
-						Intent.EXTRA_TEXT,
-						MovieVars.EXTRA_TEXT + movieTrailerVO.getYoutubeUrl()
-				);
-
-				try {
-					startActivity(Intent.createChooser(intent, MovieVars.SHARE_TEXT));
-				} catch (ActivityNotFoundException e) {
-					Log.e(NAME, e.getMessage());
-				}
-			}
-		});
-	}
-
-	private void onFeedError(String message) {
-		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
-		// No items to Display. Update UI accordingly.
-		UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
-		UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS_MSG);
-	}
-
-	private void onMovieReviewsLoaded(final ArrayList<MovieReviewVO> movieReviews) {
-		if (movieReviews == null || movieReviews.size() == 0 || getActivity() == null) {
-			UiViewUtil.setText(getView(), R.id.movie_reviews_label, MovieVars.NO_REVIEWS_MSG);
-
-			return;
-		}
-
-		mMovieReviews = movieReviews;
-
-		if (mReviewsContainer == null) {
-			mReviewsContainer = (ViewGroup) mRootView.findViewById(R.id.movie_reviews_container);
-		}
-
-		final LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-		for (final MovieReviewVO movieReviewVO : mMovieReviews) {
-			final View reviewView = inflater.inflate(R.layout.item_review, mReviewsContainer, false);
-			final ReviewViewHolder reviewViewHolder = new ReviewViewHolder(reviewView);
-
-			reviewView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse(
-									movieReviewVO.getUrl()
-							)
-					);
-
-					startActivity(intent);
-				}
-			});
-
-			final TextView circleView = reviewViewHolder.circleView;
-			final TextView authorView = reviewViewHolder.authorView;
-			final TextView contentView = reviewViewHolder.contentView;
-
-			circleView.setText(String.valueOf(movieReviewVO.getAuthor().charAt(0)).toUpperCase());
-			circleView.getBackground().setColorFilter(
-					Color.parseColor(ColorUtil.getNextColor()),
-					PorterDuff.Mode.SRC
-			);
-
-			authorView.setText(movieReviewVO.getAuthor());
-
-			final String content = movieReviewVO.getContent();
-			int previewLength = MovieVars.CONTENT_PREVIEW_LENGTH;
-
-			// Try to display more preview text depending on device orientation
-			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				previewLength = previewLength * 2;
-			}
-
-			contentView.setText(
-					content.length() > previewLength
-							? content.substring(0, previewLength) + MovieVars.DOTTED
-							: content
-			);
-
-			mReviewsContainer.addView(reviewView);
-		}
-	}
-
-	private void onMovieTrailersLoaded(final ArrayList<MovieTrailerVO> movieTrailers) {
-		if (movieTrailers == null || movieTrailers.size() == 0 || getActivity() == null) {
-			UiViewUtil.setText(getView(), R.id.movie_trailers_label, MovieVars.NO_TRAILERS_MSG);
-
-			return;
-		}
-
-		if (BuildConfig.DEBUG) {
-			Log.d(NAME, "onMovieTrailersLoaded: " + String.valueOf(movieTrailers.size()));
-		}
-
-		mMovieTrailers = movieTrailers;
-
-		if (mTrailersContainer == null) {
-			mTrailersContainer = (ViewGroup) mRootView.findViewById(R.id.movie_trailers_container);
-		}
-
-		// Set up Share Intent with the first Trailer item
-		setShareButtonOnClickListener(mMovieTrailers.get(0));
-
-		final LayoutInflater inflater = LayoutInflater.from(getActivity());
-
-		for (final MovieTrailerVO trailerVO : movieTrailers) {
-			final View trailerView = inflater.inflate(R.layout.item_trailer, mTrailersContainer, false);
-			final TrailerViewHolder trailerViewHolder = new TrailerViewHolder(trailerView);
-
-			trailerView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse(
-									trailerVO.getYoutubeUrl()
-							)
-					);
-
-					startActivity(intent);
-				}
-			});
-
-			final TextView titleView = trailerViewHolder.titleView;
-			titleView.setText(trailerVO.getName());
-
-			mTrailersContainer.addView(trailerView);
 		}
 	}
 

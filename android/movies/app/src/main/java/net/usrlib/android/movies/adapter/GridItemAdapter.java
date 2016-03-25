@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
-import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.viewholder.ItemViewHolder;
 
 import java.util.ArrayList;

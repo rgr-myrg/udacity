@@ -9,7 +9,7 @@ import android.util.Log;
 
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
 
 import java.util.ArrayList;
 

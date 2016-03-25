@@ -21,7 +21,7 @@ import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.adapter.GridItemAdapter;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.movieapi.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.HttpRequest;

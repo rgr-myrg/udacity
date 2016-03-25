@@ -1,11 +1,11 @@
-package net.usrlib.android.movies.task;
+package net.usrlib.android.movies.asynctask;
 
 import android.os.AsyncTask;
 
 import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.movieapi.MovieItemVO;
-import net.usrlib.android.movies.movieapi.MovieReviewVO;
-import net.usrlib.android.movies.movieapi.MovieTrailerVO;
+import net.usrlib.android.movies.parcelable.MovieItemVO;
+import net.usrlib.android.movies.parcelable.MovieReviewVO;
+import net.usrlib.android.movies.parcelable.MovieTrailerVO;
 import net.usrlib.android.movies.movieapi.MovieVars;
 
 import org.json.JSONArray;

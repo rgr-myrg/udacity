@@ -36,7 +36,7 @@ public final class MovieVars {
 
 	public static final String INTENT_TEXT_TYPE = "text/*";
 	public static final String SHARE_TEXT = "Share This Movie!";
-	public static final String EXTRA_TEXT = "Check out this Movie! ";
+	public static final String SHARE_MSG = "Check out this Movie! ";
 
 	public static final String NO_MOVIES_MSG = "Unable to load Movie details";
 	public static final String NO_REVIEWS_MSG = "No Reviews Found";

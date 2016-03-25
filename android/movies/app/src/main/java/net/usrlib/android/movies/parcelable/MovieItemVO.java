@@ -1,10 +1,11 @@
-package net.usrlib.android.movies.movieapi;
+package net.usrlib.android.movies.parcelable;
 
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.util.MathUtil;
 
 import org.json.JSONObject;
