@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import net.usrlib.android.movies.BuildConfig;
+import net.usrlib.android.movies.data.MoviesContract.FavoritesEntry;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
 
@@ -28,7 +29,8 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		//db.execSQL(MoviesSQL.DROP_FAVORITES_TABLE);
+		//onCreate(db);
 	}
 
 //	public void dropFavoritesTable() {
@@ -49,14 +51,14 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		if (cursor.moveToFirst()) {
 			do {
 				movieItems.add(new MovieItemVO(
-						cursor.getInt(cursor.getColumnIndex(MovieItemVO.ID)),
-						cursor.getString(cursor.getColumnIndex(MovieItemVO.ORIGINAL_TITLE)),
-						cursor.getString(cursor.getColumnIndex(MovieItemVO.POSTER_PATH)),
-						cursor.getString(cursor.getColumnIndex(MovieItemVO.OVERVIEW)),
-						cursor.getString(cursor.getColumnIndex(MovieItemVO.RELEASE_DATE)),
-						cursor.getInt(cursor.getColumnIndex(MovieItemVO.VOTE_COUNT)),
-						cursor.getDouble(cursor.getColumnIndex(MovieItemVO.VOTE_AVERAGE)),
-						cursor.getDouble(cursor.getColumnIndex(MovieItemVO.POPULARITY))
+						cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_ID)),
+						cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_ORIGINAL_TITLE)),
+						cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_POSTER_PATH)),
+						cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_OVERVIEW)),
+						cursor.getString(cursor.getColumnIndex(FavoritesEntry.COLUMN_RELEASE_DATE)),
+						cursor.getInt(cursor.getColumnIndex(FavoritesEntry.COLUMN_VOTE_COUNT)),
+						cursor.getDouble(cursor.getColumnIndex(FavoritesEntry.COLUMN_VOTE_AVERAGE)),
+						cursor.getDouble(cursor.getColumnIndex(FavoritesEntry.COLUMN_POPULARITY))
 				));
 			} while (cursor.moveToNext());
 		}
@@ -74,7 +76,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 		boolean result;
 
 		if (isLiked) {
-			final long id = db.insert(MoviesSQL.TABLE_MOVIE_FAVORITES, null, values);
+			final long id = db.insert(FavoritesEntry.TABLE_NAME, null, values);
 			result = id != -1;
 
 			if (result) {
@@ -82,10 +84,10 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			}
 		} else {
 			final int rows = db.delete(
-					MoviesSQL.TABLE_MOVIE_FAVORITES,
+					FavoritesEntry.TABLE_NAME,
 					MoviesSQL.ID_CLAUSE,
 					new String[]{
-							String.valueOf(values.get(MovieItemVO.ID))
+							String.valueOf(values.get(FavoritesEntry.COLUMN_ID))
 					}
 			);
 

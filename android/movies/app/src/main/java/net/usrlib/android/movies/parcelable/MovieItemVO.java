@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import net.usrlib.android.movies.data.MoviesContract.FavoritesEntry;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.util.MathUtil;
 
@@ -18,16 +19,6 @@ import java.util.Locale;
 public final class MovieItemVO implements Parcelable {
 
 	public static final String NAME = MovieItemVO.class.getSimpleName();
-
-	public static final String ID = "id";
-	public static final String ORIGINAL_TITLE = "original_title";
-	public static final String POSTER_PATH = "poster_path";
-	public static final String OVERVIEW = "overview";
-	public static final String RELEASE_DATE = "release_date";
-	public static final String VOTE_COUNT = "vote_count";
-	public static final String VOTE_AVERAGE = "vote_average";
-	public static final String POPULARITY = "popularity";
-	public static final String IMAGE_URL = "image_url";
 
 	private int id;
 	private String originalTitle;
@@ -158,12 +149,12 @@ public final class MovieItemVO implements Parcelable {
 
 		// Round vote count to the nearest decimal
 		final double voteCount = MathUtil.round(
-				jsonObject.optDouble(VOTE_AVERAGE, 0),
+				jsonObject.optDouble(FavoritesEntry.COLUMN_VOTE_AVERAGE, 0),
 				1
 		);
 
 		String releaseDate = jsonObject.optString(
-				RELEASE_DATE,
+				FavoritesEntry.COLUMN_RELEASE_DATE,
 				MovieVars.UNSET_VALUE
 		);
 
@@ -181,28 +172,28 @@ public final class MovieItemVO implements Parcelable {
 		}
 
 		return new MovieItemVO(
-				jsonObject.optInt(ID, 0),
-				jsonObject.optString(ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
-				jsonObject.optString(POSTER_PATH, MovieVars.UNSET_VALUE),
-				jsonObject.optString(OVERVIEW, MovieVars.UNSET_VALUE),
+				jsonObject.optInt(FavoritesEntry.COLUMN_ID, 0),
+				jsonObject.optString(FavoritesEntry.COLUMN_ORIGINAL_TITLE, MovieVars.UNSET_VALUE),
+				jsonObject.optString(FavoritesEntry.COLUMN_POSTER_PATH, MovieVars.UNSET_VALUE),
+				jsonObject.optString(FavoritesEntry.COLUMN_OVERVIEW, MovieVars.UNSET_VALUE),
 				releaseDate,
-				jsonObject.optInt(VOTE_COUNT, 0),
+				jsonObject.optInt(FavoritesEntry.COLUMN_VOTE_COUNT, 0),
 				voteCount,
-				jsonObject.optDouble(POPULARITY, 0)
+				jsonObject.optDouble(FavoritesEntry.COLUMN_POPULARITY, 0)
 		);
 	}
 
 	public ContentValues toContentValues() {
 		ContentValues values = new ContentValues();
 
-		values.put(ID, id);
-		values.put(ORIGINAL_TITLE, originalTitle);
-		values.put(POSTER_PATH, posterPath);
-		values.put(OVERVIEW, overview);
-		values.put(RELEASE_DATE, releaseDate);
-		values.put(VOTE_COUNT, voteCount);
-		values.put(VOTE_AVERAGE, voteAverage);
-		values.put(POPULARITY, popularity);
+		values.put(FavoritesEntry.COLUMN_ID, id);
+		values.put(FavoritesEntry.COLUMN_ORIGINAL_TITLE, originalTitle);
+		values.put(FavoritesEntry.COLUMN_POSTER_PATH, posterPath);
+		values.put(FavoritesEntry.COLUMN_OVERVIEW, overview);
+		values.put(FavoritesEntry.COLUMN_RELEASE_DATE, releaseDate);
+		values.put(FavoritesEntry.COLUMN_VOTE_COUNT, voteCount);
+		values.put(FavoritesEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+		values.put(FavoritesEntry.COLUMN_POPULARITY, popularity);
 
 		return values;
 	}
