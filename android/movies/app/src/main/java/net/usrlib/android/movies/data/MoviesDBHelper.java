@@ -80,7 +80,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			result = id != -1;
 
 			if (result) {
-				MovieEvent.MovieSetAsFavorite.notifyComplete(null);
+				MovieEvent.MovieSetAsFavorite.notifySuccess();
 			}
 		} else {
 			final int rows = db.delete(
@@ -94,7 +94,7 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			result = rows > 0;
 
 			if (result) {
-				MovieEvent.MovieUnsetAsFavorite.notifyComplete(null);
+				MovieEvent.MovieUnsetAsFavorite.notifySuccess();
 			}
 		}
 

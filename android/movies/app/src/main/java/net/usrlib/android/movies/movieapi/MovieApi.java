@@ -2,10 +2,10 @@ package net.usrlib.android.movies.movieapi;
 
 import android.util.Log;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.asynctask.ParseDataTask;
 import net.usrlib.android.util.HttpRequest;
+import net.usrlib.pattern.TinyEvent;
 
 import org.json.JSONObject;
 
@@ -69,7 +69,7 @@ public final class MovieApi {
 	private final void loadJsonFeedSortedBy(final String sortBy) {
 		// Cap off requests when the limit is reached
 		if (mPageNumber >= MovieVars.PAGE_COUNT_LIMIT) {
-			MovieEvent.RequestLimitReached.notifyComplete();
+			MovieEvent.RequestLimitReached.notifySuccess();
 			return;
 		}
 
@@ -87,7 +87,7 @@ public final class MovieApi {
 		);
 	}
 
-	private final void makeHttpRequest(final Event event, final RequestType requestType) {
+	private final void makeHttpRequest(final TinyEvent event, final RequestType requestType) {
 		// Create a new task each request. AsyncTask runs once and terminates.
 		mHttpRequest = new HttpRequest(
 				new HttpRequest.Delegate() {

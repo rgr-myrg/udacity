@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
@@ -19,6 +18,7 @@ import net.usrlib.android.movies.parcelable.MovieTrailerVO;
 import net.usrlib.android.movies.viewholder.TrailerViewHolder;
 import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
+import net.usrlib.pattern.TinyEvent;
 
 import java.util.ArrayList;
 
@@ -36,10 +36,10 @@ public final class MovieTrailers {
 		mFragment = fragment;
 
 		MovieEvent.MovieTrailersLoaded.addListener(
-				new Event.Listener() {
+				new TinyEvent.Listener() {
 					@Override
-					public void onComplete(Object eventData) {
-						onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) eventData);
+					public void onSuccess(Object data) {
+						onMovieTrailersLoaded((ArrayList<MovieTrailerVO>) data);
 					}
 
 					@Override

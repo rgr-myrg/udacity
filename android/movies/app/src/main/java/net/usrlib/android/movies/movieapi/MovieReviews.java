@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.BaseFragment;
@@ -19,6 +18,7 @@ import net.usrlib.android.movies.viewholder.ReviewViewHolder;
 import net.usrlib.android.util.ColorUtil;
 import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
+import net.usrlib.pattern.TinyEvent;
 
 import java.util.ArrayList;
 
@@ -35,14 +35,14 @@ public class MovieReviews {
 		mFragment = fragment;
 
 		MovieEvent.MovieReviewsLoaded.addListener(
-				new Event.Listener() {
+				new TinyEvent.Listener() {
 					@Override
-					public void onComplete(Object eventData) {
-						onMovieReviewsLoaded((ArrayList<MovieReviewVO>) eventData);
+					public void onSuccess(Object data) {
+						onMovieReviewsLoaded((ArrayList<MovieReviewVO>) data);
 					}
 
 					@Override
-					public void onError(Object eventData) {
+					public void onError(Object data) {
 						onMovieReviewsError();
 					}
 				}

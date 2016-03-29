@@ -6,13 +6,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.BaseFragment;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.UiViewUtil;
+import net.usrlib.pattern.TinyEvent;
 
 public class MovieDetails {
 
@@ -23,18 +23,18 @@ public class MovieDetails {
 	public MovieDetails(BaseFragment fragment) {
 		mFragment = fragment;
 
-		MovieEvent.MovieSetAsFavorite.addListener(new Event.Listener() {
+		MovieEvent.MovieSetAsFavorite.addListener(new TinyEvent.Listener() {
 			@Override
-			public void onComplete(Object eventData) {
+			public void onSuccess(Object eventData) {
 				UiViewUtil.displayToastMessage(
 						mFragment.getActivity(), ResourceHolder.getSavedFavoriteMsg()
 				);
 			}
 		});
 
-		MovieEvent.MovieUnsetAsFavorite.addListener(new Event.Listener() {
+		MovieEvent.MovieUnsetAsFavorite.addListener(new TinyEvent.Listener() {
 			@Override
-			public void onComplete(Object eventData) {
+			public void onSuccess(Object eventData) {
 				UiViewUtil.displayToastMessage(
 						mFragment.getActivity(), ResourceHolder.getRemovedFavoriteMsg()
 				);

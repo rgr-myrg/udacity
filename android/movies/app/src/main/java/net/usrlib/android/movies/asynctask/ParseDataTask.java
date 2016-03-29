@@ -3,10 +3,10 @@ package net.usrlib.android.movies.asynctask;
 import android.os.AsyncTask;
 
 import net.usrlib.android.movies.movieapi.MovieEvent;
+import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.parcelable.MovieReviewVO;
 import net.usrlib.android.movies.parcelable.MovieTrailerVO;
-import net.usrlib.android.movies.movieapi.MovieVars;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +34,8 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieItemVO> movieItemVOs) {
 				// Notify Observers Discover Feed was Loaded
-				MovieEvent.DiscoverFeedLoaded.notifyComplete(movieItemVOs);
+				//MovieEvent.DiscoverFeedLoaded.notifyComplete(movieItemVOs);
+				MovieEvent.DiscoverFeedLoaded.notifySuccess(movieItemVOs);
 			}
 		}.execute();
 	}
@@ -58,7 +59,8 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieTrailerVO> movieTrailerVOs) {
 				// Notify Observers Trailers were Loaded
-				MovieEvent.MovieTrailersLoaded.notifyComplete(movieTrailerVOs);
+				//MovieEvent.MovieTrailersLoaded.notifyComplete(movieTrailerVOs);
+				MovieEvent.MovieTrailersLoaded.notifySuccess(movieTrailerVOs);
 			}
 		}.execute();
 	}
@@ -82,7 +84,8 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieReviewVO> movieReviewVOs) {
 				// Notify Observers Reviews were Loaded
-				MovieEvent.MovieReviewsLoaded.notifyComplete(movieReviewVOs);
+				//MovieEvent.MovieReviewsLoaded.notifyComplete(movieReviewVOs);
+				MovieEvent.MovieReviewsLoaded.notifySuccess(movieReviewVOs);
 			}
 
 		}.execute();

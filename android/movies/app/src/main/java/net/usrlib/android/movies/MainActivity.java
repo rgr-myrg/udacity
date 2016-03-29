@@ -8,12 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.DetailActivityFragment;
 import net.usrlib.android.movies.lifecycle.ActivityLifecycle;
 import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
+import net.usrlib.pattern.TinyEvent.Listener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,11 +32,20 @@ public class MainActivity extends AppCompatActivity {
 		if (findViewById(R.id.master_container) != null) {
 			Facade.setIsTablet(true);
 
+//			MovieEvent.LoadDetailFragment.addListener(
+//					new Event.Listener() {
+//						@Override
+//						public void onComplete(Object eventData) {
+//							onLoadDetailFragment((MovieItemVO) eventData);
+//						}
+//					}
+//			);
+
 			MovieEvent.LoadDetailFragment.addListener(
-					new Event.Listener() {
+					new Listener() {
 						@Override
-						public void onComplete(Object eventData) {
-							onLoadDetailFragment((MovieItemVO) eventData);
+						public void onSuccess(Object data) {
+							onLoadDetailFragment((MovieItemVO) data);
 						}
 					}
 			);

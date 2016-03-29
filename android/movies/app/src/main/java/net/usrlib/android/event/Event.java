@@ -5,11 +5,11 @@ import java.util.Observer;
 
 public final class Event extends Observable {
 
-	public final void notifyError(Object data) {
+	public final void notifyError(final Object data) {
 		notify(new EventPacket(EventType.ERROR, data));
 	}
 
-	public final void notifyComplete(Object data) {
+	public final void notifyComplete(final Object data) {
 		notify(new EventPacket(EventType.COMPLETE, data));
 	}
 
@@ -17,20 +17,22 @@ public final class Event extends Observable {
 		notify(new EventPacket(EventType.COMPLETE));
 	}
 
-	public final void addListener(Listener listener) {
+	public final void addListener(final Listener listener) {
 		super.addObserver(listener);
+		listener.onRegister();
 	}
 
-	public final void addListenerOnce(Listener listener) {
+	public final void addListenerOnce(final Listener listener) {
 		listener.setRunOnce(true);
 		super.addObserver(listener);
 	}
 
-	public final synchronized void deleteListener(Listener listener) {
+	public final synchronized void removeListener(final Listener listener) {
 		super.deleteObserver(listener);
+		listener.onRemove();
 	}
 
-	private final void notify(Object data) {
+	private final void notify(final Object data) {
 		setChanged();
 		notifyObservers(data);
 		clearChanged();
@@ -41,12 +43,12 @@ public final class Event extends Observable {
 		private EventType mType;
 		private Object mData;
 
-		public EventPacket(EventType type, Object data) {
+		public EventPacket(final EventType type, final Object data) {
 			this.mType = type;
 			this.mData = data;
 		}
 
-		public EventPacket(EventType type) {
+		public EventPacket(final EventType type) {
 			this.mType = type;
 		}
 
@@ -98,6 +100,8 @@ public final class Event extends Observable {
 		// Must override in each instance.
 		public void onComplete(Object eventData) {}
 		public void onError(Object eventData) {}
+		public void onRegister() {}
+		public void onRemove() {}
 
 	}
 

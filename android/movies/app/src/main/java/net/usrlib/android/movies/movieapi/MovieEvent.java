@@ -1,15 +1,15 @@
 package net.usrlib.android.movies.movieapi;
 
-import net.usrlib.android.event.Event;
+import net.usrlib.pattern.TinyEvent;
 
 public final class MovieEvent {
 
-	public static final Event DiscoverFeedLoaded   = new Event();
-	public static final Event RequestLimitReached  = new Event();
-	public static final Event MovieTrailersLoaded  = new Event();
-	public static final Event MovieReviewsLoaded   = new Event();
-	public static final Event MovieSetAsFavorite   = new Event();
-	public static final Event MovieUnsetAsFavorite = new Event();
-	public static final Event LoadDetailFragment   = new Event();
+	public static final TinyEvent DiscoverFeedLoaded   = new TinyEvent();
+	public static final TinyEvent RequestLimitReached  = new TinyEvent();
+	public static final TinyEvent MovieTrailersLoaded  = new TinyEvent();
+	public static final TinyEvent MovieReviewsLoaded   = new TinyEvent();
+	public static final TinyEvent MovieSetAsFavorite   = new TinyEvent();
+	public static final TinyEvent MovieUnsetAsFavorite = new TinyEvent();
+	public static final TinyEvent LoadDetailFragment   = new TinyEvent();
 
 }

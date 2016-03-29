@@ -14,7 +14,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import net.usrlib.android.event.Event;
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
@@ -26,6 +25,7 @@ import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.viewholder.ResourceHolder;
 import net.usrlib.android.util.HttpRequest;
 import net.usrlib.android.util.UiViewUtil;
+import net.usrlib.pattern.TinyEvent;
 
 import java.util.ArrayList;
 
@@ -151,24 +151,23 @@ public class MainActivityFragment extends BaseFragment {
 					+ String.valueOf(mHasEventListeners));
 		}
 
-		MovieEvent.DiscoverFeedLoaded.addListener(new Event.Listener() {
+		MovieEvent.DiscoverFeedLoaded.addListener(new TinyEvent.Listener(){
 			@Override
-			public void onComplete(Object eventData) {
+			public void onSuccess(Object data) {
 				onMovieFeedLoaded(
-						(ArrayList<MovieItemVO>) eventData
+						(ArrayList<MovieItemVO>) data
 				);
 			}
 
 			@Override
-			public void onError(Object eventData) {
-				// Handle gracefully
+			public void onError(Object data) {
 				onMovieFeedError();
 			}
 		});
 
-		MovieEvent.RequestLimitReached.addListener(new Event.Listener() {
+		MovieEvent.RequestLimitReached.addListener(new TinyEvent.Listener(){
 			@Override
-			public void onComplete(Object eventData) {
+			public void onSuccess(Object data) {
 				onMovieLimitReached();
 			}
 		});
@@ -198,7 +197,8 @@ public class MainActivityFragment extends BaseFragment {
 					// Use a request code to trigger onActivityResult on MainActivity
 					activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 				} else {
-					MovieEvent.LoadDetailFragment.notifyComplete(movieItemVO);
+					//MovieEvent.LoadDetailFragment.notifyComplete(movieItemVO);
+					MovieEvent.LoadDetailFragment.notifySuccess(movieItemVO);
 				}
 			}
 		});
