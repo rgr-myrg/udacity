@@ -33,7 +33,7 @@
 		</activity>
 
 		<provider
-			android:authorities="@string/content_authority"
+			android:authorities="net.usrlib.android.movies"
 			android:name=".data.MoviesProvider"
 			android:exported="false"
 			android:syncable="false" />

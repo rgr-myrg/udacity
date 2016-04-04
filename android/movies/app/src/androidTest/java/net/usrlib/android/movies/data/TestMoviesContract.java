@@ -9,21 +9,27 @@ public class TestMoviesContract extends AndroidTestCase {
 	private static final String TEST_URI = "content://net.usrlib.android.movies.data/favorites";
 
 	public void testBuildFavoritesUri() {
-		final Uri uri = MoviesContract.FavoritesEntry.buildFavoritesUri(TEST_MOVIE_ID);
+		final Uri uri = MoviesContract.FavoritesEntry.buildFavoritesUriWithId(TEST_MOVIE_ID);
 
-		assertNotNull("buildFavoritesUri returns null", uri);
+		assertNotNull("buildFavoritesUriWithId should not return null", uri);
 
 		assertEquals(
-				"buildFavoritesUri should contain TEST_MOVIE_ID",
+				"buildFavoritesUriWithId should contain TEST_MOVIE_ID",
 				String.valueOf(TEST_MOVIE_ID),
 				uri.getLastPathSegment()
 		);
 
 		assertEquals(
-				"buildFavoritesUri should return a qualified uri",
+				"buildFavoritesUriWithId should return a qualified uri",
 				TEST_URI + "/" + TEST_MOVIE_ID,
 				uri.toString()
 		);
+	}
+
+	public void testBuildMoviesUrl() {
+		final Uri uri = MoviesContract.MoviesEntry.buildMovieUriWithId(TEST_MOVIE_ID);
+
+		assertNotNull("buildMovieUriWithId should not return null", uri);
 	}
 
 }

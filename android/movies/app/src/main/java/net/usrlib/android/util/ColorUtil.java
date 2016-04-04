@@ -1,9 +1,8 @@
 package net.usrlib.android.util;
 
 public final class ColorUtil {
-
 	// Color list from http://htmlcolorcodes.com/color-chart/material-design-color-chart/
-	private static final String[] sColorCodes = {
+	private static final String[] sColorCodesBright = {
 			"#D32F2F",
 			"#607D8B",
 			"#C2185B",
@@ -24,20 +23,46 @@ public final class ColorUtil {
 			"#7CB342"
 	};
 
-	private static int sIndex = 0;
+	private static final String[] sColorCodesDark = {
+			"#C70039",
+			"#757575",
+			"#1565C0",
+			"#FF5733",
+			"#5C6BC0",
+			"#00838F",
+			"#9E9D24",
+			"#A1887F",
+			"#78909C"
+	};
 
-	public static final String getNextColor() {
+	private static int sIndexBright = 0;
+	private static int sIndexDark = 0;
+
+	public static final String getNextColorBrightTheme() {
 		String selectedColor;
 
-		if (sIndex > sColorCodes.length - 1) {
-			sIndex = 0;
+		if (sIndexBright > sColorCodesBright.length - 1) {
+			sIndexBright = 0;
 		}
 
-		selectedColor = sColorCodes[sIndex];
+		selectedColor = sColorCodesBright[sIndexBright];
 
-		sIndex++;
+		sIndexBright++;
 
 		return selectedColor;
 	}
 
+	public static final String getNextColorDarkTheme() {
+		String selectedColor;
+
+		if (sIndexDark > sColorCodesDark.length - 1) {
+			sIndexDark = 0;
+		}
+
+		selectedColor = sColorCodesDark[sIndexDark];
+
+		sIndexDark++;
+
+		return selectedColor;
+	}
 }

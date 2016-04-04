@@ -88,7 +88,7 @@ public class MovieReviews {
 
 			circleView.setText(String.valueOf(movieReviewVO.getAuthor().charAt(0)).toUpperCase());
 			circleView.getBackground().setColorFilter(
-					Color.parseColor(ColorUtil.getNextColor()),
+					Color.parseColor(ColorUtil.getNextColorBrightTheme()),
 					PorterDuff.Mode.SRC
 			);
 
