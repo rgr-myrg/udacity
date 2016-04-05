@@ -64,11 +64,6 @@ public class MainActivityFragment extends BaseFragment {
 		// Ensure onOptionsItemSelected is triggered
 		setHasOptionsMenu(true);
 
-		// Display Friendly Message
-		UiViewUtil.displayToastMessage(
-				getActivity(), MovieVars.LOADING_MSG
-		);
-
 		// Init and Set Up Grid View
 		initGridView(
 				(GridView) mRootView.findViewById(R.id.movie_grid_view)
@@ -189,16 +184,7 @@ public class MainActivityFragment extends BaseFragment {
 				}
 		});
 
-		MovieEvent.MovieSetAsFavorite.addListener(
-				new TinyEvent.Listener() {
-					@Override
-					public void onSuccess(Object data) {
-						onMovieFavoriteChanged();
-					}
-				}
-		);
-
-		MovieEvent.MovieUnsetAsFavorite.addListener(
+		MovieEvent.MovieFavoriteChanged.addListener(
 				new TinyEvent.Listener() {
 					@Override
 					public void onSuccess(Object data) {
@@ -318,10 +304,14 @@ public class MainActivityFragment extends BaseFragment {
 	private void fetchMovieFeed(final String sortBy, final String title) {
 		if (BuildConfig.DEBUG) Log.d(NAME, "fetchMovieFeed sortBy: " + sortBy);
 
+		// Display Friendly Message
+		UiViewUtil.displayToastMessage(
+				getActivity(), MovieVars.LOADING_MSG
+		);
+
 		mCurrentSortBy = sortBy;
 		mIsFirstPageRequest = true;
 
-		//addEventListeners();
 		setActivityTitle(title);
 
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);

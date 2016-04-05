@@ -23,23 +23,20 @@ public class MovieDetails {
 	public MovieDetails(BaseFragment fragment) {
 		mFragment = fragment;
 
-		MovieEvent.MovieSetAsFavorite.addListener(new TinyEvent.Listener() {
-			@Override
-			public void onSuccess(Object eventData) {
-				UiViewUtil.displayToastMessage(
-						mFragment.getActivity(), ResourceHolder.getSavedFavoriteMsg()
-				);
-			}
-		});
-
-		MovieEvent.MovieUnsetAsFavorite.addListener(new TinyEvent.Listener() {
-			@Override
-			public void onSuccess(Object eventData) {
-				UiViewUtil.displayToastMessage(
-						mFragment.getActivity(), ResourceHolder.getRemovedFavoriteMsg()
-				);
-			}
-		});
+		MovieEvent.MovieFavoriteChanged.addListener(
+				new TinyEvent.Listener() {
+					@Override
+					public void onSuccess(Object data) {
+						final boolean isFavorited = (boolean) data;
+						UiViewUtil.displayToastMessage(
+								mFragment.getActivity(),
+								isFavorited
+										? ResourceHolder.getSavedFavoriteMsg()
+										: ResourceHolder.getRemovedFavoriteMsg()
+						);
+					}
+				}
+		);
 	}
 
 	public final void loadMovieDetail(final MovieItemVO movieItemVO) {

@@ -112,7 +112,8 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			result = id != -1;
 
 			if (result) {
-				MovieEvent.MovieSetAsFavorite.notifySuccess();
+				// Notify movie was favored with boolean true
+				MovieEvent.MovieFavoriteChanged.notifySuccess(true);
 			}
 		} else {
 			final int rows = db.delete(
@@ -126,7 +127,8 @@ public class MoviesDBHelper extends SQLiteOpenHelper {
 			result = rows > 0;
 
 			if (result) {
-				MovieEvent.MovieUnsetAsFavorite.notifySuccess();
+				// Notify movie was un-favored with boolean false
+				MovieEvent.MovieFavoriteChanged.notifySuccess(false);
 			}
 		}
 
