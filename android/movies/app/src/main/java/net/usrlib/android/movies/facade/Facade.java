@@ -46,7 +46,7 @@ public final class Facade {
 		sIsTablet = isTablet;
 	}
 
-	public static final boolean getIsTablet() {
+	public static final boolean isTablet() {
 		return sIsTablet;
 	}
 

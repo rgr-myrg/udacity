@@ -152,25 +152,43 @@ public class MainActivityFragment extends BaseFragment {
 		}
 
 		MovieEvent.DiscoverFeedLoaded.addListener(new TinyEvent.Listener(){
-			@Override
-			public void onSuccess(Object data) {
-				onMovieFeedLoaded(
-						(ArrayList<MovieItemVO>) data
-				);
-			}
+				@Override
+				public void onSuccess(Object data) {
+					onMovieFeedLoaded(
+							(ArrayList<MovieItemVO>) data
+					);
+				}
 
-			@Override
-			public void onError(Object data) {
-				onMovieFeedError();
-			}
+				@Override
+				public void onError(Object data) {
+					onMovieFeedError();
+				}
 		});
 
-		MovieEvent.RequestLimitReached.addListener(new TinyEvent.Listener(){
-			@Override
-			public void onSuccess(Object data) {
-				onMovieLimitReached();
-			}
+		MovieEvent.RequestLimitReached.addListener(new TinyEvent.Listener() {
+				@Override
+				public void onSuccess(Object data) {
+					onMovieLimitReached();
+				}
 		});
+
+		MovieEvent.MovieSetAsFavorite.addListener(
+				new TinyEvent.Listener() {
+					@Override
+					public void onSuccess(Object data) {
+						onMovieFavoriteChanged();
+					}
+				}
+		);
+
+		MovieEvent.MovieUnsetAsFavorite.addListener(
+				new TinyEvent.Listener() {
+					@Override
+					public void onSuccess(Object data) {
+						onMovieFavoriteChanged();
+					}
+				}
+		);
 
 		mHasEventListeners = true;
 	}
@@ -190,15 +208,26 @@ public class MainActivityFragment extends BaseFragment {
 					return;
 				}
 
-				if (!Facade.getIsTablet()) {
+				if (!Facade.isTablet()) {
 					Intent intent = new Intent(activity, DetailActivity.class);
 					intent.putExtra(MovieItemVO.NAME, movieItemVO);
 
 					// Use a request code to trigger onActivityResult on MainActivity
 					activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 				} else {
-					//MovieEvent.LoadDetailFragment.notifyComplete(movieItemVO);
-					MovieEvent.LoadDetailFragment.notifySuccess(movieItemVO);
+					//MovieEvent.LoadDetailFragment.notifySuccess(movieItemVO);
+					// Create a bundle with movieItemVO
+					final Bundle bundle = new Bundle();
+					bundle.putParcelable(MovieItemVO.NAME, movieItemVO);
+					final DetailActivityFragment fragment = new DetailActivityFragment();
+					fragment.setArguments(bundle);
+					getActivity().getSupportFragmentManager()
+							.beginTransaction()
+							.replace(
+									R.id.detail_container,
+									fragment,
+									DetailActivityFragment.NAME
+							).commit();
 				}
 			}
 		});
@@ -345,4 +374,12 @@ public class MainActivityFragment extends BaseFragment {
 		UiViewUtil.setViewAsVisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
+	private void onMovieFavoriteChanged() {
+		if (mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())
+				&& Facade.isTablet()) {
+
+			// Reload Favorites since movie was unselected in detail fragment
+			getFavoriteMovies();
+		}
+	}
 }

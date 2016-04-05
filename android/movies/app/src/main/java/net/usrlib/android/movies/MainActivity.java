@@ -11,12 +11,8 @@ import android.view.Menu;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.fragment.DetailActivityFragment;
 import net.usrlib.android.movies.lifecycle.ActivityLifecycle;
-import net.usrlib.android.movies.movieapi.MovieEvent;
-import net.usrlib.android.movies.parcelable.MovieItemVO;
-import net.usrlib.pattern.TinyEvent;
 
 public class MainActivity extends AppCompatActivity {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,15 +28,6 @@ public class MainActivity extends AppCompatActivity {
 		if (findViewById(R.id.master_container) != null) {
 			Facade.setIsTablet(true);
 
-			MovieEvent.LoadDetailFragment.addListener(
-					new TinyEvent.Listener() {
-						@Override
-						public void onSuccess(Object data) {
-							onLoadDetailFragment((MovieItemVO) data);
-						}
-					}
-			);
-
 			if (savedInstanceState == null) {
 				// Begin Fragment Transaction for Tablet
 				getSupportFragmentManager()
@@ -55,25 +42,6 @@ public class MainActivity extends AppCompatActivity {
 		} else {
 			Facade.setIsTablet(false);
 		}
-	}
-
-	private void onLoadDetailFragment(MovieItemVO movieItemVO) {
-		// Create a bundle with movieItemVO
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(MovieItemVO.NAME, movieItemVO);
-
-		DetailActivityFragment fragment = new DetailActivityFragment();
-		fragment.setArguments(bundle);
-
-		// Use Fragment Transaction to start DetailActivityFragment
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(
-						R.id.detail_container,
-						fragment,
-						DetailActivityFragment.NAME
-				)
-				.commit();
 	}
 
 	@Override

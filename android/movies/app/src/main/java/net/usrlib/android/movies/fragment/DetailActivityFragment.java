@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import net.usrlib.android.movies.BuildConfig;
-import net.usrlib.android.movies.DetailActivity;
 import net.usrlib.android.movies.R;
+import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieDetails;
 import net.usrlib.android.movies.movieapi.MovieReviews;
 import net.usrlib.android.movies.movieapi.MovieTrailers;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 @SuppressWarnings("unchecked")
 public class DetailActivityFragment extends BaseFragment {
 
-	public static final String NAME = DetailActivity.class.getSimpleName();
+	public static final String NAME = DetailActivityFragment.class.getSimpleName();
 
 	private MovieDetails mMovieDetails = null;
 	private MovieTrailers mMovieTrailers = null;
@@ -114,6 +116,11 @@ public class DetailActivityFragment extends BaseFragment {
 	private void loadMovieItemFromBundle(final Bundle bundle) {
 		mMovieItemVO = (MovieItemVO) bundle.getParcelable(MovieItemVO.NAME);
 
+		// Unhide detail layout only if we have data
+		if(mMovieItemVO != null) {
+			displayDetailLayout();
+		}
+
 		// Populate Detail Fragment
 		mMovieDetails.loadMovieDetail(mMovieItemVO);
 
@@ -127,6 +134,11 @@ public class DetailActivityFragment extends BaseFragment {
 
 		if (bundle.containsKey(MovieItemVO.NAME)) {
 			mMovieItemVO = (MovieItemVO) bundle.get(MovieItemVO.NAME);
+		}
+
+		// Unhide detail layout only if we have data
+		if(mMovieItemVO != null) {
+			displayDetailLayout();
 		}
 
 		// Populate Detail Fragment
@@ -147,4 +159,17 @@ public class DetailActivityFragment extends BaseFragment {
 		}
 	}
 
+	private void displayDetailLayout() {
+		if (Facade.isTablet()) {
+			((LinearLayout) mRootView.findViewById(R.id.fragment_detail_layout))
+					.setVisibility(View.VISIBLE);
+			hideDefaultMessage();
+		}
+	}
+
+	private void hideDefaultMessage() {
+		((TextView) getActivity()
+				.findViewById(R.id.detail_container_default_message))
+				.setVisibility(View.INVISIBLE);
+	}
 }

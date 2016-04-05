@@ -57,14 +57,8 @@ public class MovieDetails {
 		final ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_poster);
 		final ImageView favBtnImageView = (ImageView) rootView.findViewById(R.id.button_favorite);
 
-		if (Facade.getIsTablet()) {
+		if (Facade.isTablet()) {
 			UiViewUtil.applyNextColorOnTextView(rootView, R.id.movie_title);
-
-//					((TextView) rootView.findViewById(R.id.movie_title))
-//					.getBackground().setColorFilter(
-//					Color.parseColor(ColorUtil.getNextColorBrightTheme()),
-//					PorterDuff.Mode.SRC
-//			);
 		}
 
 		// Invoking placeholder causes the image to become misaligned. >:(
