@@ -313,22 +313,6 @@ public class MainActivityFragment extends BaseFragment {
 	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList) {
 		Context context = getContext();
 
-//		if (BuildConfig.DEBUG) {
-//			Log.d(NAME, "onMovieFeedLoaded arrayList size: "
-//							+ String.valueOf(arrayList.size()) + "\n"
-//							+ "mIsFirstPageRequest: "
-//							+ String.valueOf(mIsFirstPageRequest) + "\n"
-//			);
-//
-//			if (context == null) {
-//				Log.d(NAME, "Context is null. Facade: " + Facade.getAppContext().toString());
-//			}
-//
-//			if (mGridItemAdapter == null) {
-//				Log.d(NAME, "mGridItemAdapter is null.");
-//			}
-//		}
-
 		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			mGridItemAdapter = new GridItemAdapter(
 					context != null ? context : Facade.getAppContext(),
@@ -343,7 +327,7 @@ public class MainActivityFragment extends BaseFragment {
 		}
 
 		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.
-		//UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
+		UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
 	}
 
 	private void setActivityTitle(String viewTitle) {
