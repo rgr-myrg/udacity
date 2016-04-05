@@ -7,10 +7,10 @@ import android.provider.BaseColumns;
 
 public class MoviesContract {
 
-	// Ex: content://net.usrlib.android.movies.data/movies
+	// Ex: content://net.usrlib.android.movies._data.data/movies
 
 	public static final String PROTOCOL_SCHEME = "content://";
-	public static final String CONTENT_AUTHORITY = "net.usrlib.android.movies.data";
+	public static final String CONTENT_AUTHORITY = "net.usrlib.android.movies.provider";
 	public static final String PATH_MOVIES = "movies";
 	public static final String PATH_FAVORITES = "favorites";
 	public static final Uri BASE_CONTENT_URI = Uri.parse(PROTOCOL_SCHEME + CONTENT_AUTHORITY);
@@ -38,7 +38,7 @@ public class MoviesContract {
 	}
 
 	public static final class FavoritesEntry implements BaseColumns {
-		// Ex: content://net.usrlib.android.movies.data/favorites
+		// Ex: content://net.usrlib.android.movies._data.data/favorites
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI
 				.buildUpon()
 				.appendPath(PATH_FAVORITES)
@@ -53,6 +53,7 @@ public class MoviesContract {
 				+ "/" + PATH_FAVORITES;
 
 		public static final String TABLE_NAME = "movie_favorites";
+		public static final String DEFAULT_ORDER = TABLE_NAME + "." +_ID;
 
 		public static final String COLUMN_ID = "id";
 		public static final String COLUMN_ORIGINAL_TITLE = "original_title";

@@ -33,10 +33,17 @@
 		</activity>
 
 		<provider
-			android:authorities="net.usrlib.android.movies"
-			android:name=".data.MoviesProvider"
-			android:exported="false"
-			android:syncable="false" />
+			android:name="net.usrlib.android.movies.provider.MoviesProvider"
+			android:authorities="net.usrlib.android.movies.provider" />
+		<!--<provider-->
+			<!--android:authorities="net.usrlib.android.movies"-->
+			<!--android:name=".provider.MoviesProvider"-->
+			<!--android:label="MoviesProvider"-->
+			<!--android:grantUriPermissions="true"-->
+			<!--android:readPermission="net.usrlib.android.movies.READ"-->
+			<!--android:writePermission="net.usrlib.android.movies.WRITE"-->
+			<!--android:exported="true"-->
+			<!--android:syncable="false" />-->
 
 	</application>
 

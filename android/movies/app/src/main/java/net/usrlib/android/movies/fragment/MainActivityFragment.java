@@ -215,12 +215,13 @@ public class MainActivityFragment extends BaseFragment {
 					// Use a request code to trigger onActivityResult on MainActivity
 					activity.startActivityForResult(intent, FAVORITES_REQUEST_CODE);
 				} else {
-					//MovieEvent.LoadDetailFragment.notifySuccess(movieItemVO);
-					// Create a bundle with movieItemVO
+					// Create a bundle with movieItemVO and ship it to in the fragment
 					final Bundle bundle = new Bundle();
 					bundle.putParcelable(MovieItemVO.NAME, movieItemVO);
+
 					final DetailActivityFragment fragment = new DetailActivityFragment();
 					fragment.setArguments(bundle);
+
 					getActivity().getSupportFragmentManager()
 							.beginTransaction()
 							.replace(
@@ -249,7 +250,6 @@ public class MainActivityFragment extends BaseFragment {
 				int lastItemCount = firstVisibleItem + visibleItemCount;
 
 				if (lastItemCount > totalItemCount - visibleItemCount
-				//if (firstVisibleItem > totalItemCount - ITEM_SCROLL_BUFFER
 						&& !mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())) {
 
 					if (BuildConfig.DEBUG) Log.d(NAME, "onScroll invoking fetchNextPageSortedBy");
@@ -313,21 +313,21 @@ public class MainActivityFragment extends BaseFragment {
 	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList) {
 		Context context = getContext();
 
-		if (BuildConfig.DEBUG) {
-			Log.d(NAME, "onMovieFeedLoaded arrayList size: "
-							+ String.valueOf(arrayList.size()) + "\n"
-							+ "mIsFirstPageRequest: "
-							+ String.valueOf(mIsFirstPageRequest) + "\n"
-			);
-
-			if (context == null) {
-				Log.d(NAME, "Context is null. Facade: " + Facade.getAppContext().toString());
-			}
-
-			if (mGridItemAdapter == null) {
-				Log.d(NAME, "mGridItemAdapter is null.");
-			}
-		}
+//		if (BuildConfig.DEBUG) {
+//			Log.d(NAME, "onMovieFeedLoaded arrayList size: "
+//							+ String.valueOf(arrayList.size()) + "\n"
+//							+ "mIsFirstPageRequest: "
+//							+ String.valueOf(mIsFirstPageRequest) + "\n"
+//			);
+//
+//			if (context == null) {
+//				Log.d(NAME, "Context is null. Facade: " + Facade.getAppContext().toString());
+//			}
+//
+//			if (mGridItemAdapter == null) {
+//				Log.d(NAME, "mGridItemAdapter is null.");
+//			}
+//		}
 
 		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			mGridItemAdapter = new GridItemAdapter(
@@ -340,9 +340,6 @@ public class MainActivityFragment extends BaseFragment {
 
 		} else {
 			mGridItemAdapter.updateItemsList(arrayList);
-
-			//mGridItemAdapter.addAll(arrayList);
-			//mGridItemAdapter.notifyDataSetChanged();
 		}
 
 		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.

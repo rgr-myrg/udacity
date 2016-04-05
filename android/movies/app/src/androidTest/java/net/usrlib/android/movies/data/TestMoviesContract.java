@@ -6,7 +6,7 @@ import android.test.AndroidTestCase;
 public class TestMoviesContract extends AndroidTestCase {
 
 	private static final int TEST_MOVIE_ID = 123456;
-	private static final String TEST_URI = "content://net.usrlib.android.movies.data/favorites";
+	private static final String TEST_URI = "content://net.usrlib.android.movies._data.data/favorites";
 
 	public void testBuildFavoritesUri() {
 		final Uri uri = MoviesContract.FavoritesEntry.buildFavoritesUriWithId(TEST_MOVIE_ID);
