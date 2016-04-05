@@ -334,8 +334,10 @@ public class MainActivityFragment extends BaseFragment {
 		}
 
 		if (movieItems.isEmpty()) {
-			mMessageBox.setText(ResourceHolder.getNoFavoritesMsg());
-			mMessageBox.setVisibility(View.VISIBLE);
+			if (mCurrentTitle.contentEquals(ResourceHolder.getTitleFavorites())) {
+				mMessageBox.setText(ResourceHolder.getNoFavoritesMsg());
+				mMessageBox.setVisibility(View.VISIBLE);
+			}
 		} else {
 			// Movie Feed was Loaded. Hide Message Box Message.
 			UiViewUtil.setViewAsInvisible(getActivity(), mMessageBox);
