@@ -152,4 +152,5 @@ site	String	YouTube
 size	Integer	720
 type	String	Trailer
  */
+// Thumbnail Ex: https://i.ytimg.com/vi_webp/8hP9D6kZseM/mqdefault.webp
 

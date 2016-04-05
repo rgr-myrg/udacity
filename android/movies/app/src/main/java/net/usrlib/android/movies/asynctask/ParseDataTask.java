@@ -34,7 +34,6 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieItemVO> movieItemVOs) {
 				// Notify Observers Discover Feed was Loaded
-				//MovieEvent.DiscoverFeedLoaded.notifyComplete(movieItemVOs);
 				MovieEvent.DiscoverFeedLoaded.notifySuccess(movieItemVOs);
 			}
 		}.execute();
@@ -59,7 +58,6 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieTrailerVO> movieTrailerVOs) {
 				// Notify Observers Trailers were Loaded
-				//MovieEvent.MovieTrailersLoaded.notifyComplete(movieTrailerVOs);
 				MovieEvent.MovieTrailersLoaded.notifySuccess(movieTrailerVOs);
 			}
 		}.execute();
@@ -84,7 +82,6 @@ public final class ParseDataTask {
 			@Override
 			protected void onPostExecute(ArrayList<MovieReviewVO> movieReviewVOs) {
 				// Notify Observers Reviews were Loaded
-				//MovieEvent.MovieReviewsLoaded.notifyComplete(movieReviewVOs);
 				MovieEvent.MovieReviewsLoaded.notifySuccess(movieReviewVOs);
 			}
 

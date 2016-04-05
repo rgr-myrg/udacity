@@ -12,6 +12,7 @@ import android.util.Log;
 
 public class ActivityLifecycle {
 
+	// Just Logging lifecycle to become more familiar with app flow
 	public static void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 		Log.d("ActivityLifecycle", "onActivityCreated");
 	}
