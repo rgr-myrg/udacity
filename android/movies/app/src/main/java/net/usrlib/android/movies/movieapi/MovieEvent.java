@@ -10,6 +10,6 @@ public final class MovieEvent {
 	public static final TinyEvent MovieReviewsLoaded   = new TinyEvent();
 	public static final TinyEvent MovieSetAsFavorite   = new TinyEvent();
 	public static final TinyEvent MovieUnsetAsFavorite = new TinyEvent();
-	public static final TinyEvent LoadDetailFragment   = new TinyEvent();
+	public static final TinyEvent OptionsItemSelected  = new TinyEvent();
 
 }

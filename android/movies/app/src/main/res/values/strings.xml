@@ -17,4 +17,5 @@
 	<string name="saved_to_favorites_message">Saved to Favorites</string>
 	<string name="removed_from_favorites_message">Removed from Favorites</string>
 	<string name="detail_container_default_message">Please select a Movie to view details</string>
+	<string name="no_favorites_message">You haven\'t saved any Favorite Movies Yet! Please browse Movies and save them to your Favorites.</string>
 </resources>

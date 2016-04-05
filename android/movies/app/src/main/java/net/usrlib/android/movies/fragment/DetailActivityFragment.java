@@ -2,6 +2,7 @@ package net.usrlib.android.movies.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,14 @@ import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.R;
 import net.usrlib.android.movies.facade.Facade;
 import net.usrlib.android.movies.movieapi.MovieDetails;
+import net.usrlib.android.movies.movieapi.MovieEvent;
 import net.usrlib.android.movies.movieapi.MovieReviews;
 import net.usrlib.android.movies.movieapi.MovieTrailers;
 import net.usrlib.android.movies.movieapi.MovieVars;
 import net.usrlib.android.movies.parcelable.MovieItemVO;
 import net.usrlib.android.movies.parcelable.MovieReviewVO;
 import net.usrlib.android.movies.parcelable.MovieTrailerVO;
+import net.usrlib.pattern.TinyEvent;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,18 @@ public class DetailActivityFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle instanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+		// Hide Details when menu options are selected
+		if (Facade.isTablet()) {
+			MovieEvent.OptionsItemSelected.addListener(
+					new TinyEvent.Listener() {
+						@Override
+						public void onSuccess(Object activity) {
+							hideDetailLayout((FragmentActivity) activity);
+						}
+					}
+			);
+		}
 
 		if (mMovieDetails == null) {
 			mMovieDetails = new MovieDetails(this);
@@ -160,16 +175,34 @@ public class DetailActivityFragment extends BaseFragment {
 	}
 
 	private void displayDetailLayout() {
-		if (Facade.isTablet()) {
-			((LinearLayout) mRootView.findViewById(R.id.fragment_detail_layout))
-					.setVisibility(View.VISIBLE);
-			hideDefaultMessage();
+		if (!Facade.isTablet()) {
+			return;
 		}
+
+		final LinearLayout layout = (LinearLayout) mRootView.findViewById(R.id.fragment_detail_layout);
+		final TextView textView = (TextView) getActivity().findViewById(R.id.detail_container_default_message);
+
+		if (layout == null || textView == null) {
+			return;
+		}
+
+		layout.setVisibility(View.VISIBLE);
+		textView.setVisibility(View.INVISIBLE);
 	}
 
-	private void hideDefaultMessage() {
-		((TextView) getActivity()
-				.findViewById(R.id.detail_container_default_message))
-				.setVisibility(View.INVISIBLE);
+	private void hideDetailLayout(final FragmentActivity fragmentActivity) {
+		if (fragmentActivity == null || !Facade.isTablet()) {
+			return;
+		}
+
+		final LinearLayout layout = (LinearLayout) mRootView.findViewById(R.id.fragment_detail_layout);
+		final TextView textView = (TextView) fragmentActivity.findViewById(R.id.detail_container_default_message);
+
+		if (layout == null || textView == null) {
+			return;
+		}
+
+		layout.setVisibility(View.INVISIBLE);
+		textView.setVisibility(View.VISIBLE);
 	}
 }

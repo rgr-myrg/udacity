@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import net.usrlib.android.movies.BuildConfig;
 import net.usrlib.android.movies.DetailActivity;
@@ -37,6 +38,7 @@ public class MainActivityFragment extends BaseFragment {
 	private static final int FAVORITES_REQUEST_CODE = 5;
 
 	private View mRootView = null;
+	private TextView mMessageBox = null;
 	private GridView mGridView = null;
 	private GridItemAdapter mGridItemAdapter = null;
 	private String mCurrentSortBy;
@@ -57,9 +59,15 @@ public class MainActivityFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle instanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_main, container, false);
+		mMessageBox = (TextView) mRootView.findViewById(R.id.user_message_box);
 
 		// Ensure onOptionsItemSelected is triggered
 		setHasOptionsMenu(true);
+
+		// Display Friendly Message
+		UiViewUtil.displayToastMessage(
+				getActivity(), MovieVars.LOADING_MSG
+		);
 
 		// Init and Set Up Grid View
 		initGridView(
@@ -85,6 +93,15 @@ public class MainActivityFragment extends BaseFragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
+
+		// Signal to Observers new options are selected if we have a master layout.
+		// Provide access to the master container frame in case we need it.
+
+		if (Facade.isTablet()) {
+			MovieEvent.OptionsItemSelected.notifySuccess(
+					getFragmentManager().findFragmentById(R.id.master_container).getActivity()
+			);
+		}
 
 		switch (itemId) {
 			case R.id.action_most_popular:
@@ -310,24 +327,29 @@ public class MainActivityFragment extends BaseFragment {
 		Facade.getMovieApi().fetchFirstPageSortedBy(sortBy);
 	}
 
-	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> arrayList) {
+	private void onMovieFeedLoaded(final ArrayList<MovieItemVO> movieItems) {
 		Context context = getContext();
 
 		if (mGridItemAdapter == null || mIsFirstPageRequest) {
 			mGridItemAdapter = new GridItemAdapter(
 					context != null ? context : Facade.getAppContext(),
-					arrayList
+					movieItems
 			);
 
 			mGridView.setAdapter(mGridItemAdapter);
 			mIsFirstPageRequest = false;
 
 		} else {
-			mGridItemAdapter.updateItemsList(arrayList);
+			mGridItemAdapter.updateItemsList(movieItems);
 		}
 
-		// Movie Feed was Loaded. Hide "Connect to the Internet" Message.
-		UiViewUtil.setViewAsInvisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
+		if (movieItems.isEmpty()) {
+			mMessageBox.setText(ResourceHolder.getNoFavoritesMsg());
+			mMessageBox.setVisibility(View.VISIBLE);
+		} else {
+			// Movie Feed was Loaded. Hide Message Box Message.
+			UiViewUtil.setViewAsInvisible(getActivity(), mMessageBox);
+		}
 	}
 
 	private void setActivityTitle(String viewTitle) {
@@ -352,7 +374,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private void onMovieFeedError() {
 		UiViewUtil.displayToastMessage(getActivity(), HttpRequest.CONNECTIVY_ERROR);
-		UiViewUtil.setViewAsVisible(getActivity(), mRootView.findViewById(R.id.user_message_box));
+		UiViewUtil.setViewAsVisible(getActivity(), mMessageBox);
 	}
 
 	private void onMovieFavoriteChanged() {

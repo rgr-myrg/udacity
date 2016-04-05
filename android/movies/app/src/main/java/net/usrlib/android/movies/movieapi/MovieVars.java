@@ -35,6 +35,7 @@ public final class MovieVars {
 	public static final String SHARE_TEXT = "Share This Movie!";
 	public static final String SHARE_MSG = "Check out this Movie! ";
 
+	public static final String LOADING_MSG = "Loading Movie List!";
 	public static final String NO_MOVIES_MSG = "Unable to load Movie details";
 	public static final String NO_REVIEWS_MSG = "No Reviews Found";
 	public static final String NO_TRAILERS_MSG = "No Trailers Found";
