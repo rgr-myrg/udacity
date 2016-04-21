@@ -57,6 +57,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		UiUtil.onCreate(this);
 		mContext = this;
 
 		setContentView(R.layout.activity_my_stocks);
@@ -119,7 +120,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 								if (c.getCount() != 0) {
 									Toast toast = Toast.makeText(
 											MyStocksActivity.this,
-											"This stock is already saved!",
+											UiUtil.getStockExistsMsg(),
 											Toast.LENGTH_LONG
 									);
 
@@ -170,10 +171,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		super.onResume();
 		getLoaderManager().restartLoader(StockVars.CURSOR_LOADER_ID, null, this);
 	}
-
-//	public void networkToast() {
-//		Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
-//	}
 
 	public void restoreActionBar() {
 		ActionBar actionBar = getSupportActionBar();
