@@ -13,8 +13,9 @@
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="network_not_available_title" translatable="true">Network Not Available</string>
     <string name="network_not_available" translatable="true">
-        Please ensure you are connected to the Internet for the latest up-to-the-minute Stock quotes.
+        Please ensure you are connected to the Internet for the latest up-to-the-minute Stock Quotes.
     </string>
     <string name="stock_exists" translatable="true">This stock is already saved!</string>
+    <string name="refreshing_message" translatable="true">Retrieving the latest Stock Quotes.</string>
     <string name="title_activity_chart">ChartActivity</string>
 </resources>

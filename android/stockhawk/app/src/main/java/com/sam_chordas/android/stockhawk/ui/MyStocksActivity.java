@@ -125,14 +125,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 								);
 
 								if (c.getCount() != 0) {
-									Toast toast = Toast.makeText(
-											MyStocksActivity.this,
-											UiUtil.getStockExistsMsg(),
-											Toast.LENGTH_LONG
-									);
-
-									toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-									toast.show();
+									UiUtil.displayStockExistsMsg(MyStocksActivity.this);
 
 									return;
 								} else {
@@ -269,6 +262,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	}
 
 	private void onRefresh() {
+		UiUtil.displayRefreshingMsg(this);
 		startServiceWithTag(StockVars.TAG_PERIODIC);
 	}
 
