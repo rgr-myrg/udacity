@@ -16,4 +16,5 @@
         Please ensure you are connected to the Internet for the latest up-to-the-minute Stock quotes.
     </string>
     <string name="stock_exists" translatable="true">This stock is already saved!</string>
+    <string name="title_activity_chart">ChartActivity</string>
 </resources>

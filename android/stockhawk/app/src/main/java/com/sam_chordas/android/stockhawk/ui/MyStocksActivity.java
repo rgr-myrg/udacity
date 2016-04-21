@@ -83,8 +83,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 				new RecyclerViewItemClickListener.OnItemClickListener() {
 					@Override
 					public void onItemClick(View v, int position) {
-						//TODO:
-						// do something on item click
+						mCursor.moveToPosition(position);
+
+						Intent chartIntent = new Intent(mContext, ChartActivity.class);
+						chartIntent.putExtra(
+								StockVars.SYMBOL_KEY,
+								mCursor.getString(mCursor.getColumnIndex(StockVars.SYMBOL_KEY))
+						);
+
+						startActivity(chartIntent);
 					}
 				}));
 
@@ -210,18 +217,31 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		// This narrows the return to only the stocks that are most current.
-		return new CursorLoader(this, QuoteProvider.Quotes.CONTENT_URI,
-				new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-						QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+		return new CursorLoader(
+				this, QuoteProvider.Quotes.CONTENT_URI,
+				new String[]{
+						QuoteColumns._ID,
+						QuoteColumns.SYMBOL,
+						QuoteColumns.BIDPRICE,
+						QuoteColumns.PERCENT_CHANGE,
+						QuoteColumns.CHANGE,
+						QuoteColumns.ISUP
+				},
 				QuoteColumns.ISCURRENT + " = ?",
 				new String[]{"1"},
-				null);
+				null
+		);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		mCursorAdapter.swapCursor(data);
 		mCursor = data;
+
+		if (data.getCount() <= 0) {
+			// Toggle Empty Stock Visibility?
+			Log.d("MAIN", "onLoadFinished no data!!!");
+		}
 	}
 
 	@Override
