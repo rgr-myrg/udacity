@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.constants.StockVars;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
@@ -49,7 +50,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	private CharSequence mTitle;
 	private Intent mServiceIntent;
 	private ItemTouchHelper mItemTouchHelper;
-	private static final int CURSOR_LOADER_ID = 0;
 	private QuoteCursorAdapter mCursorAdapter;
 	private Context mContext;
 	private Cursor mCursor;
@@ -68,13 +68,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		if (savedInstanceState == null) {
 			// Run the initialize task service so that some stocks appear upon an empty database
 
-			startServiceWithTag("init");
+			startServiceWithTag(StockVars.TAG_INIT);
 		}
 
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-		getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+		getLoaderManager().initLoader(StockVars.CURSOR_LOADER_ID, null, this);
 
 		mCursorAdapter = new QuoteCursorAdapter(this, null);
 
@@ -108,20 +108,29 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 							public void onInput(MaterialDialog dialog, CharSequence input) {
 								// On FAB click, receive user input. Make sure the stock doesn't already exist
 								// in the DB and proceed accordingly
-								Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-										new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-										new String[]{input.toString()}, null);
+								Cursor c = getContentResolver().query(
+										QuoteProvider.Quotes.CONTENT_URI,
+										new String[]{QuoteColumns.SYMBOL},
+										QuoteColumns.SYMBOL + "= ?",
+										new String[]{input.toString()},
+										null
+								);
+
 								if (c.getCount() != 0) {
-									Toast toast =
-											Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-													Toast.LENGTH_LONG);
+									Toast toast = Toast.makeText(
+											MyStocksActivity.this,
+											"This stock is already saved!",
+											Toast.LENGTH_LONG
+									);
+
 									toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
 									toast.show();
+
 									return;
 								} else {
 									// Add the stock to DB
-									mServiceIntent.putExtra("tag", "add");
-									mServiceIntent.putExtra("symbol", input.toString());
+									mServiceIntent.putExtra(StockVars.TAG_KEY, StockVars.TAG_ADD);
+									mServiceIntent.putExtra(StockVars.SYMBOL_KEY, input.toString());
 									startService(mServiceIntent);
 								}
 							}
@@ -139,7 +148,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		if (isNetworkAvailable()) {
 			long period = 3600L;
 			long flex = 10L;
-			String periodicTag = "periodic";
 
 			// create a periodic task to pull stocks once every hour after the app has been opened. This
 			// is so Widget data stays up to date.
@@ -147,7 +155,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 					.setService(StockTaskService.class)
 					.setPeriod(period)
 					.setFlex(flex)
-					.setTag(periodicTag)
+					.setTag(StockVars.TAG_PERIODIC)
 					.setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
 					.setRequiresCharging(false)
 					.build();
@@ -157,11 +165,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		}
 	}
 
-
 	@Override
 	public void onResume() {
 		super.onResume();
-		getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+		getLoaderManager().restartLoader(StockVars.CURSOR_LOADER_ID, null, this);
 	}
 
 //	public void networkToast() {
@@ -230,7 +237,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 			return;
 		}
 
-		mServiceIntent.putExtra("tag", tagValue);
+		mServiceIntent.putExtra(StockVars.TAG_KEY, tagValue);
 
 		if (isNetworkAvailable()) {
 			startService(mServiceIntent);
@@ -245,8 +252,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	}
 
 	private void onRefresh() {
-		Log.d("MAIN", "onRefresh");
-		startServiceWithTag("periodic");
+		startServiceWithTag(StockVars.TAG_PERIODIC);
 	}
 
 	private boolean isNetworkAvailable() {
