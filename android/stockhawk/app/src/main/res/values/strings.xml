@@ -18,4 +18,6 @@
     <string name="stock_exists" translatable="true">This stock is already saved!</string>
     <string name="refreshing_message" translatable="true">Retrieving the latest Stock Quotes.</string>
     <string name="title_activity_chart">ChartActivity</string>
+    <string name="stock_chart_label">Stock Data</string>
+
 </resources>

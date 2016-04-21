@@ -6,21 +6,23 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
+import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.constants.StockVars;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -30,10 +32,6 @@ import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
-import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 import com.sam_chordas.android.stockhawk.util.NetworkUtil;
 import com.sam_chordas.android.stockhawk.util.UiUtil;
@@ -87,8 +85,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
 						Intent chartIntent = new Intent(mContext, ChartActivity.class);
 						chartIntent.putExtra(
-								StockVars.SYMBOL_KEY,
-								mCursor.getString(mCursor.getColumnIndex(StockVars.SYMBOL_KEY))
+								QuoteColumns.SYMBOL,
+								mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL))
 						);
 
 						startActivity(chartIntent);
@@ -131,7 +129,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 								} else {
 									// Add the stock to DB
 									mServiceIntent.putExtra(StockVars.TAG_KEY, StockVars.TAG_ADD);
-									mServiceIntent.putExtra(StockVars.SYMBOL_KEY, input.toString());
+									mServiceIntent.putExtra(QuoteColumns.SYMBOL, input.toString());
 									startService(mServiceIntent);
 								}
 							}

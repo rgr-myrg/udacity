@@ -9,5 +9,4 @@ public final class StockVars {
 	public static final String TAG_ADD = "add";
 	public static final String TAG_INIT = "init";
 	public static final String TAG_PERIODIC = "periodic";
-	public static final String SYMBOL_KEY = "symbol";
 }
