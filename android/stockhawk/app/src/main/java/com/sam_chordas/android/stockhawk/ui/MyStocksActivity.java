@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,13 +68,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		if (savedInstanceState == null) {
 			// Run the initialize task service so that some stocks appear upon an empty database
 
-			mServiceIntent.putExtra("tag", "init");
-			if (isNetworkAvailable()) {
-				startService(mServiceIntent);
-			} else {
-				//networkToast();
-				UiUtil.showNetworkNotAvailableDialog(mContext);
-			}
+			startServiceWithTag("init");
 		}
 
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -100,37 +95,38 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isNetworkAvailable()) {
-					new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
-							.content(R.string.content_test)
-							.inputType(InputType.TYPE_CLASS_TEXT)
-							.input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
-								@Override
-								public void onInput(MaterialDialog dialog, CharSequence input) {
-									// On FAB click, receive user input. Make sure the stock doesn't already exist
-									// in the DB and proceed accordingly
-									Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-											new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
-											new String[]{input.toString()}, null);
-									if (c.getCount() != 0) {
-										Toast toast =
-												Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-														Toast.LENGTH_LONG);
-										toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
-										toast.show();
-										return;
-									} else {
-										// Add the stock to DB
-										mServiceIntent.putExtra("tag", "add");
-										mServiceIntent.putExtra("symbol", input.toString());
-										startService(mServiceIntent);
-									}
-								}
-							})
-							.show();
-				} else {
-					networkToast();
+				if (!isNetworkAvailable()) {
+					displayNetworkNotAvailableDialog();
+					return;
 				}
+
+				new MaterialDialog.Builder(mContext).title(R.string.symbol_search)
+						.content(R.string.content_test)
+						.inputType(InputType.TYPE_CLASS_TEXT)
+						.input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
+							@Override
+							public void onInput(MaterialDialog dialog, CharSequence input) {
+								// On FAB click, receive user input. Make sure the stock doesn't already exist
+								// in the DB and proceed accordingly
+								Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+										new String[]{QuoteColumns.SYMBOL}, QuoteColumns.SYMBOL + "= ?",
+										new String[]{input.toString()}, null);
+								if (c.getCount() != 0) {
+									Toast toast =
+											Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+													Toast.LENGTH_LONG);
+									toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
+									toast.show();
+									return;
+								} else {
+									// Add the stock to DB
+									mServiceIntent.putExtra("tag", "add");
+									mServiceIntent.putExtra("symbol", input.toString());
+									startService(mServiceIntent);
+								}
+							}
+						})
+						.show();
 
 			}
 		});
@@ -168,9 +164,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
 	}
 
-	public void networkToast() {
-		Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
-	}
+//	public void networkToast() {
+//		Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+//	}
 
 	public void restoreActionBar() {
 		ActionBar actionBar = getSupportActionBar();
@@ -193,15 +189,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
-		}
-
-		if (id == R.id.action_change_units) {
-			// this is for changing stock changes from percent value to dollar value
-			Utils.showPercent = !Utils.showPercent;
-			this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
+		switch (id) {
+			case R.id.action_change_units:
+				onActionChangeUnits();
+				break;
+			case R.id.action_refresh:
+				onRefresh();
+				break;
+			default:
+				break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -229,14 +225,35 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		mCursorAdapter.swapCursor(null);
 	}
 
+	private void startServiceWithTag(final String tagValue) {
+		if (mServiceIntent == null) {
+			return;
+		}
+
+		mServiceIntent.putExtra("tag", tagValue);
+
+		if (isNetworkAvailable()) {
+			startService(mServiceIntent);
+		} else {
+			displayNetworkNotAvailableDialog();
+		}
+	}
+
+	private void onActionChangeUnits() {
+		Utils.showPercent = !Utils.showPercent;
+		this.getContentResolver().notifyChange(QuoteProvider.Quotes.CONTENT_URI, null);
+	}
+
+	private void onRefresh() {
+		Log.d("MAIN", "onRefresh");
+		startServiceWithTag("periodic");
+	}
+
 	private boolean isNetworkAvailable() {
 		return NetworkUtil.isNetworkAvailable(mContext);
 	}
 
-//	private void displayNetworkNotAvailableMaterialDialog() {
-//		new MaterialDialog.Builder(mContext)
-//				.title(R.string.network_not_available_title)
-//				.content(R.string.network_not_available)
-//				.show();
-//	}
+	private void displayNetworkNotAvailableDialog() {
+		UiUtil.showNetworkNotAvailableDialog(mContext);
+	}
 }
