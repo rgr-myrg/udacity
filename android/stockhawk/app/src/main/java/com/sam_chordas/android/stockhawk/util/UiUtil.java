@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -15,6 +17,7 @@ import com.sam_chordas.android.stockhawk.R;
 public final class UiUtil {
 	private static String sStockExistsMsg;
 	private static String sRefreshingMsg;
+	private static ProgressBar sProgressBar;
 
 	public static final void onCreate(final AppCompatActivity app) {
 		sStockExistsMsg = app.getString(R.string.stock_exists);
@@ -40,5 +43,26 @@ public final class UiUtil {
 
 	public static final void displayRefreshingMsg(final AppCompatActivity app) {
 		displayToast(app, sRefreshingMsg);
+	}
+
+	public static final void displayProgressBar(final AppCompatActivity app) {
+		setProgressBarVisibility(app, View.VISIBLE);
+	}
+
+	public static final void hideProgressBar(final AppCompatActivity app) {
+		setProgressBarVisibility(app, View.INVISIBLE);
+	}
+
+	private static final void setProgressBarVisibility(final AppCompatActivity app, final int value) {
+		if (sProgressBar == null) {
+			sProgressBar = (ProgressBar) app.findViewById(R.id.progress_bar);
+		}
+
+		app.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				sProgressBar.setVisibility(value);
+			}
+		});
 	}
 }
