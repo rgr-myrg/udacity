@@ -4,13 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.BarLineChartBase;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.formatter.PercentFormatter;
@@ -18,6 +14,8 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.api.StockEvent;
 import com.sam_chordas.android.stockhawk.api.YahooApi;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.realm.QuoteData;
+import com.sam_chordas.android.stockhawk.realm.QuoteRealm;
 import com.sam_chordas.android.stockhawk.util.UiUtil;
 
 import net.usrlib.pattern.TinyEvent;
@@ -30,11 +28,9 @@ import io.realm.RealmConfiguration;
 import yahoofinance.histquotes.HistoricalQuote;
 
 public class ChartActivity extends AppCompatActivity {
-
-//	private ProgressBar mProgressBar;
 	private BarChart mBarChart;
-	private Realm mRealm;
-	private RealmChangeListener mRealmChangeListener;
+	private QuoteRealm mQuoteRealm = new QuoteRealm();
+//	private RealmChangeListener mRealmChangeListener;
 	private String mStockSymbol;
 
 	private TinyEvent.Listener quoteLoadedListener = new TinyEvent.Listener() {
@@ -59,18 +55,25 @@ public class ChartActivity extends AppCompatActivity {
 
 		StockEvent.QuoteLoaded.addListener(quoteLoadedListener);
 
-//		mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-//		mProgressBar.setVisibility(View.VISIBLE);
 		UiUtil.displayProgressBar(this);
 
-		mBarChart = (BarChart) findViewById(R.id.bar_chart);
-		setup(mBarChart);
-
-		setStockSymbolFromIntent();
-		initRealmConfig();
+		initBarChart();
+		fetchQuote();
 	}
 
-	private void setStockSymbolFromIntent() {
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mQuoteRealm.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mQuoteRealm.close();
+	}
+
+	private void fetchQuote() {
 		final Intent intent = getIntent();
 
 		if (intent == null) {
@@ -87,71 +90,105 @@ public class ChartActivity extends AppCompatActivity {
 		YahooApi.fetchHistoricalQuote(mStockSymbol);
 	}
 
-	private void initRealmConfig() {
-		//RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
-		mRealm = Realm.getInstance(new RealmConfiguration.Builder(this).build());
-		mRealmChangeListener = new RealmChangeListener() {
-			@Override
-			public void onChange() {
-				Log.d("MAIN", "RealmChangeListener.onChange()");
-				//setData();
-			}
-		};
-	}
-
-	private void onHistoricalQuoteComplete(final List<HistoricalQuote> stockData) {
-		Log.d("MAIN", stockData.toString());
-		UiUtil.hideProgressBar(this);
-//		runOnUiThread(new Runnable() {
+//	private void initRealmConfig() {
+//		//RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+//		mRealm = Realm.getInstance(new RealmConfiguration.Builder(this).build());
+//		mRealmChangeListener = new RealmChangeListener() {
 //			@Override
-//			public void run() {
-//				mProgressBar.setVisibility(View.INVISIBLE);
+//			public void onChange() {
+//				Log.d("MAIN", "RealmChangeListener.onChange()");
+//				//setData();
 //			}
-//		});
+//		};
+//	}
+
+	private void onHistoricalQuoteComplete(final List<HistoricalQuote> quoteList) {
+		runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						mQuoteRealm.saveHistoricalQuoteList(quoteList);
+						mBarChart.setData(mQuoteRealm.getResultsAsRealmBarData(mStockSymbol));
+						mBarChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
+					}
+				}
+		);
+
+		UiUtil.hideProgressBar(this);
 	}
 
 	private void onHistoricalQuoteError() {
 
 	}
 
-	protected void setup(Chart<?> chart) {
+	private void initBarChart() {
+		mBarChart = (BarChart) findViewById(R.id.bar_chart);
+		mBarChart.setTouchEnabled(true);
+		mBarChart.setDrawGridBackground(false);
 
-	//	mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+		// enable scaling and dragging
+		mBarChart.setDragEnabled(true);
+		mBarChart.setScaleEnabled(true);
 
-		// no description text
-		chart.setDescription("");
-		chart.setNoDataTextDescription("You need to provide data for the chart.");
+		// if disabled, scaling can be done on x- and y-axis separately
+		mBarChart.setPinchZoom(false);
 
-		// enable touch gestures
-		chart.setTouchEnabled(true);
+		YAxis leftAxis = mBarChart.getAxisLeft();
 
-		if (chart instanceof BarLineChartBase) {
+		// Reset all limit lines to avoid overlapping lines
+		leftAxis.removeAllLimitLines();
 
-			BarLineChartBase mChart = (BarLineChartBase) chart;
+		leftAxis.setTextSize(8f);
+		leftAxis.setTextColor(Color.DKGRAY);
+		leftAxis.setValueFormatter(new PercentFormatter());
 
-			mChart.setDrawGridBackground(false);
+		XAxis xAxis = mBarChart.getXAxis();
 
-			// enable scaling and dragging
-			mChart.setDragEnabled(true);
-			mChart.setScaleEnabled(true);
+		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+		xAxis.setTextSize(8f);
+		xAxis.setTextColor(Color.DKGRAY);
 
-			// if disabled, scaling can be done on x- and y-axis separately
-			mChart.setPinchZoom(false);
-
-			YAxis leftAxis = mChart.getAxisLeft();
-			leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-		//	leftAxis.setTypeface(mTf);
-			leftAxis.setTextSize(8f);
-			leftAxis.setTextColor(Color.DKGRAY);
-			leftAxis.setValueFormatter(new PercentFormatter());
-
-			XAxis xAxis = mChart.getXAxis();
-		//	xAxis.setTypeface(mTf);
-			xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-			xAxis.setTextSize(8f);
-			xAxis.setTextColor(Color.DKGRAY);
-
-			mChart.getAxisRight().setEnabled(false);
-		}
+		mBarChart.getAxisRight().setEnabled(false);
 	}
+
+//	protected void setup(Chart<?> chart) {
+//
+//	//	mTf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
+//
+//		// no description text
+//		chart.setDescription("");
+//		chart.setNoDataTextDescription("You need to provide data for the chart.");
+//
+//		// enable touch gestures
+//		chart.setTouchEnabled(true);
+//
+//		if (chart instanceof BarLineChartBase) {
+//
+//			BarLineChartBase mChart = (BarLineChartBase) chart;
+//
+//			mChart.setDrawGridBackground(false);
+//
+//			// enable scaling and dragging
+//			mChart.setDragEnabled(true);
+//			mChart.setScaleEnabled(true);
+//
+//			// if disabled, scaling can be done on x- and y-axis separately
+//			mChart.setPinchZoom(false);
+//
+//			YAxis leftAxis = mChart.getAxisLeft();
+//			leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+//		//	leftAxis.setTypeface(mTf);
+//			leftAxis.setTextSize(8f);
+//			leftAxis.setTextColor(Color.DKGRAY);
+//			leftAxis.setValueFormatter(new PercentFormatter());
+//
+//			XAxis xAxis = mChart.getXAxis();
+//		//	xAxis.setTypeface(mTf);
+//			xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//			xAxis.setTextSize(8f);
+//			xAxis.setTextColor(Color.DKGRAY);
+//
+//			mChart.getAxisRight().setEnabled(false);
+//		}
+//	}
 }
