@@ -1,13 +1,11 @@
 package com.sam_chordas.android.stockhawk.realm;
 
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
-import com.github.mikephil.charting.data.realm.implementation.RealmBarData;
-import com.github.mikephil.charting.data.realm.implementation.RealmBarDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.data.realm.implementation.RealmLineData;
+import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,87 +20,81 @@ import yahoofinance.histquotes.HistoricalQuote;
  */
 public class QuoteRealm {
 	private Realm mRealm;
+	private RealmConfiguration mConfig = null;
 
 	public QuoteRealm() {
 	}
 
-	public void onResume(AppCompatActivity app) {
-		RealmConfiguration config = new RealmConfiguration.Builder(app)
+	public void onCreate(final AppCompatActivity app) {
+		if (mConfig != null) {
+			return;
+		}
+
+		mConfig = new RealmConfiguration.Builder(app)
 				.name("net.usrlib.realm")
 				.build();
 
-		Realm.deleteRealm(config);
-		Realm.setDefaultConfiguration(config);
+		Realm.setDefaultConfiguration(mConfig);
+	}
 
-		mRealm = Realm.getInstance(config);
+	public void onResume(final AppCompatActivity app) {
+//		Realm.deleteRealm(mConfig);
+		Realm.setDefaultConfiguration(mConfig);
+//
+//		mRealm = Realm.getInstance(mConfig);
+//		mRealm = Realm.getDefaultInstance();
 	}
 
 	public void close() {
+		mRealm = Realm.getDefaultInstance();
 		mRealm.close();
 	}
 
 	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes) {
-		mRealm.executeTransactionAsync(
-				new Realm.Transaction() {
-					@Override
-					public void execute(Realm realm) {
-						for (int x = 0; x < quotes.size(); x++) {
-							mRealm.copyToRealm(
-									QuoteData.fromHistoricalQuote(quotes.get(x))
-							);
-						}
-					}
-				}
-		);
+		//mRealm = Realm.getInstance(mConfig);
+		mRealm = Realm.getDefaultInstance();
+
+		Log.d("REALM", "size: " + String.valueOf(quotes.size()));
+		mRealm.beginTransaction();
+
+		for (int x = 0; x < quotes.size(); x++) {
+			HistoricalQuote quote = quotes.get(x);
+			QuoteData quoteData = mRealm.createObject(QuoteData.class);
+			quoteData.setValues(
+					quote.getSymbol(),
+					quote.getOpen().toString(),
+					quote.getLow().toString(),
+					quote.getHigh().toString(),
+					quote.getClose().floatValue(),
+					quote.getAdjClose().toString(),
+					quote.getVolume(),
+					quote.getDate().toString()
+			);
+			mRealm.copyToRealm(quoteData);
+		}
+
+		mRealm.commitTransaction();
 	}
 
-	public RealmBarData getResultsAsRealmBarData(final String symbol) {
-		//RealmResults<QuoteData> results = mRealm.allObjects(QuoteData.class);
+	public RealmLineData getRealmLineData(final String symbol) {
+		mRealm = Realm.getDefaultInstance();
+
 		RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
-				.equalTo("mSymbol", symbol)
+				.equalTo(QuoteData.SYMBOL_KEY, symbol)
 				.findAll();
 
-		RealmBarDataSet<QuoteData> set = new RealmBarDataSet<>(results, "mClose", "mId");
+		Log.d("REALM", results.toString());
 
-		set.setColors(
-				new int[] {
-						ColorTemplate.rgb("#FF5722"),
-						ColorTemplate.rgb("#03A9F4")
-				}
+		ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+		dataSets.add(
+				new RealmLineDataSet<QuoteData>(
+						results,
+						QuoteData.CLOSE_KEY,
+						QuoteData.ID_KEY
+				)
 		);
-		set.setLabel("Realm BarDataSet");
 
-		ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-		dataSets.add(set);
-
-		RealmBarData data = new RealmBarData(results, "xValue", dataSets);
-		//data.setValueTypeface(mTf);
-		data.setValueTextSize(8f);
-		data.setValueTextColor(Color.DKGRAY);
-		data.setValueFormatter(new PercentFormatter());
-		return data;
+		return new RealmLineData(results, QuoteData.DATE_KEY, dataSets);
 	}
 }
-/*
- private void setData() {
-
-        RealmResults<RealmDemoData> result = mRealm.allObjects(RealmDemoData.class);
-
-        //RealmBarDataSet<RealmDemoData> set = new RealmBarDataSet<RealmDemoData>(result, "stackValues", "xIndex"); // normal entries
-        RealmBarDataSet<RealmDemoData> set = new RealmBarDataSet<RealmDemoData>(result, "value", "xIndex"); // stacked entries
-        set.setColors(new int[] {ColorTemplate.rgb("#FF5722"), ColorTemplate.rgb("#03A9F4")});
-        set.setLabel("Realm BarDataSet");
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set); // add the dataset
-
-        // create a data object with the dataset list
-        RealmBarData data = new RealmBarData(result, "xValue", dataSets);
-        styleData(data);
-
-        // set data
-        mChart.setData(data);
-        mChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
-    }
- */

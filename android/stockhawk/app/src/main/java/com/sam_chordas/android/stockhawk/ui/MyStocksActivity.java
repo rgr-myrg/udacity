@@ -58,7 +58,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		UiUtil.onCreate(this);
 		mContext = this;
 
-		setContentView(R.layout.activity_my_stocks);
+		setContentView(R.layout.activity_stocks);
 
 		// The intent service is for executing immediate pulls from the Yahoo API
 		// GCMTaskService can only schedule tasks, they cannot execute immediately

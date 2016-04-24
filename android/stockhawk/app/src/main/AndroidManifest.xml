@@ -51,6 +51,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"/>
         </activity>
+        <activity
+            android:name=".ui.LineChartActivity"
+            android:label="@string/title_activity_chart"
+            android:parentActivityName=".ui.MyStocksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sam_chordas.android.stockhawk.ui.MyStocksActivity"/>
+        </activity>
     </application>
 
 </manifest>

@@ -18,9 +18,9 @@ public class YahooApi {
 			@Override
 			public void run() {
 				try {
-					Stock tesla = YahooFinance.get(symbol, true);
+					Stock stock = YahooFinance.get(symbol, true);
 					//Stock tesla = YahooFinance.get(symbol, )
-					List<HistoricalQuote> list = tesla.getHistory();
+					List<HistoricalQuote> list = stock.getHistory();
 
 					if (list == null) {
 						StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
@@ -33,4 +33,22 @@ public class YahooApi {
 			}
 		}).start();
 	}
+
+//	public static List<HistoricalQuote> fetchQuoteWithSymbol(final String symbol) {
+//		final List<HistoricalQuote> list;
+//		new Thread(
+//				new Runnable() {
+//					@Override
+//					public void run() {
+//						try {
+//							Stock stock = YahooFinance.get(symbol, true);
+//							list = stock.getHistory();
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//		).start();
+//		return list;
+//	}
 }

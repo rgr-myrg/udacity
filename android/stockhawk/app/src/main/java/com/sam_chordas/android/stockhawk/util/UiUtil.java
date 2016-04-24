@@ -17,11 +17,13 @@ import com.sam_chordas.android.stockhawk.R;
 public final class UiUtil {
 	private static String sStockExistsMsg;
 	private static String sRefreshingMsg;
+	private static String sDefaultErrorMsg;
 	private static ProgressBar sProgressBar;
 
 	public static final void onCreate(final AppCompatActivity app) {
-		sStockExistsMsg = app.getString(R.string.stock_exists);
-		sRefreshingMsg = app.getString(R.string.refreshing_message);
+		sStockExistsMsg  = app.getString(R.string.stock_exists);
+		sRefreshingMsg   = app.getString(R.string.refreshing_message);
+		sDefaultErrorMsg = app.getString(R.string.error_message);
 	}
 
 	public static final void showNetworkNotAvailableDialog(final Context context) {
@@ -43,6 +45,10 @@ public final class UiUtil {
 
 	public static final void displayRefreshingMsg(final AppCompatActivity app) {
 		displayToast(app, sRefreshingMsg);
+	}
+
+	public static final void displayDefaultErrorMsg(final AppCompatActivity app) {
+		displayToast(app, sDefaultErrorMsg);
 	}
 
 	public static final void displayProgressBar(final AppCompatActivity app) {

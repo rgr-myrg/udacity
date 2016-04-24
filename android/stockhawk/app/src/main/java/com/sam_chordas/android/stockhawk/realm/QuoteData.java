@@ -1,12 +1,16 @@
 package com.sam_chordas.android.stockhawk.realm;
 
 import io.realm.RealmObject;
-import yahoofinance.histquotes.HistoricalQuote;
 
 /**
  * Created by rgr-myrg on 4/22/16.
  */
 public class QuoteData extends RealmObject {
+	public static final String ID_KEY  = "mId";
+	public static final String SYMBOL_KEY  = "mSymbol";
+	public static final String DATE_KEY  = "mDate";
+	public static final String CLOSE_KEY = "mClose";
+
 	private static int mNextId = 0;
 	private int mId;
 	private String mSymbol;
@@ -17,7 +21,7 @@ public class QuoteData extends RealmObject {
 	private float mClose;
 	private String mAdjClose;
 
-	private Long mVolume;
+//	private Long mVolume;
 	private String mDate;
 
 	public QuoteData() {
@@ -40,7 +44,27 @@ public class QuoteData extends RealmObject {
 		this.mHigh = high;
 		this.mClose = close;
 		this.mAdjClose = adjClose;
-		this.mVolume = volume;
+//		this.mVolume = volume;
+		this.mDate = mDate;
+	}
+
+	public void setValues(
+			String symbol,
+			String open,
+			String low,
+			String high,
+			float close,
+			String adjClose,
+			Long volume,
+			String mDate) {
+		this.mId = mNextId++;
+		this.mSymbol = symbol;
+		this.mOpen = open;
+		this.mLow = low;
+		this.mHigh = high;
+		this.mClose = close;
+		this.mAdjClose = adjClose;
+//		this.mVolume = volume;
 		this.mDate = mDate;
 	}
 
@@ -48,9 +72,9 @@ public class QuoteData extends RealmObject {
 		return mDate;
 	}
 
-	public Long getVolume() {
-		return mVolume;
-	}
+//	public Long getVolume() {
+//		return mVolume;
+//	}
 
 	public String getAdjClose() {
 		return mAdjClose;
@@ -78,19 +102,5 @@ public class QuoteData extends RealmObject {
 
 	public int getId() {
 		return mId;
-	}
-
-	public static final QuoteData fromHistoricalQuote(final HistoricalQuote quote) {
-		return new QuoteData(
-				mNextId++,
-				quote.getSymbol(),
-				quote.getOpen().toString(),
-				quote.getLow().toString(),
-				quote.getHigh().toString(),
-				quote.getClose().floatValue(),
-				quote.getAdjClose().toString(),
-				quote.getVolume(),
-				quote.getDate().toString()
-		);
 	}
 }
