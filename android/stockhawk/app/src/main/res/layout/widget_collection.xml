@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-                android:padding="@dimen/widget_margin">
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical"
+			  android:padding="@dimen/widget_margin">
 
-    <FrameLayout
-        android:id="@+id/widget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:background="@color/material_blue_500">
+	<FrameLayout
+		android:id="@+id/widget"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/material_blue_500"
+		android:minHeight="?android:attr/listPreferredItemHeightSmall">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/widget_title"
-            android:textColor="@color/material_white"
-            android:textSize="@dimen/md_title_textsize"
-            android:layout_gravity="center"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:text="@string/widget_title"
+			android:textColor="@color/material_white"
+			android:textSize="@dimen/md_title_textsize"/>
 
-        <Button
-            android:layout_width="50sp"
-            android:layout_height="50sp"
-            android:padding="10sp"
-            android:id="@+id/update"
-            android:layout_gravity="end"
-            android:drawableTop="@drawable/refresh"
+		<Button
+			android:id="@+id/update_button"
+			android:layout_width="50sp"
+			android:layout_height="50sp"
+			android:layout_gravity="end"
+			android:background="@color/material_blue_500"
+			android:contentDescription="@string/button_refresh_description"
 
-            android:background="@color/material_blue_500"
-            android:contentDescription="@string/refreshbtn"
-            />
+			android:drawableTop="@drawable/refresh_icon"
+			android:padding="10sp"
+			/>
 
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <ListView
-            android:id="@+id/widget_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/material_gray_600"
-            android:dividerHeight="1dp"
-            tools:listitem="@layout/widget_collection_item"/>
-        <TextView
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/stock_empty"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:visibility="gone"
-            android:background="@color/material_gray_900"/>
-    </FrameLayout>
+	</FrameLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+
+		<ListView
+			android:id="@+id/widget_list_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:divider="@color/material_gray_600"
+			android:dividerHeight="1dp"
+			tools:listitem="@layout/widget_list_item"/>
+
+		<TextView
+			android:id="@+id/empty_text_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/material_gray_900"
+			android:gravity="center"
+			android:text="@string/stock_empty_message"
+			android:textColor="@android:color/white"
+			android:textSize="20sp"
+			android:visibility="gone"/>
+	</FrameLayout>
 
 </LinearLayout>

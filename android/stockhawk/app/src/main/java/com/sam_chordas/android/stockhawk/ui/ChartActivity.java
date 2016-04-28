@@ -12,6 +12,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineData;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.api.DateVO;
 import com.sam_chordas.android.stockhawk.api.StockEvent;
 import com.sam_chordas.android.stockhawk.api.YahooApi;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -20,6 +21,7 @@ import com.sam_chordas.android.stockhawk.util.UiUtil;
 
 import net.usrlib.pattern.TinyEvent;
 
+import java.text.ParseException;
 import java.util.List;
 
 import yahoofinance.histquotes.HistoricalQuote;
@@ -64,7 +66,8 @@ public class ChartActivity extends AppCompatActivity {
 		}
 
 		getSupportActionBar().setTitle(mStockSymbol);
-		YahooApi.fetchHistoricalQuote(mStockSymbol);
+
+		fetchHistoricalQuote();
 	}
 
 	@Override
@@ -91,6 +94,17 @@ public class ChartActivity extends AppCompatActivity {
 		return stockSymbol;
 	}
 
+	private void fetchHistoricalQuote() {
+		try {
+			DateVO dateVO = mQuoteRealm.getDateWithSymbolLookup(mStockSymbol);
+			YahooApi.fetchHistoricalQuoteWithDate(mStockSymbol, dateVO);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} finally {
+			YahooApi.fetchHistoricalQuote(mStockSymbol);
+		}
+	}
+
 	private void onHistoricalQuoteComplete(final List<HistoricalQuote> quoteList) {
 		mQuoteRealm.saveHistoricalQuoteList(quoteList);
 		setLineChartData(mQuoteRealm.getRealmLineData(mStockSymbol));
@@ -103,10 +117,11 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void setLineChartData(RealmLineData data) {
-		//CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.custom_marker_view);
+		//CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.chart_marker_view);
 		//mLineChart.setMarkerView(customMarkerView);
 
-//		XAxis xAxis = mLineChart.getXAxis();
+		mLineChart.setMarkerView(new ChartMarkerView(this, R.layout.chart_marker_view));
+		XAxis xAxis = mLineChart.getXAxis();
 //		xAxis.enableGridDashedLine(8f, 5f, 0f);
 //		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //		YAxis yAxis = mLineChart.getAxisRight();

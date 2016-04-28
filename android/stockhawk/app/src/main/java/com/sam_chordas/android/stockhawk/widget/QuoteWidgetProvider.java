@@ -16,7 +16,7 @@ import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.ui.ChartActivity;
 
 public class QuoteWidgetProvider extends AppWidgetProvider {
-	public static final String SYNC_CLICKED= "com.sam_chordas.android.stockhawk.SYNC_CLICKED";
+	public static final String SYNC_CLICKED = "com.sam_chordas.android.stockhawk.SYNC_CLICKED";
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -41,7 +41,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 
 			appWidgetManager.notifyAppWidgetViewDataChanged(
 					appWidgetManager.getAppWidgetIds(componentName),
-					R.id.widget_list
+					R.id.widget_list_view
 			);
 		}
 	}
@@ -53,6 +53,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 		);
 
 		final Intent refreshIntent = new Intent(context, QuoteWidgetProvider.class);
+
 		refreshIntent.setAction(SYNC_CLICKED);
 
 		final PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(
@@ -62,8 +63,8 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 				PendingIntent.FLAG_UPDATE_CURRENT
 		);
 
-		views.setOnClickPendingIntent(R.id.update, refreshPendingIntent);
-		views.setEmptyView(R.id.widget_list, R.id.empty_view);
+		views.setOnClickPendingIntent(R.id.update_button, refreshPendingIntent);
+		views.setEmptyView(R.id.widget_list_view, R.id.empty_text_view);
 
 		final Intent openAppIntent = new Intent(context, ChartActivity.class);
 
@@ -72,7 +73,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 				.addNextIntentWithParentStack(openAppIntent)
 				.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		views.setPendingIntentTemplate(R.id.widget_list, openAppPendingIntent);
+		views.setPendingIntentTemplate(R.id.widget_list_view, openAppPendingIntent);
 
 		// Set up the collection
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -88,7 +89,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	private static void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
 		views.setRemoteAdapter(
-				R.id.widget_list,
+				R.id.widget_list_view,
 				getNewIntentWithContext(context)
 		);
 	}
@@ -102,7 +103,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 	private static void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
 		views.setRemoteAdapter(
 				0,
-				R.id.widget_list,
+				R.id.widget_list_view,
 				getNewIntentWithContext(context)
 		);
 	}

@@ -21,5 +21,7 @@
     <string name="stock_chart_label">Stock Data</string>
     <string name="error_message">Oops! Something went wrong!</string>
     <string name="widget_title">Today\'s Market</string>
+    <string name="stock_empty_message">Stock Not Added</string>
+    <string name="button_refresh_description">Refresh Button</string>
 
 </resources>
