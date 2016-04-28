@@ -20,5 +20,6 @@
     <string name="title_activity_chart">ChartActivity</string>
     <string name="stock_chart_label">Stock Data</string>
     <string name="error_message">Oops! Something went wrong!</string>
+    <string name="widget_title">Today\'s Market</string>
 
 </resources>
