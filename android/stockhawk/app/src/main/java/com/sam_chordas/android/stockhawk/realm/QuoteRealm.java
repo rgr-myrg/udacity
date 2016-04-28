@@ -49,18 +49,19 @@ public class QuoteRealm {
 //		Realm.deleteRealm(mConfig);
 		Realm.setDefaultConfiguration(mConfig);
 //
-//		mRealm = Realm.getInstance(mConfig);
+		mRealm = Realm.getInstance(mConfig);
 //		mRealm = Realm.getDefaultInstance();
 	}
 
 	public void close() {
-		mRealm = Realm.getDefaultInstance();
+		//mRealm = Realm.getDefaultInstance();
+		mRealm = Realm.getInstance(mConfig);
 		mRealm.close();
 	}
 
 	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes) {
-		//mRealm = Realm.getInstance(mConfig);
-		mRealm = Realm.getDefaultInstance();
+		mRealm = Realm.getInstance(mConfig);
+		//mRealm = Realm.getDefaultInstance();
 
 		Log.d("REALM", "size: " + String.valueOf(quotes.size()));
 		mRealm.beginTransaction();
@@ -88,11 +89,12 @@ public class QuoteRealm {
 		}
 
 		mRealm.commitTransaction();
-		mRealm.close();
+		//mRealm.close();
 	}
 
 	public RealmLineData getRealmLineData(final String symbol) {
-		mRealm = Realm.getDefaultInstance();
+		//mRealm = Realm.getDefaultInstance();
+		mRealm = Realm.getInstance(mConfig);
 
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
@@ -117,12 +119,13 @@ public class QuoteRealm {
 
 		dataSets.add(dataSet);
 
-		mRealm.close();
+		//mRealm.close();
 		return new RealmLineData(results, QuoteData.DATE_KEY, dataSets);
 	}
 
 	public DateVO getDateWithSymbolLookup(final String symbol) throws ParseException {
-		mRealm = Realm.getDefaultInstance();
+		//mRealm = Realm.getDefaultInstance();
+		mRealm = Realm.getInstance(mConfig);
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)

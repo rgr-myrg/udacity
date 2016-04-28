@@ -18,12 +18,14 @@ public final class UiUtil {
 	private static String sStockExistsMsg;
 	private static String sRefreshingMsg;
 	private static String sDefaultErrorMsg;
+	private static String sStockNotFoundMsg;
 	private static ProgressBar sProgressBar;
 
 	public static final void onCreate(final AppCompatActivity app) {
-		sStockExistsMsg  = app.getString(R.string.stock_exists);
-		sRefreshingMsg   = app.getString(R.string.refreshing_message);
-		sDefaultErrorMsg = app.getString(R.string.error_message);
+		sStockExistsMsg   = app.getString(R.string.stock_exists);
+		sRefreshingMsg    = app.getString(R.string.refreshing_message);
+		sDefaultErrorMsg  = app.getString(R.string.error_message);
+		sStockNotFoundMsg = app.getString(R.string.stock_not_found_message);
 	}
 
 	public static final void showNetworkNotAvailableDialog(final Context context) {
@@ -49,6 +51,17 @@ public final class UiUtil {
 
 	public static final void displayDefaultErrorMsg(final AppCompatActivity app) {
 		displayToast(app, sDefaultErrorMsg);
+	}
+
+	public static final void displayStockNotFoundMsg(final AppCompatActivity app) {
+		app.runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						displayToast(app, sStockNotFoundMsg);
+					}
+				}
+		);
 	}
 
 	public static final void displayProgressBar(final AppCompatActivity app) {

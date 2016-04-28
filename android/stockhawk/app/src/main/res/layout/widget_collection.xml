@@ -54,7 +54,7 @@
 			android:layout_height="match_parent"
 			android:background="@color/material_gray_900"
 			android:gravity="center"
-			android:text="@string/stock_empty_message"
+			android:text="@string/stock_not_found_message"
 			android:textColor="@android:color/white"
 			android:textSize="20sp"
 			android:visibility="gone"/>

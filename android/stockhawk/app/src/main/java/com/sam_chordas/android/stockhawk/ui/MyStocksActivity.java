@@ -24,6 +24,7 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.api.StockEvent;
 import com.sam_chordas.android.stockhawk.constants.StockVars;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -35,6 +36,8 @@ import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 import com.sam_chordas.android.stockhawk.util.NetworkUtil;
 import com.sam_chordas.android.stockhawk.util.UiUtil;
+
+import net.usrlib.pattern.TinyEvent;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -52,10 +55,20 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	private Context mContext;
 	private Cursor mCursor;
 
+	private TinyEvent.Listener mListener = new TinyEvent.Listener() {
+		@Override
+		public void onError(Object data) {
+			Log.d("MAIN", "onError");
+			onQuoteNotFound();
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		UiUtil.onCreate(this);
+		StockEvent.QuoteLoaded.addListener(mListener);
+
 		mContext = this;
 
 		setContentView(R.layout.activity_stocks);
@@ -270,5 +283,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
 	private void displayNetworkNotAvailableDialog() {
 		UiUtil.showNetworkNotAvailableDialog(mContext);
+	}
+
+	private void onQuoteNotFound() {
+		UiUtil.displayStockNotFoundMsg(this);
 	}
 }
