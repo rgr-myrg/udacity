@@ -2,7 +2,6 @@ package com.sam_chordas.android.stockhawk.util;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -18,14 +17,14 @@ public final class UiUtil {
 	private static String sStockExistsMsg;
 	private static String sRefreshingMsg;
 	private static String sDefaultErrorMsg;
-	private static String sStockNotFoundMsg;
+	private static String sQuoteNotFoundMsg;
 	private static ProgressBar sProgressBar;
 
 	public static final void onCreate(final AppCompatActivity app) {
 		sStockExistsMsg   = app.getString(R.string.stock_exists);
 		sRefreshingMsg    = app.getString(R.string.refreshing_message);
 		sDefaultErrorMsg  = app.getString(R.string.error_message);
-		sStockNotFoundMsg = app.getString(R.string.stock_not_found_message);
+		sQuoteNotFoundMsg = app.getString(R.string.stock_not_found_message);
 	}
 
 	public static final void showNetworkNotAvailableDialog(final Context context) {
@@ -53,12 +52,12 @@ public final class UiUtil {
 		displayToast(app, sDefaultErrorMsg);
 	}
 
-	public static final void displayStockNotFoundMsg(final AppCompatActivity app) {
+	public static final void displayQuoteNotFoundMsg(final AppCompatActivity app) {
 		app.runOnUiThread(
 				new Runnable() {
 					@Override
 					public void run() {
-						displayToast(app, sStockNotFoundMsg);
+						displayToast(app, sQuoteNotFoundMsg);
 					}
 				}
 		);

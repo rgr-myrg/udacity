@@ -288,6 +288,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	}
 
 	private void onQuoteNotFound() {
-		UiUtil.displayStockNotFoundMsg(this);
+		UiUtil.displayQuoteNotFoundMsg(this);
 	}
 }

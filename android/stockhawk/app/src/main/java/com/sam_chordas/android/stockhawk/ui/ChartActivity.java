@@ -27,8 +27,8 @@ import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
 public class ChartActivity extends AppCompatActivity {
-	private LineChart mLineChart;
 	private QuoteRealm mQuoteRealm = new QuoteRealm();
+	private LineChart mLineChart;
 	private String mStockSymbol;
 
 	private TinyEvent.Listener quoteLoadedListener = new TinyEvent.Listener() {
@@ -101,8 +101,9 @@ public class ChartActivity extends AppCompatActivity {
 			YahooApi.fetchHistoricalQuoteWithDate(mStockSymbol, dateVO);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			//YahooApi.fetchHistoricalQuote(mStockSymbol);
 		} finally {
-			YahooApi.fetchHistoricalQuote(mStockSymbol);
+			//YahooApi.fetchHistoricalQuote(mStockSymbol);
 		}
 	}
 

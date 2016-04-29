@@ -1,5 +1,7 @@
 package com.sam_chordas.android.stockhawk.api;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -35,6 +37,7 @@ public class YahooApi {
 		}).start();
 	}
 	public static void fetchHistoricalQuoteWithDate(final String symbol, final DateVO dateVO) {
+		Log.d("YahooApi", "from: " + dateVO.getStartCalendar().getTime() + " to: " + dateVO.getCurrentCalendar().getTime());
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

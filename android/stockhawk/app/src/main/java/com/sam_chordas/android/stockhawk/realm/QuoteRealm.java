@@ -94,7 +94,8 @@ public class QuoteRealm {
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)
-				.findAll();
+				.findAllSorted(QuoteData.DATE_KEY);
+				//.findAll();
 
 		Log.d("REALM", results.toString());
 
@@ -124,9 +125,9 @@ public class QuoteRealm {
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)
-				.findAll();
+				.findAllSorted(QuoteData.DATE_KEY);
+				//.findAll();
 
-		//mRealm.close();
 		return DateVO.fromRealmResults(results);
 	}
 }
