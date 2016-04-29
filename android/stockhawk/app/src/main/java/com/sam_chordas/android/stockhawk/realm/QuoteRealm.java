@@ -27,41 +27,37 @@ import yahoofinance.histquotes.HistoricalQuote;
 public class QuoteRealm {
 	private Realm mRealm;
 	private RealmConfiguration mConfig = null;
-	private String mCurrentDate;
-	private String mPreviousDate;
+	private AppCompatActivity mApp;
 
 	public QuoteRealm() {
 	}
 
-	public void onCreate(final AppCompatActivity app) {
-		if (mConfig != null) {
-			return;
-		}
-
-		mConfig = new RealmConfiguration.Builder(app)
+	public Realm getRealmInstance() {
+		mConfig = new RealmConfiguration.Builder(mApp)
 				.name("net.usrlib.realm")
 				.build();
 
 		Realm.setDefaultConfiguration(mConfig);
+
+		return Realm.getInstance(mConfig);
+	}
+
+	public void onCreate(final AppCompatActivity app) {
+		mApp = app;
 	}
 
 	public void onResume(final AppCompatActivity app) {
-//		Realm.deleteRealm(mConfig);
-		Realm.setDefaultConfiguration(mConfig);
-//
-		mRealm = Realm.getInstance(mConfig);
-//		mRealm = Realm.getDefaultInstance();
+		mApp = app;
 	}
 
 	public void close() {
 		//mRealm = Realm.getDefaultInstance();
-		mRealm = Realm.getInstance(mConfig);
+		mRealm = getRealmInstance();
 		mRealm.close();
 	}
 
 	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes) {
-		mRealm = Realm.getInstance(mConfig);
-		//mRealm = Realm.getDefaultInstance();
+		mRealm = getRealmInstance();
 
 		Log.d("REALM", "size: " + String.valueOf(quotes.size()));
 		mRealm.beginTransaction();
@@ -93,8 +89,7 @@ public class QuoteRealm {
 	}
 
 	public RealmLineData getRealmLineData(final String symbol) {
-		//mRealm = Realm.getDefaultInstance();
-		mRealm = Realm.getInstance(mConfig);
+		mRealm = getRealmInstance();
 
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
@@ -124,8 +119,8 @@ public class QuoteRealm {
 	}
 
 	public DateVO getDateWithSymbolLookup(final String symbol) throws ParseException {
-		//mRealm = Realm.getDefaultInstance();
-		mRealm = Realm.getInstance(mConfig);
+		mRealm = getRealmInstance();
+
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)
@@ -133,22 +128,6 @@ public class QuoteRealm {
 
 		//mRealm.close();
 		return DateVO.fromRealmResults(results);
-
-//		final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy-MM-dd");
-//		final Calendar calendar = Calendar.getInstance();
-//		final RealmResults<QuoteData> results = mRealm
-//				.where(QuoteData.class)
-//				.equalTo(QuoteData.SYMBOL_KEY, symbol)
-//				.findAll();
-//
-//		mCurrentDate = simpleDateFormat.format(calendar.getTime());
-//
-//		if (results.size() > 0) {
-//			mPreviousDate = results.last().getDate();
-//		} else {
-//			calendar.add(Calendar.YEAR, -1);
-//			mPreviousDate = simpleDateFormat.format(calendar.getTime());
-//		}
 	}
 }
 

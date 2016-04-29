@@ -33,6 +33,8 @@ import java.util.ArrayList;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
+	public static final int QUOTE_NOT_FOUND = -1;
+
 	private String LOG_TAG = StockTaskService.class.getSimpleName();
 
 	private OkHttpClient client = new OkHttpClient();
@@ -143,7 +145,7 @@ public class StockTaskService extends GcmTaskService {
 					if (contentVals == null) {
 						Log.w(LOG_TAG, "Stock Symbol Returns Null ArrayList");
 						// Trigger Error Event
-						StockEvent.QuoteLoaded.notifyError();
+						StockEvent.QuoteLoaded.notifyError(QUOTE_NOT_FOUND);
 
 						return GcmNetworkManager.RESULT_FAILURE;
 					}

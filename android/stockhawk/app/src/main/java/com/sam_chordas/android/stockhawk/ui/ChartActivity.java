@@ -50,6 +50,7 @@ public class ChartActivity extends AppCompatActivity {
 
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		StockEvent.QuoteLoaded.addListener(quoteLoadedListener);
 
 		UiUtil.displayProgressBar(this);
@@ -65,7 +66,7 @@ public class ChartActivity extends AppCompatActivity {
 			return;
 		}
 
-		getSupportActionBar().setTitle(mStockSymbol);
+		getSupportActionBar().setTitle(mStockSymbol.toUpperCase());
 
 		fetchHistoricalQuote();
 	}
@@ -106,8 +107,15 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void onHistoricalQuoteComplete(final List<HistoricalQuote> quoteList) {
-		mQuoteRealm.saveHistoricalQuoteList(quoteList);
-		setLineChartData(mQuoteRealm.getRealmLineData(mStockSymbol));
+		runOnUiThread(
+				new Runnable() {
+					@Override
+					public void run() {
+						mQuoteRealm.saveHistoricalQuoteList(quoteList);
+						setLineChartData(mQuoteRealm.getRealmLineData(mStockSymbol));
+					}
+				}
+		);
 
 		UiUtil.hideProgressBar(this);
 	}
@@ -117,9 +125,6 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void setLineChartData(RealmLineData data) {
-		//CustomMarkerView customMarkerView = new CustomMarkerView(this, R.layout.chart_marker_view);
-		//mLineChart.setMarkerView(customMarkerView);
-
 		mLineChart.setMarkerView(new ChartMarkerView(this, R.layout.chart_marker_view));
 		XAxis xAxis = mLineChart.getXAxis();
 //		xAxis.enableGridDashedLine(8f, 5f, 0f);
@@ -131,30 +136,20 @@ public class ChartActivity extends AppCompatActivity {
 		mLineChart.setAutoScaleMinMaxEnabled(true);
 		mLineChart.getLegend().setEnabled(false);
 		mLineChart.setData(data);
-
-		runOnUiThread(
-				new Runnable() {
-					@Override
-					public void run() {
-						mLineChart.animateXY(
-								3000,
-								1000,
-								Easing.EasingOption.Linear,
-								Easing.EasingOption.Linear
-						);
-					}
-				}
+		mLineChart.animateXY(
+				3000,
+				1000,
+				Easing.EasingOption.Linear,
+				Easing.EasingOption.Linear
 		);
 	}
 
 	private void initLineChart() {
 		mLineChart = (LineChart) findViewById(R.id.line_chart);
 		mLineChart.setTouchEnabled(true);
-		//mLineChart.setDrawGridBackground(false);
 		mLineChart.setDescription("");
 		mLineChart.setNoDataText("Loading chart...");
 		mLineChart.setDrawGridBackground(true);
-
 
 		// enable scaling and dragging
 		mLineChart.setDragEnabled(true);

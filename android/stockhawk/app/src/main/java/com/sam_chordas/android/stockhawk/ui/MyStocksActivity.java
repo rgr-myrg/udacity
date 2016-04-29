@@ -58,8 +58,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	private TinyEvent.Listener mListener = new TinyEvent.Listener() {
 		@Override
 		public void onError(Object data) {
-			Log.d("MAIN", "onError");
-			onQuoteNotFound();
+			Log.d("MAIN", "onError " + data);
+			if (data.equals(StockTaskService.QUOTE_NOT_FOUND)) {
+				onQuoteNotFound();
+			}
 		}
 	};
 
