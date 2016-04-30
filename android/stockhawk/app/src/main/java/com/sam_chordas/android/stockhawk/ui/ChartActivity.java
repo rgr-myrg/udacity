@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -27,11 +28,14 @@ import java.util.List;
 import yahoofinance.histquotes.HistoricalQuote;
 
 public class ChartActivity extends AppCompatActivity {
+	public static final String NAME = ChartActivity.class.getSimpleName();
+
 	private QuoteRealm mQuoteRealm = new QuoteRealm();
 	private LineChart mLineChart;
 	private String mStockSymbol;
+	private boolean mHasListener;
 
-	private TinyEvent.Listener quoteLoadedListener = new TinyEvent.Listener() {
+	private TinyEvent.Listener mQuoteLoadedListener = new TinyEvent.Listener() {
 		@Override
 		public void onSuccess(final Object data) {
 			onHistoricalQuoteComplete((List<HistoricalQuote>) data);
@@ -51,8 +55,12 @@ public class ChartActivity extends AppCompatActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		StockEvent.QuoteLoaded.addListener(quoteLoadedListener);
+//		if (!mHasListener) {
+//			StockEvent.QuoteLoaded.addListener(mQuoteLoadedListener);
+//			mHasListener = true;
+//		}
 
+		StockEvent.QuoteLoaded.addListenerOnce(mQuoteLoadedListener);
 		UiUtil.displayProgressBar(this);
 
 		mQuoteRealm.onCreate(this);
@@ -96,6 +104,8 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void fetchHistoricalQuote() {
+		Log.d(NAME, "fetchHistoricalQuote mStockSymbol: " + mStockSymbol);
+
 		try {
 			DateVO dateVO = mQuoteRealm.getDateWithSymbolLookup(mStockSymbol);
 			YahooApi.fetchHistoricalQuoteWithDate(mStockSymbol, dateVO);
@@ -108,6 +118,8 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void onHistoricalQuoteComplete(final List<HistoricalQuote> quoteList) {
+		Log.d(NAME, "onHistoricalQuoteComplete");
+
 		runOnUiThread(
 				new Runnable() {
 					@Override
@@ -126,8 +138,11 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void setLineChartData(RealmLineData data) {
+		Log.d(NAME, "setLineChartData count: " + data.getDataSetCount());
+
 		mLineChart.setMarkerView(new ChartMarkerView(this, R.layout.chart_marker_view));
-		XAxis xAxis = mLineChart.getXAxis();
+//		XAxis xAxis = mLineChart.getXAxis();
+
 //		xAxis.enableGridDashedLine(8f, 5f, 0f);
 //		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //		YAxis yAxis = mLineChart.getAxisRight();
@@ -138,7 +153,7 @@ public class ChartActivity extends AppCompatActivity {
 		mLineChart.getLegend().setEnabled(false);
 		mLineChart.setData(data);
 		mLineChart.animateXY(
-				3000,
+				1000,
 				1000,
 				Easing.EasingOption.Linear,
 				Easing.EasingOption.Linear
@@ -146,7 +161,10 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void initLineChart() {
+		Log.d(NAME, "initLineChart");
+
 		mLineChart = (LineChart) findViewById(R.id.line_chart);
+		//mLineChart.setLogEnabled(true);
 		mLineChart.setTouchEnabled(true);
 		mLineChart.setDescription("");
 		mLineChart.setNoDataText("Loading chart...");

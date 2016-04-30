@@ -28,7 +28,6 @@ public class QuoteData extends RealmObject {
 	}
 
 	public QuoteData(
-			int id,
 			String symbol,
 			String open,
 			String low,
@@ -37,7 +36,7 @@ public class QuoteData extends RealmObject {
 			String adjClose,
 			Long volume,
 			String mDate) {
-		this.mId = id;
+		this.mId = mNextId++;
 		this.mSymbol = symbol;
 		this.mOpen = open;
 		this.mLow = low;

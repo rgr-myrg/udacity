@@ -7,7 +7,6 @@ import com.sam_chordas.android.stockhawk.realm.QuoteData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import io.realm.RealmResults;
 
@@ -28,7 +27,7 @@ public class DateVO {
 		dateVO.mCurrentCalendar = Calendar.getInstance();
 
 		if (results.size() > 0) {
-			Log.d("DateVO", results.last().getDate());
+			Log.d("DateVO", "last: " + results.last().getDate() + " first: " + results.first().getDate());
 			dateVO.mStartCalendar.setTime(dateFormat.parse(results.last().getDate()));
 		} else {
 			dateVO.mStartCalendar.add(Calendar.YEAR, -1);
@@ -43,5 +42,10 @@ public class DateVO {
 
 	public Calendar getCurrentCalendar() {
 		return mCurrentCalendar;
+	}
+
+	public boolean isDateToday() {
+		return mStartCalendar.get(Calendar.MONTH) == mCurrentCalendar.get(Calendar.MONTH)
+				&& mStartCalendar.get(Calendar.YEAR) == mCurrentCalendar.get(Calendar.YEAR);
 	}
 }

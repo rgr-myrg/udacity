@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
@@ -20,16 +21,19 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		super.onUpdate(context, appWidgetManager, appWidgetIds);
+//		super.onUpdate(context, appWidgetManager, appWidgetIds);
 
 		for (int appWidgetId : appWidgetIds) {
 			updateAppWidget(context, appWidgetManager, appWidgetId);
 		}
+		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
+
+		Log.d("QuoteWidgetProvider", "onReceive");
 
 		if (intent.getAction().equals(SYNC_CLICKED)) {
 			final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -47,7 +51,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 	}
 
 	private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-		final RemoteViews views = new RemoteViews(
+		final RemoteViews remoteViews = new RemoteViews(
 				context.getPackageName(),
 				R.layout.widget_collection
 		);
@@ -63,8 +67,8 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 				PendingIntent.FLAG_UPDATE_CURRENT
 		);
 
-		views.setOnClickPendingIntent(R.id.update_button, refreshPendingIntent);
-		views.setEmptyView(R.id.widget_list_view, R.id.empty_text_view);
+		remoteViews.setOnClickPendingIntent(R.id.update_button, refreshPendingIntent);
+		remoteViews.setEmptyView(R.id.widget_list_view, R.id.empty_text_view);
 
 		final Intent openAppIntent = new Intent(context, ChartActivity.class);
 
@@ -73,17 +77,17 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 				.addNextIntentWithParentStack(openAppIntent)
 				.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		views.setPendingIntentTemplate(R.id.widget_list_view, openAppPendingIntent);
+		remoteViews.setPendingIntentTemplate(R.id.widget_list_view, openAppPendingIntent);
 
 		// Set up the collection
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			setRemoteAdapter(context, views);
+			setRemoteAdapter(context, remoteViews);
 		} else {
-			setRemoteAdapterV11(context, views);
+			setRemoteAdapterV11(context, remoteViews);
 		}
 
 		// Instruct the widget manager to update the widget
-		appWidgetManager.updateAppWidget(appWidgetId, views);
+		appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 	}
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

@@ -169,6 +169,7 @@ public class StockTaskService extends GcmTaskService {
 	}
 
 	private void sendSyncBroadcastIntent() {
+		Log.i(LOG_TAG, "sendSyncBroadcastIntent");
 		// Invoke setPackage to ensure only components in our app receive broadcast
 		mContext.sendBroadcast(
 				new Intent(QuoteWidgetProvider.SYNC_CLICKED).setPackage(mContext.getPackageName())

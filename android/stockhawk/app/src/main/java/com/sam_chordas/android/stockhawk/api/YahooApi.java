@@ -14,30 +14,50 @@ import yahoofinance.histquotes.HistoricalQuote;
  * Created by rgr-myrg on 4/21/16.
  */
 public class YahooApi {
+	public static final String NAME = YahooApi.class.getSimpleName();
 	public static final String NULL_ERROR = "Error: HistoricalQuote List is Null.";
 
-	public static void fetchHistoricalQuote(final String symbol) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Stock stock = YahooFinance.get(symbol, true);
-					//Stock tesla = YahooFinance.get(symbol, )
-					List<HistoricalQuote> list = stock.getHistory();
-
-					if (list == null) {
-						StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
-					}
-
-					StockEvent.QuoteLoaded.notifySuccess(list);
-				} catch (IOException e) {
-					StockEvent.QuoteLoaded.notifyError(e.getMessage());
-				}
-			}
-		}).start();
-	}
+//	public static void fetchHistoricalQuote(final String symbol) {
+//		try {
+//			Stock stock = YahooFinance.get(symbol, true);
+//			List<HistoricalQuote> list = stock.getHistory();
+//
+//			if (list == null) {
+//				StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
+//			}
+//
+//			StockEvent.QuoteLoaded.notifySuccess(list);
+//		} catch (IOException e) {
+//			StockEvent.QuoteLoaded.notifyError(e.getMessage());
+//		}
+////		new Thread(new Runnable() {
+////			@Override
+////			public void run() {
+////				try {
+////					Stock stock = YahooFinance.get(symbol, true);
+////					List<HistoricalQuote> list = stock.getHistory();
+////
+////					if (list == null) {
+////						StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
+////					}
+////
+////					StockEvent.QuoteLoaded.notifySuccess(list);
+////				} catch (IOException e) {
+////					StockEvent.QuoteLoaded.notifyError(e.getMessage());
+////				}
+////			}
+////		}).start();
+//	}
 	public static void fetchHistoricalQuoteWithDate(final String symbol, final DateVO dateVO) {
-		Log.d("YahooApi", "from: " + dateVO.getStartCalendar().getTime() + " to: " + dateVO.getCurrentCalendar().getTime());
+		Log.d(NAME, "from: " + dateVO.getStartCalendar().getTime() + " to: " + dateVO.getCurrentCalendar().getTime());
+
+		if (dateVO.isDateToday()) {
+			Log.i(NAME, "Not enough time has passed for another request.");
+			// Trigger event
+			StockEvent.QuoteLoaded.notifySuccess();
+			return;
+		}
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

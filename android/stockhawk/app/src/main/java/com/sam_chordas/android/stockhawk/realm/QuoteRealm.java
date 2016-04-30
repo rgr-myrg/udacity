@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -25,6 +26,9 @@ import yahoofinance.histquotes.HistoricalQuote;
  * Created by rgr-myrg on 4/22/16.
  */
 public class QuoteRealm {
+	public static final String NAME = QuoteRealm.class.getSimpleName();
+	public static final String REALM = "net.usrlib.realm";
+
 	private Realm mRealm;
 	private RealmConfiguration mConfig = null;
 	private AppCompatActivity mApp;
@@ -34,7 +38,7 @@ public class QuoteRealm {
 
 	public Realm getRealmInstance() {
 		mConfig = new RealmConfiguration.Builder(mApp)
-				.name("net.usrlib.realm")
+				.name(REALM)
 				.build();
 
 		Realm.setDefaultConfiguration(mConfig);
@@ -57,17 +61,18 @@ public class QuoteRealm {
 	}
 
 	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes) {
-		mRealm = getRealmInstance();
+		if (quotes == null || quotes.size() == 0) {
+			Log.i(NAME, "saveHistoricalQuoteList empty list. Not processing.");
+			return;
+		}
 
-		Log.d("REALM", "size: " + String.valueOf(quotes.size()));
+		mRealm = getRealmInstance();
 		mRealm.beginTransaction();
 
 		for (int x = 0; x < quotes.size(); x++) {
 			HistoricalQuote quote = quotes.get(x);
 			QuoteData quoteData = mRealm.createObject(QuoteData.class);
-			//Log.d("QuoteRealm", quote.getDate().toString());
-			//Log.d("QuoteRealm", DateVO.dateFormat.format(quote.getDate()) );
-			Log.d("QuoteRealm", DateVO.dateFormat.format(quote.getDate().getTime()) );
+			Log.d(NAME, DateVO.dateFormat.format(quote.getDate().getTime()) );
 
 			quoteData.setValues(
 					quote.getSymbol(),
@@ -78,14 +83,37 @@ public class QuoteRealm {
 					quote.getAdjClose().toString(),
 					quote.getVolume(),
 					DateVO.dateFormat.format(quote.getDate().getTime())
-					//quote.getDate().toString()
 			);
 
 			mRealm.copyToRealm(quoteData);
 		}
 
+//		mRealm.executeTransactionAsync(
+//				new Realm.Transaction() {
+//					@Override
+//					public void execute(Realm realm) {
+//						for (int x = 0; x < quotes.size(); x++) {
+//							final HistoricalQuote quote = quotes.get(x);
+//							Log.d("REALM",String.valueOf(x));
+//							mRealm.copyToRealm(
+//									new QuoteData(
+//											quote.getSymbol(),
+//											quote.getOpen().toString(),
+//											quote.getLow().toString(),
+//											quote.getHigh().toString(),
+//											quote.getClose().floatValue(),
+//											quote.getAdjClose().toString(),
+//											quote.getVolume(),
+//											DateVO.dateFormat.format(quote.getDate().getTime())
+//									)
+//							);
+//						}
+//					}
+//				}
+//		);
+
 		mRealm.commitTransaction();
-		//mRealm.close();
+		mRealm.close();
 	}
 
 	public RealmLineData getRealmLineData(final String symbol) {
@@ -95,9 +123,17 @@ public class QuoteRealm {
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)
 				.findAllSorted(QuoteData.DATE_KEY);
-				//.findAll();
 
-		Log.d("REALM", results.toString());
+//		results.addChangeListener(
+//				new RealmChangeListener() {
+//					@Override
+//					public void onChange() {
+//						Log.d(NAME, "onChange");
+//					}
+//				}
+//		);
+
+		Log.d(NAME, "getRealmLineData results: " + results.size());
 
 		final RealmLineDataSet<QuoteData> dataSet = new RealmLineDataSet<QuoteData>(
 				results,
@@ -106,8 +142,9 @@ public class QuoteRealm {
 		);
 
 		dataSet.setDrawFilled(true);
-		//dataSet.setFillAlpha(10);
-		dataSet.setFillColor(Color.parseColor(ColorUtil.getNextColorDarkTheme()));
+		dataSet.setFillAlpha(100);
+		//dataSet.setFillColor(Color.parseColor(ColorUtil.getNextColorDarkTheme()));
+		dataSet.setFillColor(Color.BLUE);
 		dataSet.setCircleColor(Color.BLACK);
 		dataSet.setCircleSize(2f);
 
@@ -126,7 +163,8 @@ public class QuoteRealm {
 				.where(QuoteData.class)
 				.equalTo(QuoteData.SYMBOL_KEY, symbol)
 				.findAllSorted(QuoteData.DATE_KEY);
-				//.findAll();
+
+		Log.d(NAME, "getDateWithSymbolLookup results: " + results.size());
 
 		return DateVO.fromRealmResults(results);
 	}
