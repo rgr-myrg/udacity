@@ -1,7 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -13,7 +12,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineData;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.api.DateVO;
 import com.sam_chordas.android.stockhawk.api.StockEvent;

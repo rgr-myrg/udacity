@@ -28,10 +28,8 @@
 			android:layout_gravity="end"
 			android:background="@color/material_blue_500"
 			android:contentDescription="@string/button_refresh_description"
-
 			android:drawableTop="@drawable/refresh_icon"
-			android:padding="10sp"
-			/>
+			android:padding="10sp"/>
 
 	</FrameLayout>
 
