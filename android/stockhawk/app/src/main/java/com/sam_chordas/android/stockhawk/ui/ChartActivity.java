@@ -170,6 +170,7 @@ public class ChartActivity extends AppCompatActivity {
 		mLineChart.setAutoScaleMinMaxEnabled(true);
 		mLineChart.getLegend().setEnabled(false);
 		mLineChart.setData(data);
+		mLineChart.notifyDataSetChanged();
 //		mLineChart.animateXY(
 //				1000,
 //				1000,
