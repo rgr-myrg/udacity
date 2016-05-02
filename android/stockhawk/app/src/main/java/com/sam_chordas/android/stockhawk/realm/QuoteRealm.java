@@ -8,16 +8,17 @@ import com.github.mikephil.charting.data.realm.implementation.RealmLineData;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.sam_chordas.android.stockhawk.api.DateVO;
-import com.sam_chordas.android.stockhawk.util.ColorUtil;
+
+import net.usrlib.material.MaterialTheme;
+import net.usrlib.material.Theme;
+import net.usrlib.material.color.Red;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -31,6 +32,7 @@ public class QuoteRealm {
 
 	private Realm mRealm;
 	private RealmConfiguration mConfig = null;
+	private MaterialTheme mTheme = MaterialTheme.get(Theme.COOL);
 	private AppCompatActivity mApp;
 
 	public QuoteRealm() {
@@ -72,18 +74,20 @@ public class QuoteRealm {
 		for (int x = 0; x < quotes.size(); x++) {
 			HistoricalQuote quote = quotes.get(x);
 			QuoteData quoteData = mRealm.createObject(QuoteData.class);
-			Log.d(NAME, DateVO.dateFormat.format(quote.getDate().getTime()) );
 
-			quoteData.setValues(
-					quote.getSymbol(),
-					quote.getOpen().toString(),
-					quote.getLow().toString(),
-					quote.getHigh().toString(),
-					quote.getClose().floatValue(),
-					quote.getAdjClose().toString(),
-					quote.getVolume(),
-					DateVO.dateFormat.format(quote.getDate().getTime())
-			);
+			Log.d(NAME, DateVO.dateFormat.format(quote.getDate().getTime()));
+			Log.d(NAME, Calendar.getInstance().getTime().toString());
+
+					quoteData.setValues(
+							quote.getSymbol(),
+							quote.getOpen().toString(),
+							quote.getLow().toString(),
+							quote.getHigh().toString(),
+							quote.getClose().floatValue(),
+							quote.getAdjClose().toString(),
+							quote.getVolume(),
+							DateVO.dateFormat.format(Calendar.getInstance().getTime())
+					);
 
 			mRealm.copyToRealm(quoteData);
 		}
@@ -143,8 +147,9 @@ public class QuoteRealm {
 
 		dataSet.setDrawFilled(true);
 		dataSet.setFillAlpha(100);
-		//dataSet.setFillColor(Color.parseColor(ColorUtil.getNextColorDarkTheme()));
-		dataSet.setFillColor(Color.BLUE);
+		dataSet.setFillColor(Color.parseColor(mTheme.getNextColor().hex));
+
+		//dataSet.setFillColor(Color.BLUE);
 		dataSet.setCircleColor(Color.BLACK);
 		dataSet.setCircleSize(2f);
 

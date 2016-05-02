@@ -3,7 +3,6 @@ package com.sam_chordas.android.stockhawk.api;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import yahoofinance.Stock;
@@ -17,37 +16,6 @@ public class YahooApi {
 	public static final String NAME = YahooApi.class.getSimpleName();
 	public static final String NULL_ERROR = "Error: HistoricalQuote List is Null.";
 
-//	public static void fetchHistoricalQuote(final String symbol) {
-//		try {
-//			Stock stock = YahooFinance.get(symbol, true);
-//			List<HistoricalQuote> list = stock.getHistory();
-//
-//			if (list == null) {
-//				StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
-//			}
-//
-//			StockEvent.QuoteLoaded.notifySuccess(list);
-//		} catch (IOException e) {
-//			StockEvent.QuoteLoaded.notifyError(e.getMessage());
-//		}
-////		new Thread(new Runnable() {
-////			@Override
-////			public void run() {
-////				try {
-////					Stock stock = YahooFinance.get(symbol, true);
-////					List<HistoricalQuote> list = stock.getHistory();
-////
-////					if (list == null) {
-////						StockEvent.QuoteLoaded.notifyError(NULL_ERROR);
-////					}
-////
-////					StockEvent.QuoteLoaded.notifySuccess(list);
-////				} catch (IOException e) {
-////					StockEvent.QuoteLoaded.notifyError(e.getMessage());
-////				}
-////			}
-////		}).start();
-//	}
 	public static void fetchHistoricalQuoteWithDate(final String symbol, final DateVO dateVO) {
 		Log.d(NAME, "from: " + dateVO.getStartCalendar().getTime() + " to: " + dateVO.getCurrentCalendar().getTime());
 

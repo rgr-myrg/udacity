@@ -59,7 +59,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 		@Override
 		public void onError(Object data) {
 			Log.d("MAIN", "onError " + data);
-			if (data.equals(StockTaskService.QUOTE_NOT_FOUND)) {
+			if (data != null && data.equals(StockTaskService.QUOTE_NOT_FOUND)) {
 				onQuoteNotFound();
 			}
 		}
