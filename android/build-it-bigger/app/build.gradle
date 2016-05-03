@@ -25,5 +25,6 @@ dependencies {
     compile project(":jokeandroidlib")
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'net.usrlib:tinyevent:0.1'
     compile project(path: ':backend', configuration: 'android-endpoints')
 }

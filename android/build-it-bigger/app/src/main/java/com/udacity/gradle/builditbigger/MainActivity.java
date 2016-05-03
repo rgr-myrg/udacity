@@ -44,14 +44,16 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void tellJoke(View view) {
-//		final JokeJavaLib joke = new JokeJavaLib();
-//		final Intent intent = new Intent(this, DisplayJokeActivity.class);
-//
-//		intent.putExtra(DisplayJokeActivity.JOKE_KEY, joke.tellJoke());
-//
-//		startActivity(intent);
-		// Replace with endpoint
-		new EndpointAsyncTask().execute(this);
-	}
+//	public void tellJoke(View view) {
+////		final JokeJavaLib joke = new JokeJavaLib();
+////		final Intent intent = new Intent(this, DisplayJokeActivity.class);
+////
+////		intent.putExtra(DisplayJokeActivity.JOKE_KEY, joke.tellJoke());
+////
+////		startActivity(intent);
+//		// Replace with endpoint
+//		// new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+////		new EndpointAsyncTask().execute(this);
+//		// NEXT Step 4: Deploy App Engine
+//	}
 }
