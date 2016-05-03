@@ -12,6 +12,11 @@ public class DisplayJokeActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display_joke);
 
+		// TODO: Figure out back button issue.
+		// Back button is displayed but clicking does nothing.
+//		getSupportActionBar().setDisplayShowHomeEnabled(true);
+//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		final TextView textView = (TextView) findViewById(R.id.joke_text);
 		textView.setText(getJokeFromIntent());
 	}
