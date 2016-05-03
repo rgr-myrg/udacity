@@ -51,7 +51,6 @@ public class EndpointAsyncTask extends AsyncTask<Context, Void, String> {
 		}
 
 		try {
-			//TODO: Remove???
 			return sMyApiService.tellJoke().execute().getData();
 		} catch (IOException e) {
 			OnPostExecute.notifyError(e.getMessage());
@@ -61,7 +60,6 @@ public class EndpointAsyncTask extends AsyncTask<Context, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-	//	super.onPostExecute(result);
 		OnPostExecute.notifySuccess(result);
 	}
 }
