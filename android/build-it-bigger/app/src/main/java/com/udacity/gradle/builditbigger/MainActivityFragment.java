@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -98,6 +100,13 @@ public class MainActivityFragment extends Fragment {
 	}
 
 	private void onEndPointPostError() {
+		final Toast toast = Toast.makeText(
+				getContext(),
+				getString(R.string.joke_not_loaded_msg),
+				Toast.LENGTH_SHORT
+		);
 
+		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+		toast.show();
 	}
 }
