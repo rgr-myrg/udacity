@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // Added for AdMob
     compile project(":jokejavalib")
     compile project(":jokeandroidlib")
     compile 'com.android.support:appcompat-v7:23.3.0'

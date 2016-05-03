@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.JokeJavaLib;
+import com.jokejavalib.JokeJavaLib;
+import com.udacity.gradle.builditbigger.task.EndpointAsyncTask;
 
 import net.usrlib.android.jokeandroidlib.DisplayJokeActivity;
 
@@ -44,17 +44,14 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-//	public void tellJoke(View view){
-//		JokeJavaLib joke = new JokeJavaLib();
-//		Toast.makeText(this, joke.tellJoke(), Toast.LENGTH_SHORT).show();
-//	}
-
 	public void tellJoke(View view) {
-		final JokeJavaLib joke = new JokeJavaLib();
-		final Intent intent = new Intent(this, DisplayJokeActivity.class);
-
-		intent.putExtra(DisplayJokeActivity.JOKE_KEY, joke.tellJoke());
-
-		startActivity(intent);
+//		final JokeJavaLib joke = new JokeJavaLib();
+//		final Intent intent = new Intent(this, DisplayJokeActivity.class);
+//
+//		intent.putExtra(DisplayJokeActivity.JOKE_KEY, joke.tellJoke());
+//
+//		startActivity(intent);
+		// Replace with endpoint
+		new EndpointAsyncTask().execute(this);
 	}
 }

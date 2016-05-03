@@ -9,6 +9,7 @@ package net.usrlib.android.backend;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.jokejavalib.JokeJavaLib;
 
 import javax.inject.Named;
 
@@ -33,4 +34,12 @@ public class MyEndpoint {
         return response;
     }
 
+	@ApiMethod(name = "tellJoke")
+	public MyBean tellJoke() {
+		MyBean response = new MyBean();
+		JokeJavaLib jokeJavaLib = new JokeJavaLib();
+		response.setData(jokeJavaLib.tellJoke());
+
+		return response;
+	}
 }
