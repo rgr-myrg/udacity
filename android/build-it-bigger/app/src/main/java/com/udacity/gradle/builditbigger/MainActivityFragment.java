@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,10 @@ public class MainActivityFragment extends Fragment {
 		@Override
 		public void onSuccess(Object data) {
 			onEndPointPostExecute((String) data);
+		}
+		@Override
+		public void onError(Object data) {
+			onEndPointPostError();
 		}
 	};
 
@@ -81,10 +86,18 @@ public class MainActivityFragment extends Fragment {
 	}
 
 	private void onEndPointPostExecute(final String result) {
+		Log.d("MAIN", "onEndPointPostExecute result: " + result);
+
 		final Context context = getActivity();
 		final Intent intent = new Intent(context, DisplayJokeActivity.class);
 
 		intent.putExtra(DisplayJokeActivity.JOKE_KEY, result);
 		context.startActivity(intent);
+
+		mProgressBar.setVisibility(View.GONE);
+	}
+
+	private void onEndPointPostError() {
+
 	}
 }

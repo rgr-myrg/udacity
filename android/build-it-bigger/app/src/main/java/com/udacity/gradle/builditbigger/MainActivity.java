@@ -1,26 +1,16 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.jokejavalib.JokeJavaLib;
-import com.udacity.gradle.builditbigger.task.EndpointAsyncTask;
-
-import net.usrlib.android.jokeandroidlib.DisplayJokeActivity;
-
-
-public class MainActivity extends ActionBarActivity {
-
+public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,17 +33,4 @@ public class MainActivity extends ActionBarActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
-
-//	public void tellJoke(View view) {
-////		final JokeJavaLib joke = new JokeJavaLib();
-////		final Intent intent = new Intent(this, DisplayJokeActivity.class);
-////
-////		intent.putExtra(DisplayJokeActivity.JOKE_KEY, joke.tellJoke());
-////
-////		startActivity(intent);
-//		// Replace with endpoint
-//		// new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
-////		new EndpointAsyncTask().execute(this);
-//		// NEXT Step 4: Deploy App Engine
-//	}
 }

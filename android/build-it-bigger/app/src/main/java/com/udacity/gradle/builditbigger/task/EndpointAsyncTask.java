@@ -17,7 +17,7 @@ import java.io.IOException;
  * Created by rgr-myrg on 5/2/16.
  */
 public class EndpointAsyncTask extends AsyncTask<Context, Void, String> {
-	public static final String APP_SERVER = "https://androidappbackend.appspot.com/_ah/api/";
+	public static final String APP_SERVER = "https://jokeapp-1300.appspot.com/_ah/api/";
 	public static final String LOCALHOST = "http://10.0.2.2:8080/_ah/api/";
 	public static final TinyEvent OnPostExecute = new TinyEvent();
 
@@ -51,6 +51,7 @@ public class EndpointAsyncTask extends AsyncTask<Context, Void, String> {
 		}
 
 		try {
+			//TODO: Remove???
 			return sMyApiService.tellJoke().execute().getData();
 		} catch (IOException e) {
 			OnPostExecute.notifyError(e.getMessage());
@@ -60,7 +61,7 @@ public class EndpointAsyncTask extends AsyncTask<Context, Void, String> {
 
 	@Override
 	protected void onPostExecute(String result) {
-		super.onPostExecute(result);
+	//	super.onPostExecute(result);
 		OnPostExecute.notifySuccess(result);
 	}
 }
