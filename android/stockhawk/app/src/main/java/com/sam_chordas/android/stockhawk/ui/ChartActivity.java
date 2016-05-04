@@ -47,8 +47,6 @@ public class ChartActivity extends AppCompatActivity {
 	private Realm mRealmInstance = null;
 	private String mStockSymbol = null;
 
-//	private LineChart mLineChart;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -203,6 +201,7 @@ public class ChartActivity extends AppCompatActivity {
 		RealmLineData realmLineData = new RealmLineData(mRealmResults, QuoteData.DATE_KEY, dataSets);
 
 		final LineChart lineChart = (LineChart) findViewById(R.id.line_chart);
+
 		lineChart.setLogEnabled(true);
 //		lineChart.destroyDrawingCache();
 //		lineChart.clear();
@@ -226,16 +225,16 @@ public class ChartActivity extends AppCompatActivity {
 		lineChart.getLegend().setEnabled(false);
 		lineChart.notifyDataSetChanged();
 
-		lineChart.animateXY(
-				1000,
-				1000,
-				Easing.EasingOption.Linear,
-				Easing.EasingOption.Linear
-		);
+//		lineChart.animateXY(
+//				1000,
+//				1000,
+//				Easing.EasingOption.Linear,
+//				Easing.EasingOption.Linear
+//		);
 
 		//Refresh chart
 		lineChart.invalidate();
-//		lineChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
+		lineChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
 		lineChart.setData(realmLineData);
 		UiUtil.hideProgressBar(this);
 	}
