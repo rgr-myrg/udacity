@@ -1,6 +1,5 @@
 <resources>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ad_unit_id">ca-app-pub-7237046001480876/9005266265</string>
 
 </resources>

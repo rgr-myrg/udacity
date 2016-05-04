@@ -47,7 +47,6 @@ public class BaseActivityFragment extends Fragment {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						mProgressBar.setVisibility(View.VISIBLE);
 						startEndPointTask();
 					}
 				}
@@ -55,6 +54,7 @@ public class BaseActivityFragment extends Fragment {
 	}
 
 	protected void startEndPointTask() {
+		mProgressBar.setVisibility(View.VISIBLE);
 		new EndpointAsyncTask().execute();
 	}
 
