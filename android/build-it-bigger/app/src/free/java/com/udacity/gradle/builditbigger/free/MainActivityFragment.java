@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -35,7 +35,8 @@ public class MainActivityFragment extends BaseActivityFragment {
 		setProgressBar(root);
 		setInterstitialAd();
 		setAdView(root);
-		setJokeButton(root);
+		setJokeButtonColor(root);
+		setJokeButtonClickListener(root);
 
 		return root;
 	}
@@ -104,9 +105,11 @@ public class MainActivityFragment extends BaseActivityFragment {
 
 	@Override
 	protected void setJokeButton(View rootView) {
-		final Button button = (Button) rootView.findViewById(R.id.joke_btn);
+		if (mJokeButton == null) {
+			mJokeButton = (TextView) rootView.findViewById(R.id.joke_btn);
+		}
 
-		button.setOnClickListener(
+		mJokeButton.setOnClickListener(
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {

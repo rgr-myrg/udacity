@@ -48,5 +48,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'net.usrlib:tinyevent:0.1'
+    compile 'net.usrlib:material-color:0.1'
     compile 'com.android.support:support-v4:23.3.0'
 }

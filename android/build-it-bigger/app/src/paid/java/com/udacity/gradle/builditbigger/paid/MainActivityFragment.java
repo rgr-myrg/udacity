@@ -29,7 +29,8 @@ public class MainActivityFragment extends BaseActivityFragment {
 		EndpointAsyncTask.OnPostExecute.addListener(mPostExecuteListener);
 
 		setProgressBar(root);
-		setJokeButton(root);
+		setJokeButtonColor(root);
+		setJokeButtonClickListener(root);
 
 		return root;
 	}
