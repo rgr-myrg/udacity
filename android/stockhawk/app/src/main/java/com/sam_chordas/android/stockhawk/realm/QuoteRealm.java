@@ -33,13 +33,13 @@ public class QuoteRealm {
 	private Realm mRealm;
 	private RealmConfiguration mConfig = null;
 	private MaterialTheme mTheme = MaterialTheme.get(Theme.COOL);
-	private AppCompatActivity mApp;
+//	private AppCompatActivity mApp;
 
 	public QuoteRealm() {
 	}
 
-	public Realm getRealmInstance() {
-		mConfig = new RealmConfiguration.Builder(mApp)
+	public Realm getRealmInstance(AppCompatActivity app) {
+		mConfig = new RealmConfiguration.Builder(app)
 				.name(REALM)
 				.build();
 
@@ -48,27 +48,27 @@ public class QuoteRealm {
 		return Realm.getInstance(mConfig);
 	}
 
-	public void onCreate(final AppCompatActivity app) {
-		mApp = app;
-	}
-
+//	public void onCreate(final AppCompatActivity app) {
+//		mApp = app;
+//	}
+//
 	public void onResume(final AppCompatActivity app) {
-		mApp = app;
+		mRealm = getRealmInstance(app);
 	}
 
-	public void close() {
+	public void close(final AppCompatActivity app) {
 		//mRealm = Realm.getDefaultInstance();
-		mRealm = getRealmInstance();
+		mRealm = getRealmInstance(app);
 		mRealm.close();
 	}
 
-	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes) {
+	public void saveHistoricalQuoteList(final List<HistoricalQuote> quotes, final AppCompatActivity app) {
 		if (quotes == null || quotes.size() == 0) {
 			Log.i(NAME, "saveHistoricalQuoteList empty list. Not processing.");
 			return;
 		}
 
-		mRealm = getRealmInstance();
+		mRealm = getRealmInstance(app);
 		mRealm.beginTransaction();
 
 		for (int x = 0; x < quotes.size(); x++) {
@@ -120,8 +120,8 @@ public class QuoteRealm {
 		mRealm.close();
 	}
 
-	public RealmLineData getRealmLineData(final String symbol) {
-		mRealm = getRealmInstance();
+	public RealmLineData getRealmLineData(final String symbol, final AppCompatActivity app) {
+		mRealm = getRealmInstance(app);
 
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)
@@ -161,8 +161,9 @@ public class QuoteRealm {
 		return new RealmLineData(results, QuoteData.DATE_KEY, dataSets);
 	}
 
-	public DateVO getDateWithSymbolLookup(final String symbol) throws ParseException {
-		mRealm = getRealmInstance();
+	public DateVO getDateWithSymbolLookup(final String symbol, final AppCompatActivity app)
+			throws ParseException {
+		mRealm = getRealmInstance(app);
 
 		final RealmResults<QuoteData> results = mRealm
 				.where(QuoteData.class)

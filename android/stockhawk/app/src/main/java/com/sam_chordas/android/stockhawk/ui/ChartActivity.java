@@ -63,8 +63,6 @@ public class ChartActivity extends AppCompatActivity {
 
 		StockEvent.QuoteLoaded.addListenerOnce(mQuoteLoadedListener);
 
-		mQuoteRealm.onCreate(this);
-
 		mStockSymbol = getStockSymbolFromIntent();
 
 		if (mStockSymbol == null) {
@@ -93,7 +91,7 @@ public class ChartActivity extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mQuoteRealm.close();
+		mQuoteRealm.close(this);
 	}
 
 	private String getStockSymbolFromIntent() {
@@ -112,12 +110,10 @@ public class ChartActivity extends AppCompatActivity {
 		Log.d(NAME, "fetchHistoricalQuote mStockSymbol: " + mStockSymbol);
 
 		try {
-			DateVO dateVO = mQuoteRealm.getDateWithSymbolLookup(mStockSymbol);
+			DateVO dateVO = mQuoteRealm.getDateWithSymbolLookup(mStockSymbol, this);
 			YahooApi.fetchHistoricalQuoteWithDate(mStockSymbol, dateVO);
 		} catch (ParseException e) {
 			e.printStackTrace();
-			//YahooApi.fetchHistoricalQuote(mStockSymbol);
-		} finally {
 			//YahooApi.fetchHistoricalQuote(mStockSymbol);
 		}
 	}
@@ -129,8 +125,17 @@ public class ChartActivity extends AppCompatActivity {
 				new Runnable() {
 					@Override
 					public void run() {
-						mQuoteRealm.saveHistoricalQuoteList(quoteList);
-						setLineChartData(mQuoteRealm.getRealmLineData(mStockSymbol));
+						mQuoteRealm.saveHistoricalQuoteList(
+								quoteList,
+								ChartActivity.this
+						);
+
+						final RealmLineData data = mQuoteRealm.getRealmLineData(
+								mStockSymbol,
+								ChartActivity.this
+						);
+
+						setLineChartData(data);
 					}
 				}
 		);
@@ -180,7 +185,7 @@ public class ChartActivity extends AppCompatActivity {
 
 		//Refresh chart
 		mLineChart.invalidate();
-		mLineChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+		mLineChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
 	}
 
 //	private void initLineChart() {
