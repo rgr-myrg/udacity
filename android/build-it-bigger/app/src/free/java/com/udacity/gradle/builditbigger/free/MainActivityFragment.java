@@ -104,7 +104,7 @@ public class MainActivityFragment extends BaseActivityFragment {
 	}
 
 	@Override
-	protected void setJokeButton(View rootView) {
+	protected void setJokeButtonClickListener(View rootView) {
 		if (mJokeButton == null) {
 			mJokeButton = (TextView) rootView.findViewById(R.id.joke_btn);
 		}
