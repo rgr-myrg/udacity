@@ -14,7 +14,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
-import com.sam_chordas.android.stockhawk.ui.ChartActivity;
+import com.sam_chordas.android.stockhawk.ui.ChartingActivity;
 
 public class QuoteWidgetProvider extends AppWidgetProvider {
 	public static final String SYNC_CLICKED = "com.sam_chordas.android.stockhawk.SYNC_CLICKED";
@@ -70,7 +70,7 @@ public class QuoteWidgetProvider extends AppWidgetProvider {
 		remoteViews.setOnClickPendingIntent(R.id.update_button, refreshPendingIntent);
 		remoteViews.setEmptyView(R.id.widget_list_view, R.id.empty_text_view);
 
-		final Intent openAppIntent = new Intent(context, ChartActivity.class);
+		final Intent openAppIntent = new Intent(context, ChartingActivity.class);
 
 		PendingIntent openAppPendingIntent = TaskStackBuilder
 				.create(context)

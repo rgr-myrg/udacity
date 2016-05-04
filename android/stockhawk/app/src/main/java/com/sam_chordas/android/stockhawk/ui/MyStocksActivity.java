@@ -98,11 +98,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 					public void onItemClick(View v, int position) {
 						mCursor.moveToPosition(position);
 
-						Intent chartIntent = new Intent(mContext, ChartActivity.class);
-						chartIntent.putExtra(
-								QuoteColumns.SYMBOL,
-								mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL))
+						final String stockSymbol = mCursor.getString(
+								mCursor.getColumnIndex(QuoteColumns.SYMBOL)
 						);
+
+						Intent chartIntent = new Intent(mContext, ChartActivity.class);
+						chartIntent.putExtra(QuoteColumns.SYMBOL, stockSymbol);
 
 						startActivity(chartIntent);
 					}
