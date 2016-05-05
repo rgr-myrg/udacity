@@ -26,40 +26,40 @@ import android.widget.ScrollView;
  * A custom ScrollView that can accept a scroll listener.
  */
 public class ObservableScrollView extends ScrollView {
-    private Callbacks mCallbacks;
+	private Callbacks mCallbacks;
 
-    public ObservableScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public ObservableScrollView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
 
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-        if (mCallbacks != null) {
-            mCallbacks.onScrollChanged();
-        }
-    }
+	@Override
+	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+		super.onScrollChanged(l, t, oldl, oldt);
+		if (mCallbacks != null) {
+			mCallbacks.onScrollChanged();
+		}
+	}
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        int scrollY = getScrollY();
-        // hack to call onScrollChanged on screen rotate
-        if (scrollY > 0 && mCallbacks != null) {
-            mCallbacks.onScrollChanged();
-        }
-    }
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		super.onLayout(changed, l, t, r, b);
+		int scrollY = getScrollY();
+		// hack to call onScrollChanged on screen rotate
+		if (scrollY > 0 && mCallbacks != null) {
+			mCallbacks.onScrollChanged();
+		}
+	}
 
-    @Override
-    public int computeVerticalScrollRange() {
-        return super.computeVerticalScrollRange();
-    }
+	@Override
+	public int computeVerticalScrollRange() {
+		return super.computeVerticalScrollRange();
+	}
 
-    public void setCallbacks(Callbacks listener) {
-        mCallbacks = listener;
-    }
+	public void setCallbacks(Callbacks listener) {
+		mCallbacks = listener;
+	}
 
-    public static interface Callbacks {
-        public void onScrollChanged();
-    }
+	public static interface Callbacks {
+		public void onScrollChanged();
+	}
 }
