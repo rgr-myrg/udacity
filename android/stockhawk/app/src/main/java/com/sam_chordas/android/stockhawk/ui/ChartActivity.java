@@ -200,6 +200,7 @@ public class ChartActivity extends AppCompatActivity {
 		//styleData(data);
 
 		final LineChart lineChart = (LineChart) findViewById(R.id.line_chart);
+		lineChart.setLogEnabled(true);
 		lineChart.getXAxis().setDrawGridLines(false);
 		lineChart.setDescription("");
 
