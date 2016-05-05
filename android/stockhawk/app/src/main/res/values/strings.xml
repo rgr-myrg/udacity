@@ -26,5 +26,6 @@
     <string name="button_refresh_description">Refresh Button</string>
     <string name="linechart_description">Line Chart of Stock Values</string>
     <string name="fab_description">Add a New Stock Button</string>
+    <string name="line_chart_label">Historical Quote</string>
 
 </resources>

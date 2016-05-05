@@ -1,19 +1,16 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineData;
 import com.github.mikephil.charting.data.realm.implementation.RealmLineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.realm.QuoteData;
@@ -22,7 +19,6 @@ import com.sam_chordas.android.stockhawk.util.UiUtil;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -64,7 +60,7 @@ public class ChartActivity extends AppCompatActivity {
 
 		getSupportActionBar().setTitle(mStockSymbol.toUpperCase());
 
-		initRealmDatabase(this);
+		initRealmDatabase();
 
 		mRealmResults = getRealmResults(mStockSymbol);
 
@@ -88,12 +84,13 @@ public class ChartActivity extends AppCompatActivity {
 		return stockSymbol;
 	}
 
-	private void initRealmDatabase(final AppCompatActivity app) {
-		mRealmConfig = new RealmConfiguration.Builder(app)
+	private void initRealmDatabase() {
+		mRealmConfig = new RealmConfiguration.Builder(this)
 				.name(REALM_ID)
 				.build();
 
 		Realm.setDefaultConfiguration(mRealmConfig);
+
 		mRealmInstance = Realm.getInstance(mRealmConfig);
 	}
 
@@ -167,7 +164,8 @@ public class ChartActivity extends AppCompatActivity {
 					quote.getClose().floatValue(),
 					quote.getAdjClose().toString(),
 					quote.getVolume(),
-					sDateFormat.format(Calendar.getInstance().getTime())
+					sDateFormat.format(quote.getDate().getTime())
+					//sDateFormat.format(Calendar.getInstance().getTime())
 			);
 
 			mRealmInstance.copyToRealm(quoteData);
@@ -178,64 +176,35 @@ public class ChartActivity extends AppCompatActivity {
 	}
 
 	private void setLineChartDataAndRenderGraph() {
-		Log.i(NAME, "setLineChartData size: " + mRealmResults.size());
+		Log.i(NAME, "setLineChartDataAndRenderGraph size: " + mRealmResults.size());
 
-		final RealmLineDataSet<QuoteData> dataSet = new RealmLineDataSet<QuoteData>(
+		final RealmLineDataSet<QuoteData> set = new RealmLineDataSet<QuoteData>(
 				mRealmResults,
 				QuoteData.CLOSE_KEY,
 				QuoteData.ID_KEY
 		);
 
-		dataSet.setDrawFilled(true);
-		dataSet.setFillAlpha(100);
-		//dataSet.setFillColor(Color.parseColor(mTheme.getNextColor().hex));
-
-		dataSet.setFillColor(Color.BLUE);
-		dataSet.setCircleColor(Color.BLACK);
-		dataSet.setCircleSize(2f);
+		set.setDrawCubic(false);
+		set.setLabel(getString(R.string.line_chart_label));
+		set.setDrawCircleHole(false);
+		set.setColor(ColorTemplate.rgb("#FF5722"));
+		set.setCircleColor(ColorTemplate.rgb("#FF5722"));
+		set.setLineWidth(1.8f);
+		set.setCircleSize(3.6f);
 
 		ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+		dataSets.add(set); // add the dataset
 
-		dataSets.add(dataSet);
-
-		RealmLineData realmLineData = new RealmLineData(mRealmResults, QuoteData.DATE_KEY, dataSets);
+		// create a data object with the dataset list
+		RealmLineData data = new RealmLineData(mRealmResults, QuoteData.DATE_KEY, dataSets);
+		//styleData(data);
 
 		final LineChart lineChart = (LineChart) findViewById(R.id.line_chart);
-
-		lineChart.setLogEnabled(true);
-//		lineChart.destroyDrawingCache();
-//		lineChart.clear();
-		lineChart.setDrawGridBackground(true);
-		lineChart.setTouchEnabled(true);
+		lineChart.getXAxis().setDrawGridLines(false);
 		lineChart.setDescription("");
-		lineChart.setDragEnabled(true);
-		lineChart.setScaleEnabled(true);
-		lineChart.setVisibility(View.VISIBLE);
-		lineChart.setMarkerView(new ChartMarkerView(this, R.layout.chart_marker_view));
-		//lineChart.setNoDataText("Loading chart...");
 
-		XAxis xAxis = lineChart.getXAxis();
-		xAxis.enableGridDashedLine(8f, 5f, 0f);
-		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		YAxis yAxis = lineChart.getAxisRight();
-		yAxis.setDrawLabels(false);
-		yAxis.enableGridDashedLine(8f, 5f, 0f);
-
-		lineChart.setAutoScaleMinMaxEnabled(true);
-		lineChart.getLegend().setEnabled(false);
-		lineChart.notifyDataSetChanged();
-
-//		lineChart.animateXY(
-//				1000,
-//				1000,
-//				Easing.EasingOption.Linear,
-//				Easing.EasingOption.Linear
-//		);
-
-		//Refresh chart
-		lineChart.invalidate();
-		lineChart.animateX(1000, Easing.EasingOption.EaseInOutQuart);
-		lineChart.setData(realmLineData);
-		UiUtil.hideProgressBar(this);
+		// set data
+		lineChart.setData(data);
+		lineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
 	}
 }
