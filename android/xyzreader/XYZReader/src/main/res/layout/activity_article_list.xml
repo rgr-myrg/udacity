@@ -18,14 +18,15 @@
 			android:paddingTop="@dimen/toolbar_container_height"
 			android:paddingLeft="@dimen/list_side_margin"
 			android:paddingRight="@dimen/list_side_margin"
-			android:paddingBottom="28dp" />
+			android:paddingBottom="28dp"
+			android:background="@color/recycler_view_background"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 	<FrameLayout
 		android:id="@+id/toolbar_container"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/toolbar_container_height"
-		android:background="?colorPrimary"
+		android:background="@color/theme_primary"
 		android:elevation="@dimen/toolbar_container_elevation">
 
 		<android.support.v7.widget.Toolbar
