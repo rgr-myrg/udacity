@@ -93,7 +93,7 @@ public class ArticleDetailFragment extends Fragment implements
 		setHasOptionsMenu(true);
 	}
 
-	public ArticleDetailActivity getActivityCast() {
+	public ArticleDetailActivity getParentActivity() {
 		return (ArticleDetailActivity) getActivity();
 	}
 
@@ -131,7 +131,12 @@ public class ArticleDetailFragment extends Fragment implements
 			@Override
 			public void onScrollChanged() {
 				mScrollY = mScrollView.getScrollY();
-				getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
+
+				final ArticleDetailActivity parentActivity = getParentActivity();
+
+				if (parentActivity != null) {
+					parentActivity.onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
+				}
 
 				mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
 

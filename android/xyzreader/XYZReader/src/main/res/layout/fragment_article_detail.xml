@@ -16,18 +16,27 @@
 			<FrameLayout
 				android:id="@+id/photo_container"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
+				android:layout_height="match_parent"
 				android:background="@color/photo_placeholder">
-				<!--suppress AndroidLintContentDescription -->
+
+				<ProgressBar
+					android:id="@+id/progress_bar"
+					android:layout_width="@dimen/progressbar_size"
+					android:layout_height="@dimen/progressbar_size"
+					android:layout_gravity="center_horizontal"
+					android:layout_marginTop="@dimen/toolbar_container_height"
+					android:visibility="visible"/>
+
 				<ImageView
 					android:id="@+id/photo"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-                    android:scaleType="fitXY"/>
+					android:scaleType="fitXY"
+					android:contentDescription="IMAGE"/>
 
 				<View
 					android:layout_width="match_parent"
-					android:layout_height="@dimen/toolbar_container_height"
+					android:layout_height="200dp"
 					android:background="@drawable/photo_background_protection" />
 
 			</FrameLayout>
@@ -46,7 +55,7 @@
 					android:id="@+id/meta_bar"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:background="@color/theme_primary"
+					android:background="@color/recycler_view_background"
 					android:layout_gravity="bottom"
 					android:orientation="vertical"
 					android:paddingLeft="@dimen/detail_inner_horiz_margin"
@@ -89,6 +98,7 @@
 					android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier" />
 
 			</com.example.xyzreader.ui.MaxWidthLinearLayout>
+
 		</FrameLayout>
 	</com.example.xyzreader.ui.ObservableScrollView>
 
@@ -103,5 +113,4 @@
 		android:src="@drawable/ic_share"
 		android:elevation="@dimen/fab_elevation"
 		android:contentDescription="@string/action_share" />
-
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>
