@@ -32,7 +32,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:scaleType="fitXY"
-					android:contentDescription="IMAGE"/>
+					android:contentDescription="@string/photo_content_description"/>
 
 				<View
 					android:layout_width="match_parent"
