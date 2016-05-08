@@ -38,13 +38,14 @@ public class ArticleListActivity extends ActionBarActivity implements
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 
+	private boolean mIsRefreshing = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_article_list);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
 
 		final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
@@ -65,8 +66,10 @@ public class ArticleListActivity extends ActionBarActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		registerReceiver(mRefreshingReceiver,
-				new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+		registerReceiver(
+				mRefreshingReceiver,
+				new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE)
+		);
 	}
 
 	@Override
@@ -74,8 +77,6 @@ public class ArticleListActivity extends ActionBarActivity implements
 		super.onStop();
 		unregisterReceiver(mRefreshingReceiver);
 	}
-
-	private boolean mIsRefreshing = false;
 
 	private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
 		@Override
@@ -100,10 +101,16 @@ public class ArticleListActivity extends ActionBarActivity implements
 	public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 		Adapter adapter = new Adapter(cursor);
 		adapter.setHasStableIds(true);
+
 		mRecyclerView.setAdapter(adapter);
+
 		int columnCount = getResources().getInteger(R.integer.list_column_count);
-		StaggeredGridLayoutManager sglm =
-				new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+
+		StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(
+				columnCount,
+				StaggeredGridLayoutManager.VERTICAL
+		);
+
 		mRecyclerView.setLayoutManager(sglm);
 	}
 
@@ -128,20 +135,28 @@ public class ArticleListActivity extends ActionBarActivity implements
 		@Override
 		public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 			View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
-			final ViewHolder vh = new ViewHolder(view);
+			final ViewHolder viewHolder = new ViewHolder(view);
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					startActivity(new Intent(Intent.ACTION_VIEW,
-							ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+					startActivity(
+							new Intent(
+									Intent.ACTION_VIEW,
+									ItemsContract.Items.buildItemUri(
+											getItemId(viewHolder.getAdapterPosition())
+									)
+							)
+					);
 				}
 			});
-			return vh;
+
+			return viewHolder;
 		}
 
 		@Override
 		public void onBindViewHolder(ViewHolder holder, int position) {
 			mCursor.moveToPosition(position);
+
 			holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
 			holder.subtitleView.setText(
 					DateUtils.getRelativeTimeSpanString(
@@ -149,10 +164,14 @@ public class ArticleListActivity extends ActionBarActivity implements
 							System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
 							DateUtils.FORMAT_ABBREV_ALL).toString()
 							+ " by "
-							+ mCursor.getString(ArticleLoader.Query.AUTHOR));
+							+ mCursor.getString(ArticleLoader.Query.AUTHOR)
+			);
+
 			holder.thumbnailView.setImageUrl(
 					mCursor.getString(ArticleLoader.Query.THUMB_URL),
-					ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
+					ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader()
+			);
+
 			holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 		}
 
