@@ -68,6 +68,11 @@ public class Utils {
 	}
 
 	public static String truncateChange(String change, boolean isPercentChange) {
+		if (change.toLowerCase().equals("null")) {
+			Log.e(LOG_TAG, "truncateChange null string literal encountered. Setting to zero.");
+			change = "+0.000";
+		}
+
 		String weight = change.substring(0, 1);
 		String ampersand = "";
 		if (isPercentChange) {
@@ -89,6 +94,7 @@ public class Utils {
 				QuoteProvider.Quotes.CONTENT_URI);
 		try {
 			String change = jsonObject.getString("Change");
+
 			builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
 			builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
 			builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
