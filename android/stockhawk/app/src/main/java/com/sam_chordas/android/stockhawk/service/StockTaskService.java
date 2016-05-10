@@ -16,6 +16,7 @@ import com.sam_chordas.android.stockhawk.api.StockEvent;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 import com.sam_chordas.android.stockhawk.util.UiUtil;
 import com.sam_chordas.android.stockhawk.widget.QuoteWidgetProvider;
 import com.squareup.okhttp.OkHttpClient;
@@ -145,7 +146,9 @@ public class StockTaskService extends GcmTaskService {
 					if (contentVals == null) {
 						Log.w(LOG_TAG, "Stock Symbol Returns Null ArrayList");
 						// Trigger Error Event
-						StockEvent.QuoteLoaded.notifyError(QUOTE_NOT_FOUND);
+						if (MyStocksActivity.OnStockLoadedError != null) {
+							MyStocksActivity.OnStockLoadedError.notifyError(QUOTE_NOT_FOUND);
+						}
 
 						return GcmNetworkManager.RESULT_FAILURE;
 					}

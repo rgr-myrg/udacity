@@ -41,6 +41,7 @@ import net.usrlib.pattern.TinyEvent;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+	public static TinyEvent OnStockLoadedError = null;
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
@@ -69,7 +70,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		UiUtil.onCreate(this);
-		StockEvent.QuoteLoaded.addListener(mListener);
+
+		OnStockLoadedError = new TinyEvent();
+		OnStockLoadedError.addListener(mListener);
 
 		mContext = this;
 
