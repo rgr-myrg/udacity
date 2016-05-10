@@ -102,7 +102,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 								mCursor.getColumnIndex(QuoteColumns.SYMBOL)
 						);
 
-						Intent chartIntent = new Intent(mContext, ChartActivity.class);
+						Intent chartIntent = new Intent(mContext, ChartSqlActivity.class);
 						chartIntent.putExtra(QuoteColumns.SYMBOL, stockSymbol);
 
 						startActivity(chartIntent);
