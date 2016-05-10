@@ -198,6 +198,7 @@ public class MainActivityFragment extends BaseFragment {
 
 	private void initGridView(final GridView gridView) {
 		mGridView = gridView;
+		//mGridView.setEmptyView((TextView) mRootView.findViewById(R.id.movie_grid_view_empty));
 
 		mGridView.setOnItemClickListener(new AbsListView.OnItemClickListener() {
 			final Activity activity = getActivity();

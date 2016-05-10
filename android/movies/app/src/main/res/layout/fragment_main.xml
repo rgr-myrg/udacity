@@ -23,6 +23,14 @@
 		android:gravity="center"/>
 
 		<TextView
+			android:id="@+id/movie_grid_view_empty"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:text="@string/no_internet_message"
+			style="@style/TextAppearance.AppCompat.Medium.Inverse"/>
+
+		<TextView
 			android:id="@+id/user_message_box"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
