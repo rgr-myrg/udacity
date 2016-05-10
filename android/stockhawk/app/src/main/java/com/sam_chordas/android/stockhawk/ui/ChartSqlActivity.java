@@ -34,7 +34,7 @@ import yahoofinance.histquotes.Interval;
  * Created by rgr-myrg on 5/9/16.
  */
 public class ChartSqlActivity extends AppCompatActivity {
-	public static final String NAME = ChartActivity.class.getSimpleName();
+	public static final String NAME = ChartSqlActivity.class.getSimpleName();
 	public static final SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	private static final int CHART_ANIMATION_TIME = 1500;
