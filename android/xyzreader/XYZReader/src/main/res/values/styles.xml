@@ -19,6 +19,9 @@
 
 	<style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="actionBarSize">@dimen/toolbar_container_height</item>
+        <item name="elevation">@dimen/toolbar_container_elevation</item>
 	</style>
 
 	<style name="Theme.Bacon.Detail">
