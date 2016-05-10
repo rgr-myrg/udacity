@@ -156,22 +156,27 @@ public class ChartSqlActivity extends AppCompatActivity {
 	}
 
 	private void setLineChartDataAndRenderGraph(final List<HistoricalQuote> historicalQuoteList) {
-		for (int x = 0; x < historicalQuoteList.size(); x++) {
-			final HistoricalQuote quote = historicalQuoteList.get(x);
+//		for (int x = 0; x < historicalQuoteList.size(); x++) {
+//			final HistoricalQuote quote = historicalQuoteList.get(x);
+//			final float closeValue = quote.getClose().floatValue();
+//			final String dateValue = sDateFormat.format(quote.getDate().getTime());
+//
+//			mStockValueDataSet.add(new Entry(closeValue, x));
+//			mDateForXAxis.add(dateValue);
+//
+//		}
+
+		for (int y = historicalQuoteList.size() - 1; y >= 0; y--) {
+			final HistoricalQuote quote = historicalQuoteList.get(y);
 			final float closeValue = quote.getClose().floatValue();
 			final String dateValue = sDateFormat.format(quote.getDate().getTime());
 
-			mStockValueDataSet.add(new Entry(closeValue, x));
+			mStockValueDataSet.add(new Entry(closeValue, y));
 			mDateForXAxis.add(dateValue);
 
-		}
-
-//		for (int y = historicalQuoteList.size() - 1; y > 0; y--) {
-//			final HistoricalQuote quote = historicalQuoteList.get(y);
-//
 //			mStockValueDataSet.add(new Entry(quote.getClose().floatValue(), y));
 //			mDateForXAxis.add(sDateFormat.format(quote.getDate().getTime()));
-//		}
+		}
 
 		final LineChart lineChart = (LineChart) findViewById(R.id.line_chart);
 		final LineDataSet lineDataSet = new LineDataSet(mStockValueDataSet, mStockSymbol);
