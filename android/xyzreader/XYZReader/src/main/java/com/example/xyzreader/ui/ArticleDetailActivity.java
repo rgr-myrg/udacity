@@ -109,8 +109,8 @@ public class ArticleDetailActivity extends AppCompatActivity
 		}
 	}
 
+	// Floating Action Button onClick Handler
 	public void onFABClicked(View view) {
-		Log.d("FAB", "onFABClicked");
 		startActivity(
 				Intent.createChooser(ShareCompat.IntentBuilder.from(this)
 						.setType("text/plain")
@@ -118,7 +118,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 						.getIntent(), getString(R.string.action_share)
 				)
 		);
-
 	}
 
 	private void initPagerView() {
