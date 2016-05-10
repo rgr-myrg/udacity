@@ -8,7 +8,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="symbol_search">Symbol Search</string>
     <string name="content_test">Search for a Stock Symbol</string>
-    <string name="input_hint">FB</string>
+    <string name="input_hint" translatable="false">FB</string>
     <string name="input_prefill"></string>
 
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
@@ -16,7 +16,7 @@
     <string name="network_not_available">
         Please ensure you are connected to the Internet for the latest up-to-the-minute Stock Quotes.
     </string>
-    <string name="stock_exists" translatable="true">This stock is already saved!</string>
+    <string name="stock_exists">This stock is already saved!</string>
     <string name="refreshing_message">Retrieving the latest Stock Quotes.</string>
     <string name="title_activity_chart">ChartActivity</string>
     <string name="stock_chart_label">Stock Data</string>
