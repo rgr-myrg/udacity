@@ -10,6 +10,9 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sam_chordas.android.stockhawk.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by rgr-myrg on 4/18/16.
  */
@@ -18,7 +21,6 @@ public final class UiUtil {
 	private static String sRefreshingMsg;
 	private static String sDefaultErrorMsg;
 	private static String sQuoteNotFoundMsg;
-	private static ProgressBar sProgressBar;
 
 	public static final void onCreate(final AppCompatActivity app) {
 		sStockExistsMsg   = app.getString(R.string.stock_exists);
@@ -68,18 +70,22 @@ public final class UiUtil {
 	}
 
 	public static final void hideProgressBar(final AppCompatActivity app) {
+//		final Timer timer = new Timer();
+//		timer.scheduleAtFixedRate(new TimerTask() {
+//			@Override
+//			public void run() {
+//				setProgressBarVisibility(app, View.INVISIBLE);
+//				timer.cancel();
+//			}
+//		}, 1000, 1000);
 		setProgressBarVisibility(app, View.INVISIBLE);
 	}
 
 	private static final void setProgressBarVisibility(final AppCompatActivity app, final int value) {
-		if (sProgressBar == null) {
-			sProgressBar = (ProgressBar) app.findViewById(R.id.progress_bar);
-		}
-
 		app.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				sProgressBar.setVisibility(value);
+				((ProgressBar) app.findViewById(R.id.progress_bar)).setVisibility(value);
 			}
 		});
 	}

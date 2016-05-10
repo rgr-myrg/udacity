@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -36,6 +37,7 @@ public class ChartSqlActivity extends AppCompatActivity {
 	public static final String NAME = ChartActivity.class.getSimpleName();
 	public static final SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+	private static final int CHART_ANIMATION_TIME = 1500;
 	private static final int YEAR_OFFSET = -1;
 
 	private QuoteDbHelper mQuoteDbHelper;
@@ -65,6 +67,7 @@ public class ChartSqlActivity extends AppCompatActivity {
 
 		getSupportActionBar().setTitle(mStockSymbol.toUpperCase());
 
+		UiUtil.displayProgressBar(this);
 		fetchHistoricalQuoteFromDb(mStockSymbol);
 	}
 
@@ -185,7 +188,21 @@ public class ChartSqlActivity extends AppCompatActivity {
 		lineChart.getXAxis().setDrawGridLines(false);
 		lineChart.setDescription("");
 		lineChart.setData(lineData);
-		lineChart.animateY(1400, Easing.EasingOption.EaseInOutQuart);
+		lineChart.animateY(CHART_ANIMATION_TIME, Easing.EasingOption.EaseInOutQuart);
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(CHART_ANIMATION_TIME);
+					UiUtil.hideProgressBar(ChartSqlActivity.this);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		).start();
 	}
 
 	private boolean isDateSameWeek(final List<HistoricalQuote> historicalQuoteList) {
