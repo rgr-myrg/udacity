@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ShareCompat;
@@ -15,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -33,24 +33,18 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_article_detail_new);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().getDecorView().setSystemUiVisibility(
+					View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+							| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+			);
+		}
 
-//		Toolbar toolbar = (Toolbar) findViewById(R.id.fragment_article_detail_toolbar);
-//		toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-//		toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				onBackPressed();
-//			}
-//		});
-//
-//		setSupportActionBar(toolbar);
-//
-//		getSupportActionBar().setDisplayShowHomeEnabled(true);
-//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setContentView(R.layout.activity_article_detail_new);
 
 		getLoaderManager().initLoader(0, null, this);
 		initPagerView();
+
 		if (savedInstanceState == null) {
 			if (getIntent() != null && getIntent().getData() != null) {
 				mStartId = ItemsContract.Items.getItemId(getIntent().getData());
@@ -114,24 +108,16 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 
 		mViewPager = (ViewPager) findViewById(R.id.detail_view_pager);
 		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setPageMargin((int) TypedValue.applyDimension(
-						TypedValue.COMPLEX_UNIT_DIP,
-						1,
-						getResources().getDisplayMetrics()
-				)
-		);
-
-		mViewPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
+//		mViewPager.setPageMargin((int) TypedValue.applyDimension(
+//						TypedValue.COMPLEX_UNIT_DIP,
+//						1,
+//						getResources().getDisplayMetrics()
+//				)
+//		);
+//
+//		mViewPager.setPageMarginDrawable(new ColorDrawable(0x22000000));
 
 		mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//			@Override
-//			public void onPageScrollStateChanged(int state) {
-//				super.onPageScrollStateChanged(state);
-//				mUpButton.animate()
-//						.alpha((state == ViewPager.SCROLL_STATE_IDLE) ? 1f : 0f)
-//						.setDuration(300);
-//			}
-
 			@Override
 			public void onPageSelected(int position) {
 				if (mCursor != null) {
@@ -139,7 +125,6 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 				}
 
 				mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
-				//updateUpButtonPosition();
 			}
 		});
 	}
@@ -147,16 +132,6 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 	private class MyPagerAdapter extends FragmentStatePagerAdapter {
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
-		}
-
-		@Override
-		public void setPrimaryItem(ViewGroup container, int position, Object object) {
-			super.setPrimaryItem(container, position, object);
-//			ArticleDetailFragment fragment = (ArticleDetailFragment) object;
-//			if (fragment != null) {
-//				mSelectedItemUpButtonFloor = fragment.getUpButtonFloor();
-//				updateUpButtonPosition();
-//			}
 		}
 
 		@Override
