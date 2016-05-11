@@ -23,7 +23,7 @@
 			android:paddingLeft="@dimen/list_side_margin"
 			android:paddingRight="@dimen/list_side_margin"
 			android:paddingBottom="28dp"
-			android:background="@color/recycler_view_background"/>
+			android:background="@color/default_background"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 	<android.support.design.widget.AppBarLayout

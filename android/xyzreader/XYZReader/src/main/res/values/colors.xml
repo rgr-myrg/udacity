@@ -21,6 +21,6 @@
 	<color name="theme_accent">#FFC300</color>
 	<color name="white">#FFF</color>
 	<color name="ltgray">#455A64</color>
-	<color name="recycler_view_background">#CCC</color>
+	<color name="default_background">#CCC</color>
 	<color name="photo_placeholder">#FFF</color>
 </resources>
