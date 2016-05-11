@@ -3,9 +3,9 @@ package com.example.xyzreader.api;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Callback;
+//import com.squareup.picasso.NetworkPolicy;
+//import com.squareup.picasso.Picasso;
 
 import net.usrlib.pattern.TinyEvent;
 
@@ -21,23 +21,23 @@ public class PicassoApi {
 	}
 
 	public static final void loadImage(final Context context, final ImageView imageView, final String url) {
-		Picasso.with(context)
-				.load(url)
-				.networkPolicy(NetworkPolicy.OFFLINE)
-				.noPlaceholder()
-				.fit()
-				.centerCrop()
-				.into(imageView, new Callback() {
-					@Override
-					public void onSuccess() {
-						//onImageLoadSuccess(imageType);
-						OnImageLoaded.notifySuccess();
-					}
-
-					@Override
-					public void onError() {
-						OnImageLoaded.notifyError();
-					}
-				});
+//		Picasso.with(context)
+//				.load(url)
+//				.networkPolicy(NetworkPolicy.OFFLINE)
+//				.noPlaceholder()
+//				.fit()
+//				.centerCrop()
+//				.into(imageView, new Callback() {
+//					@Override
+//					public void onSuccess() {
+//						//onImageLoadSuccess(imageType);
+//						OnImageLoaded.notifySuccess();
+//					}
+//
+//					@Override
+//					public void onError() {
+//						OnImageLoaded.notifyError();
+//					}
+//				});
 	}
 }
