@@ -5,10 +5,10 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -20,12 +20,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
-import com.github.florent37.glidepalette.GlidePalette;
 
 /**
  * Created by rgr-myrg on 5/10/16.
@@ -65,7 +64,6 @@ public class ArticleDetailFragmentNew extends Fragment implements
 			mItemId = getArguments().getLong(ITEM_ID_KEY);
 		}
 
-		Log.d(NAME, "onCreate mItemId: " + mItemId);
 		setHasOptionsMenu(true);
 	}
 
@@ -153,6 +151,9 @@ public class ArticleDetailFragmentNew extends Fragment implements
 
 			return;
 		}
+
+		loadImageAndPalette(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
+
 		final String articleTitle  = mCursor.getString(ArticleLoader.Query.TITLE);
 		final String articleBody   = mCursor.getString(ArticleLoader.Query.BODY);
 		final String articleAuthor = mCursor.getString(ArticleLoader.Query.AUTHOR);
@@ -182,75 +183,58 @@ public class ArticleDetailFragmentNew extends Fragment implements
 		);
 
 		bodyTextView.setText(Html.fromHtml(articleBody));
-
-//		loadImageWithUrl(mCursor.getString(ArticleLoader.Query.PHOTO_URL), (ImageView) mRootView.findViewById(R.id.main_photo));
-//		Glide.with(getActivity())
-//				.load(articlePhoto)
-//				//.fitCenter()
-//				.into((ImageView) mRootView.findViewById(R.id.main_photo)
-//		);
-
-//		final Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.fragment_article_detail_toolbar);
-//		Glide.with(getActivity())
-//				.load(articlePhoto)
-//				.listener(GlidePalette.with(articlePhoto)
-//								.use(GlidePalette.Profile.VIBRANT)
-//								.intoBackground(toolbar)
-//								.crossfade(true)
-//				)
-//		.into((ImageView) mRootView.findViewById(R.id.main_photo));
-	//	mCurrentPhotoUrl = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
-		loadImageIntoView(mCursor.getString(ArticleLoader.Query.PHOTO_URL));
-
 	}
 
-	private void loadImageWithUrl(final String url, final ImageView imageView) {
-		ImageLoaderHelper.getInstance(
-				getActivity()).getImageLoader().get(
-				url,
-				new ImageLoader.ImageListener() {
-					@Override
-					public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-						Bitmap bitmap = imageContainer.getBitmap();
-
-						if (bitmap != null) {
-							//Palette p = Palette.generate(bitmap, 12);
-							Palette palette = (new Palette.Builder(bitmap))
-									.maximumColorCount(12)
-									.generate();
-
-							imageView.setImageBitmap(imageContainer.getBitmap());
-//							mMutedColor = palette.getDarkMutedColor(0xFF333333);
-//							mPhotoView.setImageBitmap(imageContainer.getBitmap());
-//							mRootView.findViewById(R.id.meta_bar)
-//									.setBackgroundColor(mMutedColor);
-//
-//							updateStatusBar();
-						}
-					}
-
-					@Override
-					public void onErrorResponse(VolleyError volleyError) {
-
-					}
-				}
-		);
-	}
-
-	private void loadImageIntoView(final String imageUrl) {
+	private void loadImageAndPalette(final String imageUrl) {
 		Glide.with(getActivity())
 				.load(imageUrl)
-				.listener(
-						GlidePalette.with(imageUrl)
-								.use(GlidePalette.Profile.VIBRANT)
-								.intoBackground(
-										(Toolbar) mRootView.findViewById(
-												R.id.fragment_article_detail_toolbar
-										)
-								)
-								.crossfade(true)
-				)
-				.into((ImageView) mRootView.findViewById(R.id.main_photo));
+				.asBitmap()
+				.into(new BitmapImageViewTarget(
+						(ImageView) mRootView.findViewById(R.id.main_photo)
+				) {
+					@Override
+					public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+						super.onResourceReady(bitmap, anim);
+						onBitmapLoaded(bitmap);
+					}
+				});
+	}
+
+	private void onBitmapLoaded(final Bitmap bitmap) {
+		int color = 0xFF333333;
+
+		if (bitmap == null) {
+			Log.w(NAME, "Bitmap is null");
+			return;
+		}
+
+		Palette palette = (new Palette.Builder(bitmap))
+				.maximumColorCount(12)
+				.generate();
+
+		if (palette == null) {
+			Log.w(NAME, "Palette is null");
+			return;
+		}
+
+//		Palette.Swatch swatch = palette.getVibrantSwatch();
+//
+//		if (swatch == null) {
+//			Log.w(NAME, "Swatch is null");
+//			return;
+//		}
+//
+//		color = swatch.getTitleTextColor();
+
+		final int mutedColor = palette.getVibrantColor(0xFF333333);
+		color = Color.argb(
+				(int) (255),
+				(int) (Color.red(mutedColor) * 0.9),
+				(int) (Color.green(mutedColor) * 0.9),
+				(int) (Color.blue(mutedColor) * 0.9)
+		);
+		mRootView.findViewById(R.id.fragment_article_detail_toolbar)
+				.setBackgroundColor(color);
 	}
 
 	private void onAppBarLayoutCollapsed() {
