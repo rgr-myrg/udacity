@@ -1,14 +1,17 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
+	<!-- Adding SwipeRefreshLayout to the top of the hierarchy to support JellyBean. See my post: -->
+	<!-- https://discussions.udacity.com/t/appbarlayout-toolbar-not-displaying-on-jellybean/167999 -->
+
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/swipe_refresh_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/recycler_view"
 			android:layout_width="match_parent"
@@ -19,15 +22,15 @@
 			android:paddingLeft="@dimen/list_side_margin"
 			android:paddingRight="@dimen/list_side_margin"
 			android:paddingBottom="28dp"
-			android:background="@color/recycler_view_background"/>
+			android:background="@color/default_background"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
-	<FrameLayout
+	<android.support.design.widget.AppBarLayout
 		android:id="@+id/toolbar_container"
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/toolbar_container_height"
-		android:background="@color/theme_primary"
-		android:elevation="@dimen/toolbar_container_elevation">
+		android:layout_height="wrap_content"
+		android:background="?colorPrimary"
+		android:elevation="?elevation">
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
@@ -36,15 +39,65 @@
 			android:layout_marginRight="@dimen/list_toolbar_side_margin"
 			android:layout_width="match_parent"
 			android:layout_height="?actionBarSize"
-			android:layout_gravity="center_vertical">
+			android:layout_gravity="bottom">
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:src="@drawable/logo"
 				android:contentDescription="@string/app_name" />
-
 		</android.support.v7.widget.Toolbar>
-	</FrameLayout>
+	</android.support.design.widget.AppBarLayout>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
+
+	<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+	<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent"-->
+	<!--android:orientation="vertical">-->
+
+	<!--<android.support.v4.widget.SwipeRefreshLayout-->
+	<!--android:id="@+id/swipe_refresh_layout"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent">-->
+
+	<!--<android.support.v7.widget.RecyclerView-->
+	<!--android:id="@+id/recycler_view"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent"-->
+	<!--android:clipToPadding="false"-->
+	<!--android:scrollbarStyle="outsideOverlay"-->
+	<!--android:paddingTop="@dimen/toolbar_container_height"-->
+	<!--android:paddingLeft="@dimen/list_side_margin"-->
+	<!--android:paddingRight="@dimen/list_side_margin"-->
+	<!--android:paddingBottom="28dp"-->
+	<!--android:background="@color/recycler_view_background"/>-->
+	<!--</android.support.v4.widget.SwipeRefreshLayout>-->
+
+	<!--<FrameLayout-->
+	<!--android:id="@+id/toolbar_container"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="@dimen/toolbar_container_height"-->
+	<!--android:background="@color/theme_primary"-->
+	<!--android:elevation="@dimen/toolbar_container_elevation">-->
+
+	<!--<android.support.v7.widget.Toolbar-->
+	<!--android:id="@+id/toolbar"-->
+	<!--app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+	<!--android:layout_marginLeft="@dimen/list_toolbar_side_margin"-->
+	<!--android:layout_marginRight="@dimen/list_toolbar_side_margin"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="?actionBarSize"-->
+	<!--android:layout_gravity="center_vertical">-->
+
+	<!--<ImageView-->
+	<!--android:layout_width="wrap_content"-->
+	<!--android:layout_height="wrap_content"-->
+	<!--android:src="@drawable/logo"-->
+	<!--android:contentDescription="@string/app_name" />-->
+
+	<!--</android.support.v7.widget.Toolbar>-->
+	<!--</FrameLayout>-->
+
+	<!--</FrameLayout>-->

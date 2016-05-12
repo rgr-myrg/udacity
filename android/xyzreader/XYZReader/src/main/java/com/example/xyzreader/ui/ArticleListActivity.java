@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,6 +32,8 @@ import com.example.xyzreader.data.UpdaterService;
  */
 public class ArticleListActivity extends AppCompatActivity implements
 		LoaderManager.LoaderCallbacks<Cursor> {
+
+	public static final String NAME = ArticleListActivity.class.getSimpleName();
 
 	private Toolbar mToolbar;
 	private SwipeRefreshLayout mSwipeRefreshLayout;

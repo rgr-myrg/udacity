@@ -16,11 +16,11 @@
 -->
 
 <resources>
-	<color name="theme_primary">#FF5733</color>
-	<color name="theme_primary_dark">#0288D1</color>
+	<color name="theme_primary">#0288D1</color>
+	<color name="theme_primary_dark">#FF5733</color>
 	<color name="theme_accent">#FFC300</color>
 	<color name="white">#FFF</color>
 	<color name="ltgray">#455A64</color>
-	<color name="recycler_view_background">#CCC</color>
+	<color name="default_background">#CCC</color>
 	<color name="photo_placeholder">#FFF</color>
 </resources>
