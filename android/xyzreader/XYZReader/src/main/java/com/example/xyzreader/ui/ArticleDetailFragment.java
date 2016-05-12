@@ -309,7 +309,7 @@ public class ArticleDetailFragment extends Fragment implements
 	@Override
 	public void onLoaderReset(Loader<Cursor> cursorLoader) {
 		mCursor = null;
-		bindViews();
+			bindViews();
 	}
 
 	public int getUpButtonFloor() {
