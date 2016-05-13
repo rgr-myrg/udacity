@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Build it Bigger</string>
+    <string name="app_name">Jokester</string>
     <string name="instructions">Press the button for a delicious joke!</string>
     <string name="button_text">Make\nMe\nLaugh!</string>
     <string name="action_settings">Settings</string>
