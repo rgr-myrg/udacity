@@ -60,11 +60,9 @@
 			android:layout_marginLeft="@dimen/detail_inner_horiz_margin"
 			android:layout_marginRight="@dimen/detail_inner_horiz_margin"
 			android:paddingBottom="@dimen/detail_body_bottom_margin"
-			android:textColor="@color/ltgray"
 			android:textColorLink="@color/theme_accent"
-			android:textSize="@dimen/detail_body_text_size"
 			android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
-			style="?android:attr/textAppearanceMedium"/>
+			style="@style/Base.TextAppearance.AppCompat.Large"/>
 	</android.support.v4.widget.NestedScrollView>
 
 	<android.support.v7.widget.Toolbar
@@ -88,21 +86,19 @@
 
 			<TextView
 				android:id="@+id/article_title"
-				style="?android:attr/textAppearanceLarge"
+				style="@style/Base.TextAppearance.AppCompat.Large.Inverse"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
-				android:fontFamily="sans-serif-condensed"
-				android:textColor="@color/white"
 				android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
 				android:lineSpacingMultiplier="0.9"/>
 
 			<TextView
 				android:id="@+id/article_byline"
-				style="?android:attr/textAppearanceSmall"
+				style="@style/Base.TextAppearance.AppCompat.Small.Inverse"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textColor="@color/white" />
+				android:layout_height="wrap_content" />
 		</LinearLayout>
 	</android.support.v7.widget.Toolbar>
 

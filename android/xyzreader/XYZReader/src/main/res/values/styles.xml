@@ -27,6 +27,7 @@
 	<style name="Theme.Bacon.Detail" parent="@style/Theme.AppCompat.Light.NoActionBar">
 		<item name="android:statusBarColor">@android:color/transparent</item>
 		<item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
 	</style>
 
     <style name="ToolBarWithNavigationBack">

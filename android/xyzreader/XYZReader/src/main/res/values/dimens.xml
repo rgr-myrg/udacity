@@ -8,7 +8,7 @@
 	<dimen name="fab_press_translation_z">6dp</dimen>
 	<dimen name="fab_margin">24dp</dimen>
 
-	<dimen name="toolbar_container_height">60dp</dimen>
+	<dimen name="toolbar_container_height">80dp</dimen>
 	<dimen name="toolbar_container_elevation">8dp</dimen>
     <dimen name="card_view_elevation">4dp</dimen>
 
