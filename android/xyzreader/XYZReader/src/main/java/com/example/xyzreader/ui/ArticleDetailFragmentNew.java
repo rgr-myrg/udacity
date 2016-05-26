@@ -41,8 +41,6 @@ public class ArticleDetailFragmentNew extends Fragment implements
 	private View mRootView;
 	private long mItemId;
 
-	private String mCurrentPhotoUrl;
-
 	public ArticleDetailFragmentNew() {
 	}
 
@@ -91,7 +89,7 @@ public class ArticleDetailFragmentNew extends Fragment implements
 			}
 		});
 
-		// Workaround to support disappearing image when
+		// Tentative workaround to support disappearing image when
 		// resuming from collapsed on Android JellyBean. rgr-myrg
 //		((AppBarLayout) mRootView.findViewById(R.id.appbar)).addOnOffsetChangedListener(
 //				new AppBarLayout.OnOffsetChangedListener() {
@@ -145,7 +143,11 @@ public class ArticleDetailFragmentNew extends Fragment implements
 	}
 
 	private void bindArticleInfoAndDisplay() {
-		if (mRootView == null || mCursor == null) {
+		if (mRootView == null) {
+			return;
+		}
+
+		if (mCursor == null) {
 			mRootView.setVisibility(View.GONE);
 			((TextView) mRootView.findViewById(R.id.article_title)).setText(NOT_AVAILABLE);
 
@@ -228,7 +230,7 @@ public class ArticleDetailFragmentNew extends Fragment implements
 
 		final int mutedColor = palette.getVibrantColor(0xFF333333);
 		color = Color.argb(
-				(int) (255),
+				255,
 				(int) (Color.red(mutedColor) * 0.9),
 				(int) (Color.green(mutedColor) * 0.9),
 				(int) (Color.blue(mutedColor) * 0.9)
@@ -237,10 +239,10 @@ public class ArticleDetailFragmentNew extends Fragment implements
 				.setBackgroundColor(color);
 	}
 
-	private void onAppBarLayoutCollapsed() {
-		Log.i(NAME, "onAppBarLayoutCollapsed is triggered.");
-		//loadImageIntoView(mCurrentPhotoUrl);
-	}
+//	private void onAppBarLayoutCollapsed() {
+//		Log.i(NAME, "onAppBarLayoutCollapsed is triggered.");
+//		//loadImageIntoView(mCurrentPhotoUrl);
+//	}
 
 	private ArticleDetailActivityNew getParentActivity() {
 		return (ArticleDetailActivityNew) getActivity();

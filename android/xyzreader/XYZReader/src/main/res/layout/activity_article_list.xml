@@ -5,26 +5,6 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<!-- Adding SwipeRefreshLayout to the top of the hierarchy to support JellyBean. See my post: -->
-	<!-- https://discussions.udacity.com/t/appbarlayout-toolbar-not-displaying-on-jellybean/167999 -->
-
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/swipe_refresh_layout"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/recycler_view"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:clipToPadding="false"
-			android:scrollbarStyle="outsideOverlay"
-			android:paddingTop="@dimen/toolbar_container_height"
-			android:paddingLeft="@dimen/list_side_margin"
-			android:paddingRight="@dimen/list_side_margin"
-			android:paddingBottom="28dp"
-			android:background="@color/default_background"/>
-	</android.support.v4.widget.SwipeRefreshLayout>
-
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/toolbar_container"
 		android:layout_width="match_parent"
@@ -34,7 +14,7 @@
 
 		<android.support.v7.widget.Toolbar
 			android:id="@+id/toolbar"
-			app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+			android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 			android:layout_marginLeft="@dimen/list_toolbar_side_margin"
 			android:layout_marginRight="@dimen/list_toolbar_side_margin"
 			android:layout_width="match_parent"
@@ -49,6 +29,11 @@
 		</android.support.v7.widget.Toolbar>
 	</android.support.design.widget.AppBarLayout>
 
+	<include
+		layout="@layout/activity_article_recycler_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/toolbar_container_height"/>
 </android.support.design.widget.CoordinatorLayout>
 
 	<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -101,3 +86,23 @@
 	<!--</FrameLayout>-->
 
 	<!--</FrameLayout>-->
+
+	<!-- Adding SwipeRefreshLayout to the top of the hierarchy to support JellyBean. See my post: -->
+	<!-- https://discussions.udacity.com/t/appbarlayout-toolbar-not-displaying-on-jellybean/167999 -->
+
+	<!--<android.support.v4.widget.SwipeRefreshLayout-->
+	<!--android:id="@+id/swipe_refresh_layout"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent">-->
+	<!--<android.support.v7.widget.RecyclerView-->
+	<!--android:id="@+id/recycler_view"-->
+	<!--android:layout_width="match_parent"-->
+	<!--android:layout_height="match_parent"-->
+	<!--android:clipToPadding="false"-->
+	<!--android:scrollbarStyle="outsideOverlay"-->
+	<!--android:paddingTop="@dimen/toolbar_container_height"-->
+	<!--android:paddingLeft="@dimen/list_side_margin"-->
+	<!--android:paddingRight="@dimen/list_side_margin"-->
+	<!--android:paddingBottom="28dp"-->
+	<!--android:background="@color/default_background"/>-->
+	<!--</android.support.v4.widget.SwipeRefreshLayout>-->

@@ -7,12 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.example.xyzreader.R;
@@ -28,6 +28,7 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 	private long mSelectedItemId;
 	private long mStartId;
 
+	private int mItemPosition = 0;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,12 +38,23 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 		getLoaderManager().initLoader(0, null, this);
 		initPagerView();
 
+//		if (savedInstanceState == null) {
+//			if (getIntent() != null && getIntent().getData() != null) {
+//				mStartId = ItemsContract.Items.getItemId(getIntent().getData());
+//				mSelectedItemId = mStartId;
+//			}
+//		}
 		if (savedInstanceState == null) {
-			if (getIntent() != null && getIntent().getData() != null) {
-				mStartId = ItemsContract.Items.getItemId(getIntent().getData());
+			final Intent intent = getIntent();
+
+			if (intent != null && intent.getData() != null) {
+				mStartId = ItemsContract.Items.getItemId(intent.getData());
 				mSelectedItemId = mStartId;
+				mItemPosition = intent.getIntExtra(ArticleListActivity.NAME, 0);
 			}
 		}
+
+		Log.d("DETAIL", "mItemId: " + mItemPosition);
 	}
 
 	public static void start(Context c) {
@@ -54,27 +66,42 @@ public class ArticleDetailActivityNew extends AppCompatActivity
 		return ArticleLoader.newAllArticlesInstance(this);
 	}
 
+//	@Override
+//	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//		mCursor = data;
+//		mPagerAdapter.notifyDataSetChanged();
+//
+//		// Select the start ID
+//		if (mStartId > 0) {
+//			mCursor.moveToFirst();
+//			// TODO: optimize
+//			while (!mCursor.isAfterLast()) {
+//				if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
+//					final int position = mCursor.getPosition();
+//					mViewPager.setCurrentItem(position, false);
+//					break;
+//				}
+//
+//				mCursor.moveToNext();
+//			}
+//
+//			mStartId = 0;
+//		}
+//	}
+
 	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+	public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
+		if (data == null) {
+			return;
+		}
+
 		mCursor = data;
 		mPagerAdapter.notifyDataSetChanged();
 
-		// Select the start ID
-		if (mStartId > 0) {
-			mCursor.moveToFirst();
-			// TODO: optimize
-			while (!mCursor.isAfterLast()) {
-				if (mCursor.getLong(ArticleLoader.Query._ID) == mStartId) {
-					final int position = mCursor.getPosition();
-					mViewPager.setCurrentItem(position, false);
-					break;
-				}
+		mCursor.moveToPosition(mItemPosition);
+		mViewPager.setCurrentItem(mItemPosition, false);
 
-				mCursor.moveToNext();
-			}
-
-			mStartId = 0;
-		}
+		mSelectedItemId = mCursor.getLong(ArticleLoader.Query._ID);
 	}
 
 	@Override

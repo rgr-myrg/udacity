@@ -36,9 +36,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 	public static final String NAME = ArticleListActivity.class.getSimpleName();
 
 	private Toolbar mToolbar;
-	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private RecyclerView mRecyclerView;
 
+	private SwipeRefreshLayout mSwipeRefresh = null;
 	private boolean mIsRefreshing = false;
 
 	@Override
@@ -48,9 +48,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-		final View toolbarContainerView = findViewById(R.id.toolbar_container);
-
-		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+		initSwipeRefreshLayout();
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 		getLoaderManager().initLoader(0, null, this);
@@ -79,6 +77,27 @@ public class ArticleListActivity extends AppCompatActivity implements
 		unregisterReceiver(mRefreshingReceiver);
 	}
 
+	private void initSwipeRefreshLayout() {
+		mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+		mSwipeRefresh.setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						mSwipeRefresh.setRefreshing(false);
+						refresh();
+					}
+				}
+		);
+
+		mSwipeRefresh.setColorSchemeResources(
+				android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light
+		);
+	}
+
 	private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -90,7 +109,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 	};
 
 	private void updateRefreshingUI() {
-		mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+		if (mSwipeRefresh != null) {
+			mSwipeRefresh.setRefreshing(mIsRefreshing);
+		}
 	}
 
 	@Override
@@ -140,14 +161,14 @@ public class ArticleListActivity extends AppCompatActivity implements
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					startActivity(
-							new Intent(
-									Intent.ACTION_VIEW,
-									ItemsContract.Items.buildItemUri(
-											getItemId(viewHolder.getAdapterPosition())
-									)
+					final Intent intent = new Intent(
+							Intent.ACTION_VIEW,
+							ItemsContract.Items.buildItemUri(
+									getItemId(viewHolder.getAdapterPosition())
 							)
 					);
+					intent.putExtra(NAME, viewHolder.getAdapterPosition());
+					startActivity(intent);
 				}
 			});
 
