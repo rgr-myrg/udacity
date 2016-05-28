@@ -72,15 +72,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 	public static final int SYNC_INTERVAL = 60 * 180;
 	public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
-	public static final String MAP_REQUEST_PATH = "/sunshine_map_request_path";
-	public static final String MAP_MAX_TEMP_KEY = "maxTemp";
-	public static final String MAP_MIN_TEMP_KEY = "minTemp";
-	public static final String MAP_CURRENT_TIME_KEY = "currentTime";
-	public static final String MAP_ICON_KEY = "mapIcon";
-
 	private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 	private static final int WEATHER_NOTIFICATION_ID = 3004;
-
 
 	private static final String[] NOTIFY_WEATHER_PROJECTION = new String[] {
 			WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
@@ -548,35 +541,40 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 				getContext().getResources(), iconResource
 		);
 
-		final PutDataMapRequest dataMapRequest = PutDataMapRequest.create(MAP_REQUEST_PATH);
+		final PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BuildConfig.MAP_REQUEST_PATH);
 
-		dataMapRequest.getDataMap().putString(MAP_MAX_TEMP_KEY, maxTemp);
-		dataMapRequest.getDataMap().putString(MAP_MIN_TEMP_KEY, minTemp);
+		dataMapRequest.getDataMap().putString(BuildConfig.MAP_MAX_TEMP_KEY, maxTemp);
+		dataMapRequest.getDataMap().putString(BuildConfig.MAP_MIN_TEMP_KEY, minTemp);
 
 		if (iconBitmap != null) {
 			final Asset iconAsset = createAssetFromBitmap(iconBitmap);
 			if (iconAsset != null) {
-				dataMapRequest.getDataMap().putAsset(MAP_ICON_KEY, iconAsset);
+				dataMapRequest.getDataMap().putAsset(BuildConfig.MAP_ICON_KEY, iconAsset);
 			}
 		}
 
 		// Need timestamp to trigger data changes!!!
 		// http://stackoverflow.com/questions/28631002/cannot-send-an-asset-to-an-android-wear-device
-		dataMapRequest.getDataMap().putLong(MAP_CURRENT_TIME_KEY, System.currentTimeMillis());
+		dataMapRequest.getDataMap().putLong(BuildConfig.MAP_CURRENT_TIME_KEY, System.currentTimeMillis());
 
 		final PutDataRequest dataRequest = dataMapRequest.asPutDataRequest();
-		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest);
-//		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest).setResultCallback(
-//				new ResultCallbacks<DataApi.DataItemResult>() {
-//					@Override
-//					public void onSuccess(DataApi.DataItemResult dataItemResult) {
-//					}
-//
-//					@Override
-//					public void onFailure(Status status) {
-//					}
-//				}
-//		);
+		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest).setResultCallback(
+				new ResultCallbacks<DataApi.DataItemResult>() {
+					@Override
+					public void onSuccess(DataApi.DataItemResult dataItemResult) {
+						if (dataItemResult.getStatus().isSuccess()) {
+							Log.i(LOG_TAG, "PutDataRequest sent successfully.");
+						} else {
+							Log.w(LOG_TAG, "Failed to send PutDataRequest.");
+						}
+					}
+
+					@Override
+					public void onFailure(Status status) {
+						Log.w(LOG_TAG, "Failed to send PutDataRequest with status: " + status);
+					}
+				}
+		);
 	}
 
 	// Helper method for transfering assets

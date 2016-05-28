@@ -20,6 +20,11 @@ android {
 	}
 	buildTypes.each {
 		it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', MyOpenWeatherMapApiKey
+		it.buildConfigField 'String', 'MAP_REQUEST_PATH', MAP_REQUEST_PATH
+		it.buildConfigField 'String', 'MAP_MAX_TEMP_KEY', MAP_MAX_TEMP_KEY
+		it.buildConfigField 'String', 'MAP_MIN_TEMP_KEY', MAP_MIN_TEMP_KEY
+		it.buildConfigField 'String', 'MAP_CURRENT_TIME_KEY', MAP_CURRENT_TIME_KEY
+		it.buildConfigField 'String', 'MAP_ICON_KEY', MAP_ICON_KEY
 	}
 }
 
@@ -32,10 +37,10 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:23.3.0'
 	compile 'com.android.support:design:23.3.0'
 	compile 'com.android.support:recyclerview-v7:23.3.0'
+	compile 'com.github.bumptech.glide:glide:3.5.2'
 	compile 'com.google.android.apps.muzei:muzei-api:2.0'
 	compile 'com.google.android.gms:play-services-gcm:8.4.0'
 	compile 'com.google.android.gms:play-services-location:8.4.0'
 	compile 'com.google.android.gms:play-services-wearable:8.4.0'
-	compile 'com.github.bumptech.glide:glide:3.5.2'
-
+	wearApp project(':wear-module')
 }
