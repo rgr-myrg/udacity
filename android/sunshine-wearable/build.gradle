@@ -18,10 +18,10 @@ allprojects {
 		jcenter()
 	}
 	project.ext {
-		MAP_REQUEST_PATH = '/map_request_path'
-		MAP_MAX_TEMP_KEY = 'maxTempValue'
-		MAP_MIN_TEMP_KEY = 'minTempValue'
-		MAP_CURRENT_TIME_KEY = 'currentTimeValue'
-		MAP_ICON_KEY = 'mapIconAsset'
+		MAP_REQUEST_PATH = '"map_request_path"';
+		MAP_MAX_TEMP_KEY = '"maxTempValue"';
+		MAP_MIN_TEMP_KEY = '"minTempValue"';
+		MAP_CURRENT_TIME_KEY = '"currentTimeValue"';
+		MAP_ICON_KEY = '"mapIconAsset"';
 	}
 }

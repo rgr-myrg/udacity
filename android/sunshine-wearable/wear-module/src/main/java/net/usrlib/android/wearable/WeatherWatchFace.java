@@ -104,8 +104,8 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 		private String[] mShortDayNames;
 		private String[] mShortMonthNames;
 
-		private String mMaxTemp;
-		private String mMinTemp;
+		private String mMaxTempValue;
+		private String mMinTempValue;
 
 		private GoogleApiClient mGoogleApiClient;
 
@@ -126,6 +126,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			public void onReceive(Context context, Intent intent) {
 				mTime.clear(intent.getStringExtra("time-zone"));
 				mTime.setToNow();
+				invalidate();
 			}
 		};
 
@@ -169,11 +170,18 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			if (visible) {
 				registerReceiver();
 
+				mGoogleApiClient.connect();
 				// Update time zone in case it changed while we weren't visible.
 				mTime.clear(TimeZone.getDefault().getID());
 				mTime.setToNow();
 			} else {
 				unregisterReceiver();
+
+				Wearable.DataApi.removeListener(mGoogleApiClient, Engine.this);
+
+				if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+					mGoogleApiClient.disconnect();
+				}
 			}
 
 			// Whether the timer should be running depends on whether we're visible (as well as
@@ -203,47 +211,69 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 					DataItem dataItem = dataEvent.getDataItem();
 					if (dataItem.getUri().getPath().compareTo(BuildConfig.MAP_REQUEST_PATH) == 0) {
 						DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
-						mMaxTemp = dataMap.getString(BuildConfig.MAP_MAX_TEMP_KEY);
-						mMinTemp = dataMap.getString(BuildConfig.MAP_MIN_TEMP_KEY);
-						new GetBitmapForWeatherTask().execute(dataMap.getAsset(BuildConfig.MAP_ICON_KEY));
+
+						mMaxTempValue = dataMap.getString(BuildConfig.MAP_MAX_TEMP_KEY);
+						mMinTempValue = dataMap.getString(BuildConfig.MAP_MIN_TEMP_KEY);
+
+						runWeatherBitmapTask(dataMap.getAsset(BuildConfig.MAP_ICON_KEY));
 					}
 				}
 			}
 		}
-/*Port THIS!!!*/
-		public Bitmap loadBitmapFromAsset(Asset asset) {
-			if (asset == null)
-				return null;
 
-			ConnectionResult result = mGoogleApiClient.blockingConnect(500, TimeUnit.MILLISECONDS);
-			if (!result.isSuccess())
-				return null;
-
-			// convert asset into a file descriptor and block until it's ready
-			InputStream assetInputStream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset).await().getInputStream();
-
-			if (assetInputStream == null)
-				return null;
-
-			// decode the stream into a bitmap
-			return BitmapFactory.decodeStream(assetInputStream);
-		}
-
-		public class GetBitmapForWeatherTask extends AsyncTask<Asset, Void, Void> {
-
-			@Override
-			protected Void doInBackground(Asset... assets) {
-				Asset asset = assets[0];
-				mIconBitmap = loadBitmapFromAsset(asset);
-
-				int size = Double.valueOf(WeatherWatchFace.this.getResources().getDimension(R.dimen.digital_icon_size)).intValue();
-				mIconBitmap = Bitmap.createScaledBitmap(mIconBitmap, size, size, false);
-				postInvalidate();
-
-				return null;
+		private void runWeatherBitmapTask(final Asset asset) {
+			if (asset == null || mGoogleApiClient == null) {
+				return;
 			}
+
+			new AsyncTask<Asset, Void, Void>() {
+				@Override
+				protected Void doInBackground(Asset... params) {
+					final ConnectionResult result = mGoogleApiClient.blockingConnect(
+							500, TimeUnit.MILLISECONDS
+					);
+
+					if(!result.isSuccess()) {
+						return null;
+					}
+
+					final InputStream inputStream = Wearable.DataApi
+							.getFdForAsset(mGoogleApiClient, params[0])
+							.await()
+							.getInputStream();
+
+					if (inputStream == null) {
+						return null;
+					}
+
+					final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+					if (bitmap == null) {
+						return null;
+					}
+
+					// Need a more precise representation of the size. Convert float to double then
+					// retrieve the intValue. Good post on SO:
+					// http://stackoverflow.com/questions/916081/convert-float-to-double-without-losing-precision
+					final int watchFaceIconSize = Double.valueOf(
+							WeatherWatchFace.this
+									.getResources()
+									.getDimension(R.dimen.digital_icon_size)
+					).intValue();
+
+					mIconBitmap = Bitmap.createScaledBitmap(
+							bitmap,
+							watchFaceIconSize,
+							watchFaceIconSize,
+							false
+					);
+
+					// Send an empty message to the Handler
+					postInvalidate();
+					return null;
+				}
+			}.execute(asset);
 		}
-		/*Port THIS!!!*/
+
 		@Override
 		public void onConnectionFailed(ConnectionResult connectionResult) {
 
@@ -301,7 +331,9 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			if (mAmbient != inAmbientMode) {
 				mAmbient = inAmbientMode;
 				if (mLowBitAmbient) {
-					mTextPaint.setAntiAlias(!inAmbientMode);
+					//mTextPaint.setAntiAlias(!inAmbientMode);
+					mMaxTempPaint.setAntiAlias(!inAmbientMode);
+					mMinTempPaint.setAntiAlias(!inAmbientMode);
 				}
 				invalidate();
 			}
@@ -352,7 +384,9 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 //					: String.format("%d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
 //			canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
 
-			drawDateTime(canvas, bounds);
+			if (!mAmbient) {
+				drawDateTime(canvas, bounds);
+			}
 		}
 
 		private void drawDateTime(final Canvas canvas, final Rect bounds) {
@@ -408,17 +442,17 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			);
 
 			canvas.drawText(
-					mMaxTemp,
+					mMaxTempValue,
 					x,
 					yOffsetValue,
 					mMaxTempPaint
 			);
 
-			float xOffsetValue = x + mMaxTempPaint.measureText(mMaxTemp)
+			float xOffsetValue = x + mMaxTempPaint.measureText(mMaxTempValue)
 					+ getResources().getDimension(R.dimen.digital_temp_text_margin_right);
 
 			canvas.drawText(
-					mMinTemp,
+					mMinTempValue,
 					xOffsetValue,
 					yOffsetValue,
 					mMinTempPaint

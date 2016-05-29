@@ -11,19 +11,17 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "MAP_REQUEST_PATH", MAP_REQUEST_PATH
+        buildConfigField "String", "MAP_MAX_TEMP_KEY", MAP_MAX_TEMP_KEY
+        buildConfigField "String", "MAP_MIN_TEMP_KEY", MAP_MIN_TEMP_KEY
+        buildConfigField "String", "MAP_CURRENT_TIME_KEY", MAP_CURRENT_TIME_KEY
+        buildConfigField "String", "MAP_ICON_KEY", MAP_ICON_KEY
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    buildTypes.each {
-        it.buildConfigField 'String', 'MAP_REQUEST_PATH', MAP_REQUEST_PATH
-        it.buildConfigField 'String', 'MAP_MAX_TEMP_KEY', MAP_MAX_TEMP_KEY
-        it.buildConfigField 'String', 'MAP_MIN_TEMP_KEY', MAP_MIN_TEMP_KEY
-        it.buildConfigField 'String', 'MAP_CURRENT_TIME_KEY', MAP_CURRENT_TIME_KEY
-        it.buildConfigField 'String', 'MAP_ICON_KEY', MAP_ICON_KEY
     }
 }
 

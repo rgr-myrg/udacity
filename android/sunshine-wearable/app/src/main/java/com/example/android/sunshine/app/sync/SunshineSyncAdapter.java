@@ -555,9 +555,13 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 
 		// Need timestamp to trigger data changes!!!
 		// http://stackoverflow.com/questions/28631002/cannot-send-an-asset-to-an-android-wear-device
-		dataMapRequest.getDataMap().putLong(BuildConfig.MAP_CURRENT_TIME_KEY, System.currentTimeMillis());
+		dataMapRequest.getDataMap().putLong(
+				BuildConfig.MAP_CURRENT_TIME_KEY,
+				System.currentTimeMillis()
+		);
 
 		final PutDataRequest dataRequest = dataMapRequest.asPutDataRequest();
+
 		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest).setResultCallback(
 				new ResultCallbacks<DataApi.DataItemResult>() {
 					@Override
