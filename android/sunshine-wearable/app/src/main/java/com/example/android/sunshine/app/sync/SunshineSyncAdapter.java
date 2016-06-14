@@ -42,6 +42,7 @@ import com.google.android.gms.common.api.ResultCallbacks;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -61,6 +62,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 		implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -98,28 +100,33 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 	public static final int LOCATION_STATUS_UNKNOWN = 3;
 	public static final int LOCATION_STATUS_INVALID = 4;
 
-	private GoogleApiClient mGoogleApiClient;
+//	private GoogleApiClient mGoogleApiClient;
 
 	public SunshineSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 
-		mGoogleApiClient = new GoogleApiClient.Builder(context)
-				.addApi(Wearable.API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
-
-		mGoogleApiClient.connect();
+//		mGoogleApiClient = new GoogleApiClient.Builder(context)
+//				.addApi(Wearable.API)
+//				.addConnectionCallbacks(this)
+//				.addOnConnectionFailedListener(this)
+//				.build();
+//
+//		mGoogleApiClient.connect();
 	}
 
 	@Override
-	public void onConnected(Bundle bundle) {}
+	public void onConnected(Bundle bundle) {
+		Log.d(LOG_TAG, "onConnected mGoogleApiClient connected.");
+	}
 
 	@Override
 	public void onConnectionSuspended(int i) {}
 
 	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {}
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		Log.d(LOG_TAG, "onConnectionFailed mGoogleApiClient failed.");
+
+	}
 
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
@@ -515,9 +522,87 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 	}
 
 	private void notifyWearable() {
-		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+		Log.i(LOG_TAG, "notifyWearable invoked");
+
+		final Context context = getContext();
+		final String location = Utility.getPreferredLocation(context);
+		final Uri weatherUri  = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+				location, System.currentTimeMillis()
+		);
+		final Cursor cursor = context.getContentResolver().query(
+				weatherUri, NOTIFY_WEATHER_PROJECTION, null, null, null
+		);
+
+		if (cursor == null) {
 			return;
 		}
+
+		if (!cursor.moveToFirst()) {
+			cursor.close();
+			return;
+		}
+
+		final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+				.addApi(Wearable.API)
+				.build();
+
+		ConnectionResult connectionResult = googleApiClient.blockingConnect(30, TimeUnit.SECONDS);
+
+		if (!connectionResult.isSuccess()) {
+			return;
+		}
+
+		final String maxTemp = Utility.formatTemperature(
+				getContext(), cursor.getDouble(INDEX_MAX_TEMP)
+		);
+
+		final String minTemp = Utility.formatTemperature(
+				getContext(), cursor.getDouble(INDEX_MIN_TEMP)
+		);
+
+		//final int weatherId = cursor.getInt(INDEX_WEATHER_ID);
+
+		final int iconResource = Utility.getIconResourceForWeatherCondition(
+				cursor.getInt(INDEX_WEATHER_ID)
+		);
+		final Bitmap iconBitmap = BitmapFactory.decodeResource(
+				getContext().getResources(), iconResource
+		);
+
+		final PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BuildConfig.MAP_REQUEST_PATH);
+		final DataMap dataMap = dataMapRequest.getDataMap();
+
+		dataMap.putString(BuildConfig.MAP_MAX_TEMP_KEY, maxTemp);
+		dataMap.putString(BuildConfig.MAP_MIN_TEMP_KEY, minTemp);
+		//dataMap.putInt(BuildConfig.MAP_ICON_KEY, weatherId);
+
+		if (iconBitmap != null) {
+			final Asset iconAsset = createAssetFromBitmap(iconBitmap);
+			if (iconAsset != null) {
+				dataMapRequest.getDataMap().putAsset(BuildConfig.MAP_ICON_KEY, iconAsset);
+			}
+		}
+
+		// Need timestamp to trigger data changes!!!
+		// http://stackoverflow.com/questions/28631002/cannot-send-an-asset-to-an-android-wear-device
+		dataMap.putLong(
+				BuildConfig.MAP_CURRENT_TIME_KEY,
+				System.currentTimeMillis()
+		);
+
+		PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+
+		Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+
+		Log.d("notifyWearable", "Complete");
+	}
+
+	private void notifyWearableXXX() {
+		Log.i(LOG_TAG, "notifyWearable invoked");
+
+//		if (mGoogleApiClient == null || !mGoogleApiClient.isConnected()) {
+//			return;
+//		}
 		final Uri weatherUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
 				Utility.getPreferredLocation(getContext()),
 				System.currentTimeMillis()
@@ -562,23 +647,23 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter
 
 		final PutDataRequest dataRequest = dataMapRequest.asPutDataRequest();
 
-		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest).setResultCallback(
-				new ResultCallbacks<DataApi.DataItemResult>() {
-					@Override
-					public void onSuccess(DataApi.DataItemResult dataItemResult) {
-						if (dataItemResult.getStatus().isSuccess()) {
-							Log.i(LOG_TAG, "PutDataRequest sent successfully.");
-						} else {
-							Log.w(LOG_TAG, "Failed to send PutDataRequest.");
-						}
-					}
-
-					@Override
-					public void onFailure(Status status) {
-						Log.w(LOG_TAG, "Failed to send PutDataRequest with status: " + status);
-					}
-				}
-		);
+//		Wearable.DataApi.putDataItem(mGoogleApiClient, dataRequest).setResultCallback(
+//				new ResultCallbacks<DataApi.DataItemResult>() {
+//					@Override
+//					public void onSuccess(DataApi.DataItemResult dataItemResult) {
+//						if (dataItemResult.getStatus().isSuccess()) {
+//							Log.i(LOG_TAG, "PutDataRequest sent successfully.");
+//						} else {
+//							Log.w(LOG_TAG, "Failed to send PutDataRequest.");
+//						}
+//					}
+//
+//					@Override
+//					public void onFailure(Status status) {
+//						Log.w(LOG_TAG, "Failed to send PutDataRequest with status: " + status);
+//					}
+//				}
+//		);
 	}
 
 	// Helper method for transfering assets

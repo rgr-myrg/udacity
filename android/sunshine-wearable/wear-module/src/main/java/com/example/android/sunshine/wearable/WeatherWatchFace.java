@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.usrlib.android.wearable;
+package com.example.android.sunshine.wearable;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -64,8 +64,9 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 	public static final String NAME = WeatherWatchFace.class.getSimpleName();
 	public static final String MAP_REQUEST_PATH = "/sunshine_map_request_path";
 
-	private static final Typeface NORMAL_TYPEFACE =
-			Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+	private static final Typeface NORMAL_TYPEFACE = Typeface.create(
+			Typeface.SANS_SERIF, Typeface.NORMAL
+	);
 
 	/**
 	 * Update rate in milliseconds for interactive mode. We update once a second since seconds are
@@ -133,6 +134,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 		@Override
 		public void onCreate(SurfaceHolder holder) {
 			super.onCreate(holder);
+			Log.d(NAME, "onCreate");
 
 			setWatchFaceStyle(new WatchFaceStyle.Builder(WeatherWatchFace.this)
 					.setCardPeekMode(WatchFaceStyle.PEEK_MODE_VARIABLE)
@@ -144,6 +146,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			mTime = new Time();
 
 			final DateFormatSymbols symbols = new DateFormatSymbols();
+
 			mShortDayNames = symbols.getShortWeekdays();
 			mShortMonthNames = symbols.getShortMonths();
 
@@ -154,7 +157,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 					.addOnConnectionFailedListener(this)
 					.addApi(Wearable.API)
 					.build();
-			mGoogleApiClient.connect();
+			//mGoogleApiClient.connect();
 		}
 
 		@Override
@@ -191,6 +194,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 		@Override
 		public void onConnected(Bundle bundle) {
+			Log.d(NAME, "onConnected");
 			Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
 		}
 
@@ -201,6 +205,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 		@Override
 		public void onDataChanged(DataEventBuffer dataEventBuffer) {
+			Log.d(NAME, "onDataChanged");
 			if (dataEventBuffer == null) {
 				Log.w(NAME, "onDataChanged dataEventBuffer is null.");
 				return;
@@ -209,6 +214,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			for (DataEvent dataEvent : dataEventBuffer) {
 				if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
 					DataItem dataItem = dataEvent.getDataItem();
+					Log.d(NAME, "onDataChanged: " + dataItem.getUri().getPath());
 					if (dataItem.getUri().getPath().compareTo(BuildConfig.MAP_REQUEST_PATH) == 0) {
 						DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
 
@@ -426,6 +432,9 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 		}
 
 		private void drawWeatherInfo(final Canvas canvas, final float x, final float y) {
+			Log.d("WATCHFACE", "drawWeatherInfo");
+			Log.d("WATCHFACE", "mMaxTempValue: " + mMaxTempValue);
+
 			if (mIconBitmap == null || mIconPaint == null) {
 				return;
 			}
@@ -440,7 +449,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 					topPosition,
 					mIconPaint
 			);
-
 			canvas.drawText(
 					mMaxTempValue,
 					x,
