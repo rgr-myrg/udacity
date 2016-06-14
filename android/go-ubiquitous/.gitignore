@@ -1,2 +1,11 @@
 gradle.properties
+.gradle/
+.idea/
+build/
+go-ubiquitous.iml
+gradle/
+gradlew
+gradlew.bat
+local.properties
+
 

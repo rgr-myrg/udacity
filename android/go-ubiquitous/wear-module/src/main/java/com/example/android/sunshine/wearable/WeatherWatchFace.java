@@ -176,13 +176,12 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 				mTime.clear(TimeZone.getDefault().getID());
 				mTime.setToNow();
 			} else {
-				unregisterReceiver();
-
-				Wearable.DataApi.removeListener(mGoogleApiClient, Engine.this);
-
 				if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+					Wearable.DataApi.removeListener(mGoogleApiClient, Engine.this);
 					mGoogleApiClient.disconnect();
 				}
+
+				unregisterReceiver();
 			}
 
 			// Whether the timer should be running depends on whether we're visible (as well as
@@ -224,6 +223,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 						Log.d(NAME, "onDataChanged " + mMaxTempValue + ":" + mMinTempValue);
 
 						runWeatherBitmapTask(dataMap.getAsset(BuildConfig.MAP_ICON_KEY));
+						invalidate();
 					}
 				}
 			}
@@ -284,7 +284,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 		@Override
 		public void onConnectionFailed(ConnectionResult connectionResult) {
-
+			Log.w(NAME, "onConnectionFailed: " + connectionResult.getErrorMessage());
 		}
 
 		@Override
@@ -523,7 +523,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			mYOffset = resources.getDimension(R.dimen.digital_y_offset);
 
 			mBackgroundPaint = new Paint();
-			mBackgroundPaint.setColor(resources.getColor(R.color.background_blue));
+			mBackgroundPaint.setColor(resources.getColor(R.color.primary));
 
 			mTextPaint = createPaintWithResource(resources, R.color.digital_text_white);
 
