@@ -1,0 +1,32 @@
+apply plugin: 'com.android.application'
+
+
+android {
+	compileSdkVersion 23
+	buildToolsVersion "23.0.3"
+
+	defaultConfig {
+		applicationId "com.example.android.sunshine.app"
+		minSdkVersion 21
+		targetSdkVersion 23
+		versionCode 1
+		versionName "1.0"
+		buildConfigField "String", "MAP_REQUEST_PATH", MAP_REQUEST_PATH
+		buildConfigField "String", "MAP_MAX_TEMP_KEY", MAP_MAX_TEMP_KEY
+		buildConfigField "String", "MAP_MIN_TEMP_KEY", MAP_MIN_TEMP_KEY
+		buildConfigField "String", "MAP_CURRENT_TIME_KEY", MAP_CURRENT_TIME_KEY
+		buildConfigField "String", "MAP_ICON_KEY", MAP_ICON_KEY
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile 'com.google.android.support:wearable:1.4.0'
+	compile 'com.google.android.gms:play-services-wearable:8.4.0'
+}
