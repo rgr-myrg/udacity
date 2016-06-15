@@ -38,7 +38,9 @@ import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.muzei.WeatherMuzeiSource;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
@@ -572,7 +574,17 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
 		final PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
 
-		Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+		Wearable.DataApi.putDataItem(googleApiClient, putDataRequest).setResultCallback(
+				new ResultCallback<DataApi.DataItemResult>() {
+					@Override
+					public void onResult(DataApi.DataItemResult dataItemResult) {
+						if (!dataItemResult.getStatus().isSuccess()) {
+							Log.e(LOG_TAG, "putDataItem error: "
+									+ dataItemResult.getStatus().getStatusCode()
+							);
+						}
+					}
+				});
 
 		Log.i(LOG_TAG, "notifyWearable complete");
 	}

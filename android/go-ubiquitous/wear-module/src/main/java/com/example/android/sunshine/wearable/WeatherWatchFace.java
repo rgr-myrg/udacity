@@ -156,6 +156,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 					.addOnConnectionFailedListener(this)
 					.addApi(Wearable.API)
 					.build();
+			mGoogleApiClient.connect();
 		}
 
 		@Override
@@ -223,7 +224,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 						Log.d(NAME, "onDataChanged " + mMaxTempValue + ":" + mMinTempValue);
 
 						runWeatherBitmapTask(dataMap.getAsset(BuildConfig.MAP_ICON_KEY));
-						invalidate();
+						//invalidate();
 					}
 				}
 			}
