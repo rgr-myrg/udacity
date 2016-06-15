@@ -91,8 +91,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 		boolean mRegisteredTimeZoneReceiver = false;
 
 		private Paint mBackgroundPaint;
-		private Paint mTextPaint;
-
 		private Bitmap mIconBitmap;
 
 		private Paint mCurrentTimePaint;
@@ -198,7 +196,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 		@Override
 		public void onConnectionSuspended(int i) {
-
+			Log.d(NAME, "onConnectionSuspended");
 		}
 
 		@Override
@@ -224,7 +222,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 						Log.d(NAME, "onDataChanged " + mMaxTempValue + ":" + mMinTempValue);
 
 						runWeatherBitmapTask(dataMap.getAsset(BuildConfig.MAP_ICON_KEY));
-						//invalidate();
 					}
 				}
 			}
@@ -299,9 +296,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			mXOffset = resources.getDimension(isRound
 					? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
 
-//			float textSize = resources.getDimension(isRound
-//					? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
-
 			float tempTextSize = resources.getDimension(isRound
 					? R.dimen.digital_temp_text_size_round : R.dimen.digital_temp_text_size);
 
@@ -318,8 +312,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 							? R.dimen.digital_date_text_size_round
 							: R.dimen.digital_date_text_size)
 			);
-
-//			mTextPaint.setTextSize(textSize);
 		}
 
 		@Override
@@ -340,7 +332,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 			if (mAmbient != inAmbientMode) {
 				mAmbient = inAmbientMode;
 				if (mLowBitAmbient) {
-					//mTextPaint.setAntiAlias(!inAmbientMode);
 					mMaxTempPaint.setAntiAlias(!inAmbientMode);
 					mMinTempPaint.setAntiAlias(!inAmbientMode);
 				}
@@ -370,7 +361,7 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 					// The user has completed the tap gesture.
 					mTapCount++;
 					mBackgroundPaint.setColor(resources.getColor(mTapCount % 2 == 0 ?
-							R.color.background : R.color.background2));
+							R.color.background : R.color.primary));
 					break;
 			}
 			invalidate();
@@ -387,11 +378,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 			// Draw H:MM in ambient mode or H:MM:SS in interactive mode.
 			mTime.setToNow();
-
-//			String text = mAmbient
-//					? String.format("%d:%02d", mTime.hour, mTime.minute)
-//					: String.format("%d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
-//			canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
 
 			if (!mAmbient) {
 				drawDateTime(canvas, bounds);
@@ -435,8 +421,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 		}
 
 		private void drawWeatherInfo(final Canvas canvas, final float x, final float y) {
-			Log.d(NAME, "drawWeatherInfo with values: " + x + ":" + y);
-
 			if (mIconBitmap == null || mIconPaint == null) {
 				return;
 			}
@@ -525,8 +509,6 @@ public class WeatherWatchFace extends CanvasWatchFaceService {
 
 			mBackgroundPaint = new Paint();
 			mBackgroundPaint.setColor(resources.getColor(R.color.primary));
-
-			mTextPaint = createPaintWithResource(resources, R.color.digital_text_white);
 
 			mCurrentTimePaint = createPaintWithResource(resources, R.color.digital_text_white);
 			mDatePaint = createPaintWithResource(resources, R.color.digital_text_blue);
